@@ -16,6 +16,6 @@ private:
 	int width;
 	int height;
 	int** map;
-	City(int, int);
+	City(int h, int w);
 	vector<Place> placeRegister;
 };

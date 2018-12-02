@@ -2,4 +2,10 @@
 
 using namespace std;
 
-//test
+Arbitror::Arbitror(const char * fileName)
+{
+}
+
+Arbitror::~Arbitror()
+{
+}

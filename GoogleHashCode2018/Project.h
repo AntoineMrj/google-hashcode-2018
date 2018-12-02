@@ -7,7 +7,7 @@ using namespace std;
 
 class Project
 {
-private:
+public:
 	City city;
 	vector<Building> buildings; // liste des projects buildings disponibles
 	vector<int> residentials; // liste des residences faisant referance a l index dans building
