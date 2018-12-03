@@ -7,6 +7,6 @@ private:
 	int type;
 
 public:
-	Utility(int type_);
-	int getType() { return this->type; }
+  Utility(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,int type_);
+  int getType() { return this->type; }
 };
