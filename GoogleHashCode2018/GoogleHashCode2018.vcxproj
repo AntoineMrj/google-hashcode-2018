@@ -156,6 +156,7 @@
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="City.cpp" />
     <ClCompile Include="FileLoader.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="Residential.cpp" />
     <ClCompile Include="Utility.cpp" />
