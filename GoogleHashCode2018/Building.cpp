@@ -1,15 +1,15 @@
 #include "Building.h"
 
-Building::Building()
-{
-}
 
-Building::Building(int projectNum_, int rowNum_, int columnNum_, int** occupiedCells_)
+
+Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_)
 {
 	this->projectNum = projectNum_;
 	this->rowNum = rowNum_;
 	this->columnNum = columnNum_;
-	this->occupiedCells = occupiedCells_;
+	this->occupiedCells = new unsigned int*[columnNum];
+	for(unsigned int i = 0;i++<this->rowNum;)
+		this->occupiedCells[i] = new unsigned int[this->columnNum];
 }
 
 Building::Building(const Building &b)
@@ -17,15 +17,29 @@ Building::Building(const Building &b)
 	projectNum = b.projectNum;
 	rowNum = b.rowNum;
 	columnNum = b.columnNum;
-	occupiedCells = b.occupiedCells;
+	this->occupiedCells = new unsigned int *[columnNum];
+	for (unsigned int i = 0; i++ < this->rowNum;)
+		this->occupiedCells[i] = new unsigned int[this->columnNum];
+	assignArray(b.occupiedCells);
 }
 
-/*Building& Building::operator=(Building const& buildingB)
+Building& Building::operator=(Building const& buildingB)
 {
-	projectNum = buildingA.projectNum;
-	rowNum = buildingA.rowNum;
-	columnNum = buildingA.columnNum;
-	occupiedCells = buildingA.occupiedCells;
-
+	projectNum = buildingB.projectNum;
+	rowNum = buildingB.rowNum;
+	columnNum = buildingB.columnNum;
+	occupiedCells = buildingB.occupiedCells;
+	for (unsigned int i = 0; i++ < this->rowNum;)
+		this->occupiedCells[i] = new unsigned int[this->columnNum];
+	assignArray(buildingB.occupiedCells);
 	return *this;
-}*/
+}
+
+unsigned int Building::assignArray(unsigned int **array)
+{
+	for(unsigned int i = 0;i++<columnNum;)
+	{
+		for(unsigned int j = 0;j++<rowNum;)
+			occupiedCells[i][j]=array[i][j];
+	}
+}

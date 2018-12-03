@@ -5,20 +5,25 @@ using namespace std;
 
 class Building
 {
-private:
-	int projectNum;
-	int rowNum;
-	int columnNum;
-	int** occupiedCells;
 
 public:
-	Building();
 	Building(const Building &b);
-	//Building& Building::operator=(Building const& buildingB);
-	Building(int projectNum_, int rowNum_, int columnNum_, int** occupiedCells_);
+	Building& operator=(Building const& buildingB);
+	Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_);
 
-	int getProjectNum() { return this->projectNum; }
-	int getRowNum() { return this->rowNum; }
-	int getcolumnNum() { return this->columnNum; }
-	int** getOccupiedCell() { return this->occupiedCells; }
+	unsigned int setCell(unsigned int column,unsigned int row,unsigned int value);
+
+	unsigned int** getOccupiedCell() { return this->occupiedCells; }
+	unsigned int getCell(unsigned int column,unsigned int row);
+	unsigned int getProjectNum() { return this->projectNum; }
+	unsigned int getRowNum() { return this->rowNum; }
+	unsigned int getcolumnNum() { return this->columnNum; }
+
+	unsigned int assignArray(unsigned int** array);
+
+  protected:
+	unsigned int projectNum;
+	unsigned int rowNum;
+	unsigned int columnNum;
+	unsigned int** occupiedCells;
 };

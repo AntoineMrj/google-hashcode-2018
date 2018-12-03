@@ -3,15 +3,17 @@
 City::City() {
 }
 
-City::City(int w, int h) {
+City::City(unsigned int w, unsigned int h)
+{
 	int width = w;
 	int height = h;
-	map = new int*[w]; // Type de la varibale map à modifier
+	map = new unsigned int *[w]; // Type de la varibale map ï¿½ modifier
 	for (int a = 0; a < w; a++) {
-		map[a] = new int[h];
+	map[a] = new unsigned int[h];
 	}
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < h; j++) {
+	for (unsigned int i = 0; i < h; i++) {
+		for (unsigned int j = 0; j < h; j++)
+		{
 			map[i][j] = 0;
 		}
 	}

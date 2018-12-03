@@ -7,6 +7,6 @@ private:
 	int capacity;
 
 public:
-	Residential(int capacity_);
-	int getCapacity() { return this->capacity; }
+  Residential(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,int capacity_);
+  int getCapacity() { return this->capacity; }
 };

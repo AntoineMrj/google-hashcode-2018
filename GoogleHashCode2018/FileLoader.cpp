@@ -22,10 +22,10 @@ Project FileLoader::loadProject(string source)
 
 	int** occupiedCells;
 
-	if (openFile) //si le fichier existe
+	/**if (openFile) //si le fichier existe
 	{
-		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la première ligne et enregistrement dans les varibales
-		City c(height, width); //création de la city
+		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la premiï¿½re ligne et enregistrement dans les varibales
+		City c(height, width); //crï¿½ation de la city
 
 		for (size_t i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
 			openFile >> projectType >> rowNum >> columnNum >> capacity;
@@ -36,10 +36,10 @@ Project FileLoader::loadProject(string source)
 				openFile >> test;
 			}
 
-			Building b(i, rowNum, columnNum, occupiedCells);//création du building
-			vect.push_back(b); //ajout du bâtiment au vecteur
+			Building b(i, rowNum, columnNum, occupiedCells);//crï¿½ation du building
+			vect.push_back(b); //ajout du bï¿½timent au vecteur
 
-			if (projectType == "R") //Remplissage des index en fonction du type de bâtiment
+			if (projectType == "R") //Remplissage des index en fonction du type de bï¿½timent
 				residential.push_back(i);
 			else
 				utilities.push_back(i);
@@ -48,5 +48,5 @@ Project FileLoader::loadProject(string source)
 	else
 		cout << "Le fichier n'existe pas" << endl;
 
-	return Project(c, vect, residential, utilities);
+	return Project(c, vect, residential, utilities);**/
 }
