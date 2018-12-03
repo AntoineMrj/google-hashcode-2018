@@ -20,7 +20,7 @@ Building::Building(const Building &b)
 	occupiedCells = b.occupiedCells;
 }
 
-Building& Building::operator=(Building const& buildingB)
+/*Building& Building::operator=(Building const& buildingB)
 {
 	projectNum = buildingA.projectNum;
 	rowNum = buildingA.rowNum;
@@ -28,4 +28,4 @@ Building& Building::operator=(Building const& buildingB)
 	occupiedCells = buildingA.occupiedCells;
 
 	return *this;
-}
+}*/

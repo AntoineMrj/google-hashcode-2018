@@ -14,7 +14,7 @@ private:
 public:
 	Building();
 	Building(const Building &b);
-	Building& Building::operator=(Building const& buildingB);
+	//Building& Building::operator=(Building const& buildingB);
 	Building(int projectNum_, int rowNum_, int columnNum_, int** occupiedCells_);
 
 	int getProjectNum() { return this->projectNum; }
