@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 
 	int **test;
 	int t = 2;
-	test = &t;
+	test = 2;
 
 	return EXIT_SUCCESS;
 }

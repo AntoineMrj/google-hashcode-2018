@@ -13,40 +13,66 @@ FileLoader::~FileLoader()
 
 Project FileLoader::loadProject(string source)
 {
+	Project project;
+	City city;
+
 	ifstream openFile(source);
 	int height, width, maxWalkingDistance, nbOfBuildingProjects, rowNum, columnNum, capacity;
-	char test;
+	char currentChar;
 	string currentLine, projectType;
-	vector<Building> vect;
 	vector<int> residential, utilities;
 
 	int** occupiedCells;
 
 	if (openFile) //si le fichier existe
 	{
-		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la première ligne et enregistrement dans les varibales
-		City c(height, width); //création de la city
+		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la première ligne
 
-		for (size_t i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
-			openFile >> projectType >> rowNum >> columnNum >> capacity;
-			//CREATION DE LA LISTE OCCUPIED CELLS
-
-			for (size_t j = 0; j < (rowNum*columnNum); j++) //lecture du building
+		int **map = new int*[height]; //Construction de la map de taille height/width remplie de 0
+		for (int i = 0; i < height; i++) {
+			map[i] = new int[width];
+			for (unsigned int j = 0; j < 5; j++)
 			{
-				openFile >> test;
+				map[i][j] = 0;
+			}
+		}
+		city.setMap(width, height, map);
+
+		for(int i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
+			openFile >> projectType >> rowNum >> columnNum >> capacity;
+
+			int **occupiedCells = new int*[rowNum]; //Construction de la liste de cellules occupées
+			for (int j = 0; j < rowNum; j++) {
+				occupiedCells[j] = new int[columnNum];
+				for (int k = 0; k < columnNum; j++)
+				{
+					openFile >> currentChar;
+					if (currentChar == '.')
+						occupiedCells[j][k] = 0;
+					else
+						occupiedCells[j][k] = 1;
+				}
 			}
 
-			Building b(i, rowNum, columnNum, occupiedCells);//création du building
-			vect.push_back(b); //ajout du bâtiment au vecteur
-
-			if (projectType == "R") //Remplissage des index en fonction du type de bâtiment
+			if (projectType == "R") {//création du building en fonction de son type et remplissage des index
+				Residential b(i, rowNum, columnNum, occupiedCells, capacity);
 				residential.push_back(i);
-			else
+			}
+			else {
+				Utility b(i, rowNum, columnNum, occupiedCells, capacity);
 				utilities.push_back(i);
+			}
+				
+
+			project.addBuilding(b);
 		}
+
+		project.setCity(city);
+		project.residentials(residential);
+		project.setUtilities(utilities);
 	}
 	else
 		cout << "Le fichier n'existe pas" << endl;
 
-	return Project(c, vect, residential, utilities);
+	return project;
 }
