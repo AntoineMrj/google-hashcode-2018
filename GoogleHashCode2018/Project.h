@@ -18,5 +18,5 @@ public:
 	Project(City city_, vector<Building> buildings_, vector<int> residentials_, vector<int> utilities_); // liste des utilities faisant reference a l index dans building
 
 	void addBuilding(Utility u);
-	void addBuilding(Residential u);
+	void addBuilding(Residential r);
 };

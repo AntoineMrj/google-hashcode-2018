@@ -14,8 +14,12 @@ Project::Project(City city_, vector<Building> buildings_, vector<int> residentia
 
 void Project::addBuilding(Utility u)
 {
+	this.buildings.push_back(u);
+	this.utilities.push_back(buildings.size() - 1);
 }
 
-void Project::addBuilding(Residential u)
+void Project::addBuilding(Residential r)
 {
+	this.buildings.push_back(r);
+	this.residentials.push_back(buildings.size() - 1);
 }
