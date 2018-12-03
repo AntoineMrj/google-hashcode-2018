@@ -2,6 +2,9 @@
 #include <fstream>
 #include <string>
 #include "Project.h"
+#include "City.h"
+#include <vector>
+#include <iostream>
 
 using namespace std;
 

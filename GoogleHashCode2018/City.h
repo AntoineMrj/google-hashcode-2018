@@ -4,7 +4,7 @@
 using namespace std;
 
 class City {
-private:
+public:
 	struct Coord {
 		int row;
 		int column;
@@ -16,6 +16,7 @@ private:
 	int width;
 	int height;
 	int** map;
+	City();
 	City(int h, int w);
 	vector<Place> placeRegister;
 };
