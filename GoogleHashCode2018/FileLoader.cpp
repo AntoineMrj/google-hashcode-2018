@@ -15,6 +15,7 @@ Project FileLoader::loadProject(string source)
 {
 	Project project;
 	City city;
+	Building *building;
 
 	ifstream openFile(source);
 	int height, width, maxWalkingDistance, nbOfBuildingProjects, rowNum, columnNum, capacity;
@@ -27,19 +28,19 @@ Project FileLoader::loadProject(string source)
 	if (openFile) //si le fichier existe
 	{
 		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la première ligne
-
-		int **map = new int*[height]; //Construction de la map de taille height/width remplie de 0
-		for (int i = 0; i < height; i++) {
-			map[i] = new int[width];
-			for (unsigned int j = 0; j < 5; j++)
-			{
-				map[i][j] = 0;
-			}
-		}
-		city.setMap(width, height, map);
+		project.setCity(width, height);
 
 		for(int i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
 			openFile >> projectType >> rowNum >> columnNum >> capacity;
+
+			if (projectType == "R"){
+				building = new Residential(i, rowNum, columnNum, capacity);
+				project.addResidential(building);
+			}
+			else {
+				building = new Utility(i, rowNum, columnNum, capacity);
+				project.addUtility(building);
+			}
 
 			int **occupiedCells = new int*[rowNum]; //Construction de la liste de cellules occupées
 			for (int j = 0; j < rowNum; j++) {
@@ -48,28 +49,12 @@ Project FileLoader::loadProject(string source)
 				{
 					openFile >> currentChar;
 					if (currentChar == '.')
-						occupiedCells[j][k] = 0;
+						building->setCell(k,j,0);
 					else
-						occupiedCells[j][k] = 1;
+						building->setCell(k, j, 1);
 				}
 			}
-
-			if (projectType == "R") {//création du building en fonction de son type et remplissage des index
-				Residential b(i, rowNum, columnNum, occupiedCells, capacity);
-				residential.push_back(i);
-			}
-			else {
-				Utility b(i, rowNum, columnNum, occupiedCells, capacity);
-				utilities.push_back(i);
-			}
-				
-
-			project.addBuilding(b);
 		}
-
-		project.setCity(city);
-		project.residentials(residential);
-		project.setUtilities(utilities);
 	}
 	else
 		cout << "Le fichier n'existe pas" << endl;
