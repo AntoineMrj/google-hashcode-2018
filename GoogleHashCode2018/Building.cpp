@@ -43,3 +43,8 @@ unsigned int Building::assignArray(unsigned int **array)
 			occupiedCells[i][j]=array[i][j];
 	}
 }
+
+void Building::setCell(unsigned int column, unsigned int row, unsigned int value)
+{
+	occupiedCells[column][row] = value;
+}

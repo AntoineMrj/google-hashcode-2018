@@ -11,8 +11,8 @@ public:
 	Building& operator=(Building const& buildingB);
 	Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_);
 
-	unsigned int setCell(unsigned int column,unsigned int row,unsigned int value);
-
+	void setCell(unsigned int column,unsigned int row,unsigned int value);
+	void setProjectNum(unsigned int projectNum_);
 	unsigned int** getOccupiedCell() { return this->occupiedCells; }
 	unsigned int getCell(unsigned int column,unsigned int row);
 	unsigned int getProjectNum() { return this->projectNum; }
