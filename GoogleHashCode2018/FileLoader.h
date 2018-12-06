@@ -8,7 +8,6 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
 
 class FileLoader
 {
@@ -16,6 +15,7 @@ public:
 	FileLoader();
 	~FileLoader();
 
-	Project loadProject(string source);
+	Project loadProject(std::string source);
+	Project loadSolution(std::string source);
 };
 
