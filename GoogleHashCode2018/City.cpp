@@ -31,6 +31,16 @@ bool City::placedBuilding(PlacedBuilding P) {
 	return true;
 }
 
+void City::setMapCell(int x, int y, int value)
+{
+	this->map[x][y] = value;
+}
+
+int City::getMapCell(int x, int y)
+{
+	return this->map[x][y];
+}
+
 Coord PlacedBuilding::manhattanDistance(const PlacedBuilding & P)
 {
 	//TODO

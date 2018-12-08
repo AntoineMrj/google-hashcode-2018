@@ -37,6 +37,8 @@ public:
 	//Renvoit vrai si c'était possible
 	//Renvoit faux sinon
 	bool placedBuilding(PlacedBuilding P);//Place un batiment sur la carte et l'ajoute au registe
+	void setMapCell(int x, int y, int value);
+	int getMapCell(int x, int y);
 private:
 	unsigned int width;
 	unsigned int height;
