@@ -1,5 +1,6 @@
-#include <vector>
 #pragma once
+#include <vector>
+class Coord;
 
 using namespace std;
 
@@ -26,4 +27,6 @@ public:
 	unsigned int rowNum;
 	unsigned int columnNum;
 	unsigned int** occupiedCells;
+	std::vector<Coord> shape;
+	std::vector<Coord> influenceZone;
 };

@@ -1,5 +1,5 @@
 #include "Project.h"
-
+Project Project::globalProject;
 Project::Project() {
 	this->buildings = vector<Building *>();
 	this->residentials = vector<int>();

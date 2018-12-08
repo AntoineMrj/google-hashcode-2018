@@ -24,7 +24,6 @@ struct PlacedBuilding
 	unsigned int source;
 	Coord position;
 	Coord manhattanDistance(const PlacedBuilding& P);//Calcul la distance de manhatan
-	std::vector<Coord&> Shape;//Silhouette du batiment pour faciliter le calcul de la distance
 	Utility* getSourceAsUtility();//Retourne le batiment lié en tant que utility
 	Residential* getSourceAsResidential();//Pareil mais différent
 	//Passer par le projet static

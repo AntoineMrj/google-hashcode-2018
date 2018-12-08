@@ -11,9 +11,9 @@ FileLoader::~FileLoader()
 {
 }
 
-Project FileLoader::loadProject(string source)
+void FileLoader::loadProject(string source)
 {
-	Project project;
+	Project& project=Project::globalProject;
 	City city;
 	Building *building;
 
@@ -27,7 +27,7 @@ Project FileLoader::loadProject(string source)
 
 	if (openFile) //si le fichier existe
 	{
-		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la première ligne
+		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la premiï¿½re ligne
 		project.setCity(width, height);
 
 		for(int i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
@@ -42,7 +42,7 @@ Project FileLoader::loadProject(string source)
 				project.addUtility(building);
 			}
 
-			int **occupiedCells = new int*[rowNum]; //Construction de la liste de cellules occupées
+			int **occupiedCells = new int*[rowNum]; //Construction de la liste de cellules occupï¿½es
 			for (int j = 0; j < rowNum; j++) {
 				occupiedCells[j] = new int[columnNum];
 				for (int k = 0; k < columnNum; j++)
@@ -59,5 +59,4 @@ Project FileLoader::loadProject(string source)
 	else
 		cout << "Le fichier n'existe pas" << endl;
 
-	return project;
 }

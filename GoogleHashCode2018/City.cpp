@@ -21,13 +21,13 @@ City::City(unsigned int w, unsigned int h)
 }
 
 bool City::placedBuilding(PlacedBuilding P) {
-	for (int i = 0; i < P.Shape.size(); i++) {
+	/**for (int i = 0; i < P.Shape.size(); i++) {
 		if (map[P.Shape[i].row][P.Shape[i].column] == 0)
 			map[P.Shape[i].row][P.Shape[i].column] = P.Shape.size()+1;
 		else
 			return false;
 	}
-	placedBuildingRegister.push_back(P);
+	placedBuildingRegister.push_back(P);**/
 	return true;
 }
 
