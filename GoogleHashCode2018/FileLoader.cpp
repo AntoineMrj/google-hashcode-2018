@@ -13,7 +13,7 @@ FileLoader::~FileLoader()
 
 void FileLoader::loadProject(string source)
 {
-	Project& project=Project::globalProject;
+	Project& project = Project::globalProject;
 	City city;
 	Building *building;
 
@@ -57,6 +57,59 @@ void FileLoader::loadProject(string source)
 		}
 	}
 	else
-		cout << "Le fichier n'existe pas" << endl;
+		cout << "Le fichier de projet n'existe pas" << endl;
 
+}
+
+/*
+	Chargement du fichier de solution pour placer les buildings choisis sur la
+	map de la classe city
+*/
+City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
+{
+	Project& project = Project::globalProject;
+	this->loadProject(projectFile);
+
+	Building *building;
+	City city;
+
+	int buildingsToPlace, buildingNum, x, y;
+
+	ifstream openFile(solutionFile);
+
+	if (openFile)
+	{
+		// lecture première ligne
+		openFile >> buildingsToPlace;
+
+		for (int i = 0; i <= buildingsToPlace; i++)
+		{
+			openFile >> buildingNum >> x >> y;
+
+			building = project.buildings[buildingNum];
+			if (city.getMapCell(x, y) == -1)
+			{
+				// On check les cellules que prend le building
+				for (int row = 0; row < building->getRowNum(); row++)
+				{
+					for (int col = 0; col < building->getcolumnNum(); col++)
+					{
+						if (building->getCell(col, row) == 1)
+						{
+							// On met le numéro du building sur les cases qu'il prend sur la map
+							city.setMapCell(x + row, y + col, buildingNum);
+						}
+					}
+				}	
+			}
+			else
+			{
+				cout << "Solution invalide: au moins 2 bâtiments se chevauchent" << endl;
+			}
+		}
+	}
+	else
+		cout << "Le fichier de solution n'existe pas" << endl;
+
+	return city;
 }

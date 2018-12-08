@@ -5,8 +5,7 @@
 class Arbitror
 {
 private:
-	Project project;
-	Project solution;
+	City city;
 	int score;
 public:
 

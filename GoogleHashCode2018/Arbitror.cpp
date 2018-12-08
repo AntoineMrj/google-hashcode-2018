@@ -7,8 +7,7 @@ Arbitror::Arbitror(string projectFile, string solutionFile)
 	this->score = 0;
 	// Création des objets correspondants à un projet et à une solution de celui-ci
 	FileLoader* fileLoader = new FileLoader;
-	this->project = fileLoader->loadProject(projectFile);
-	this->solution = fileLoader->loadProject(solutionFile);
+	this->city = fileLoader->loadSolution(projectFile, solutionFile);
 }
 
 void Arbitror::evaluate()

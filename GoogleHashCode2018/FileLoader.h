@@ -16,6 +16,6 @@ public:
 	~FileLoader();
 
 	void loadProject(std::string source);
-	City loadSolution(std::string source,std::string solution);
+	City loadSolution(std::string projectFile, std::string solutionFile);
 };
 
