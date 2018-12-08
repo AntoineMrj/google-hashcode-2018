@@ -21,6 +21,8 @@ public:
 	unsigned int getcolumnNum() { return this->columnNum; }
 
 	unsigned int assignArray(unsigned int** array);
+	vector<Coord> getShape();
+	bool cellInRes(unsigned int r, unsigned int c, vector<Coord> res);
 
   protected:
 	unsigned int projectNum;

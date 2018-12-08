@@ -48,3 +48,66 @@ void Building::setCell(unsigned int column, unsigned int row, unsigned int value
 {
 	occupiedCells[column][row] = value;
 }
+
+vector<Coord> Building::getShape()
+{
+	Coord coord;
+	Coord coords; // coord start
+	coords.row = 0;
+	coords.column = 0;
+
+	if (occupiedCells[0][0] == 0) {
+		for (unsigned int i = 1; i < this->columnNum; i++) {
+			if (occupiedCells[0][i] == 1) {
+				coords.column = i;
+				break;
+			}
+		}
+	}
+
+	coord.row = coords.row;
+	coord.column = coords.column;
+
+	vector<Coord> res; //tableau resultat
+	res.assign(1, coord); // case départ
+
+	unsigned int z = 0;
+	
+	do
+	{
+		if (occupiedCells[coord.row-1][coord.column] == 1 && !cellInRes(coord.row -1, coord.column, res)) {
+			coord.row -= 1;
+		}
+		else if (occupiedCells[coord.row][coord.column + 1] == 1 && !cellInRes(coord.row, coord.column+1, res)) {
+			coord.column += 1;
+		}
+		else if (occupiedCells[coord.row + 1][coord.column] == 1 && !cellInRes(coord.row+1, coord.column, res)) {
+			coord.row += 1;
+		}
+		else if (occupiedCells[coord.row][coord.column - 1] == 1 && !cellInRes(coord.row, coord.column-1, res)) {
+			coord.column -= 1;
+		}
+		else { // no move available then go back
+			z--;
+			coord = res[z];
+		}
+		
+		if (!cellInRes(coord.row, coord.column, res)) { // cell not in res then add
+			res.push_back(coord);
+			z = res.size()-1;
+		}
+
+	} while (coord.row != coords.row && coord.column != coords.column);
+	
+	return res;
+}
+
+bool Building::cellInRes(unsigned int r, unsigned int c, vector<Coord> res) 
+{
+	for (unsigned int i = 0; i < res.size(); i++) {
+		if (res[i].column == c && res[i].row == r) {
+			return true;
+		}
+	}
+	return false;
+}
