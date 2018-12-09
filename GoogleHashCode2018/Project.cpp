@@ -43,6 +43,10 @@ void Project::setMaxWalkingDistance(int MaxWD)
 				this->basic_influenceArea.insert({row,col});
 			}
 		}
+		if(row<0)
+			width++;
+		else
+			width--;
 	}
 	this->maxWalkingDistance = MaxWD;
 }
