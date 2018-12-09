@@ -6,18 +6,21 @@ FileLoader::FileLoader()
 {
 }
 
-
 FileLoader::~FileLoader()
 {
 }
 
-void FileLoader::loadProject(string source)
+/*
+	Chargement du fichier de projet pour créer le projet, la carte et 
+	tous les buildings disponibles
+*/
+void FileLoader::loadProject(string projectFile)
 {
 	Project& project = Project::globalProject;
 	City city;
 	Building *building;
 
-	ifstream openFile(source);
+	ifstream openFile(projectFile);
 	int height, width, maxWalkingDistance, nbOfBuildingProjects, rowNum, columnNum, capacity;
 	char currentChar;
 	string currentLine, projectType;
@@ -25,12 +28,15 @@ void FileLoader::loadProject(string source)
 
 	int** occupiedCells;
 
-	if (openFile) //si le fichier existe
+	//si le fichier existe
+	if (openFile)
 	{
-		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects; //lecture de la premi�re ligne
+		//lecture de la première ligne
+		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects;
 		project.setCity(width, height);
 
-		for(int i = 0; i < nbOfBuildingProjects; i++) { //Lecture des buildings
+		//Lecture des buildings
+		for(int i = 0; i < nbOfBuildingProjects; i++) {
 			openFile >> projectType >> rowNum >> columnNum >> capacity;
 
 			if (projectType == "R"){
@@ -42,7 +48,8 @@ void FileLoader::loadProject(string source)
 				project.addUtility(building);
 			}
 
-			int **occupiedCells = new int*[rowNum]; //Construction de la liste de cellules occup�es
+			//Construction de la liste de cellules occupées
+			int **occupiedCells = new int*[rowNum];
 			for (int j = 0; j < rowNum; j++) {
 				occupiedCells[j] = new int[columnNum];
 				for (int k = 0; k < columnNum; j++)
@@ -82,29 +89,16 @@ City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 		// lecture première ligne
 		openFile >> buildingsToPlace;
 
-		for (int i = 0; i <= buildingsToPlace; i++)
+		for (int i = 0; i < buildingsToPlace; i++)
 		{
 			openFile >> buildingNum >> x >> y;
 
 			building = project.buildings[buildingNum];
-			if (city.getMapCell(x, y) == -1)
-			{
-				// On check les cellules que prend le building
-				for (int row = 0; row < building->getRowNum(); row++)
-				{
-					for (int col = 0; col < building->getcolumnNum(); col++)
-					{
-						if (building->getCell(col, row) == 1)
-						{
-							// On met le numéro du building sur les cases qu'il prend sur la map
-							city.setMapCell(x + row, y + col, buildingNum);
-						}
-					}
-				}	
-			}
-			else
+			// SI le building ne peut pas être placé, la solution est invalide
+			if (!city.placeBuilding(*building, x, y))
 			{
 				cout << "Solution invalide: au moins 2 bâtiments se chevauchent" << endl;
+				exit(0);
 			}
 		}
 	}
