@@ -7,9 +7,9 @@ Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int 
 	this->projectNum = projectNum_;
 	this->rowNum = rowNum_;
 	this->columnNum = columnNum_;
-	this->occupiedCells = new unsigned int*[columnNum];
+	this->occupiedCells = new int*[columnNum];
 	for(unsigned int i = 0;i++<this->rowNum;)
-		this->occupiedCells[i] = new unsigned int[this->columnNum];
+		this->occupiedCells[i] = new int[this->columnNum];
 }
 
 Building::Building(const Building &b)
@@ -17,9 +17,9 @@ Building::Building(const Building &b)
 	projectNum = b.projectNum;
 	rowNum = b.rowNum;
 	columnNum = b.columnNum;
-	this->occupiedCells = new unsigned int *[columnNum];
+	this->occupiedCells = new int *[columnNum];
 	for (unsigned int i = 0; i++ < this->rowNum;)
-		this->occupiedCells[i] = new unsigned int[this->columnNum];
+		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(b.occupiedCells);
 }
 
@@ -30,12 +30,12 @@ Building& Building::operator=(Building const& buildingB)
 	columnNum = buildingB.columnNum;
 	occupiedCells = buildingB.occupiedCells;
 	for (unsigned int i = 0; i++ < this->rowNum;)
-		this->occupiedCells[i] = new unsigned int[this->columnNum];
+		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(buildingB.occupiedCells);
 	return *this;
 }
 
-unsigned int Building::assignArray(unsigned int **array)
+unsigned int Building::assignArray(int **array)
 {
 	for(unsigned int i = 0;i++<columnNum;)
 	{
@@ -69,7 +69,7 @@ vector<Coord> Building::getShape()
 	coord.column = coords.column;
 
 	vector<Coord> res; //tableau resultat
-	res.assign(1, coord); // case départ
+	res.assign(1, coord); // case dï¿½part
 
 	unsigned int z = 0;
 	
@@ -91,7 +91,7 @@ vector<Coord> Building::getShape()
 			z--;
 			coord = res[z];
 		}
-		
+
 		if (!cellInRes(coord.row, coord.column, res)) { // cell not in res then add
 			res.push_back(coord);
 			z = res.size()-1;

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <functional>
 class Coord;
 
 using namespace std;
@@ -14,21 +15,21 @@ public:
 
 	void setCell(unsigned int column,unsigned int row,unsigned int value);
 	void setProjectNum(unsigned int projectNum_);
-	unsigned int** getOccupiedCell() { return this->occupiedCells; }
-	unsigned int getCell(unsigned int column,unsigned int row);
+	int** getOccupiedCell() { return this->occupiedCells; }
+	int getCell(unsigned int column,unsigned int row);
 	unsigned int getProjectNum() { return this->projectNum; }
 	unsigned int getRowNum() { return this->rowNum; }
 	unsigned int getcolumnNum() { return this->columnNum; }
 
-	unsigned int assignArray(unsigned int** array);
+	unsigned int assignArray(int** array);
 	vector<Coord> getShape();
 	bool cellInRes(unsigned int r, unsigned int c, vector<Coord> res);
-
+	virtual void placeInCity(City& C);
   protected:
 	unsigned int projectNum;
 	unsigned int rowNum;
 	unsigned int columnNum;
-	unsigned int** occupiedCells;
+	int** occupiedCells;
 	std::vector<Coord> shape;
 	std::vector<Coord> influenceZone;
 };

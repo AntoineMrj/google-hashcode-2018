@@ -19,14 +19,14 @@ struct Coord
 	{
 	}
 
-	Coord(unsigned int x, unsigned int y)
+	Coord(int x,int y)
 	{
 		this->row = x;
 		this->column = y;
 	}
 
-	unsigned int row;
-	unsigned int column;
+	int row;
+	int column;
 	Coord coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
 };
 
@@ -40,12 +40,12 @@ struct PlacedBuilding
 	{
 	}
 
-	PlacedBuilding(unsigned int buildingNum)
+	PlacedBuilding(Building* buildingNum)
 	{
 		this->buildingNum = buildingNum;
 	}
 
-	unsigned int buildingNum;
+	Building* buildingNum;
 	Coord position;
 	Coord manhattanDistance(const PlacedBuilding& placedBuilding);//Calcul la distance de manhatan
 	Utility* getSourceAsUtility();//Retourne le batiment lié en tant que utility
@@ -56,16 +56,21 @@ class City {
 public:
 	City();
 	City(unsigned int h,unsigned int w);
-	bool placeBuilding(Building building, int x, int y);
+	void operator()(Residential* R);
+	void operator()(Utility* U);
+	bool placeBuilding(Building* building, int col, int row);
+	void placeBuildingType(Residential* R);
+	void placeBuildingType(Utility *U);
+
 	void setMapCell(int x, int y, int value);
 	int getMapCell(int x, int y);
 private:
 	unsigned int width;
 	unsigned int height;
-	unsigned int** map;
+	int** map;
 	//Placed building, index sur les bâtiments posés
 	vector<PlacedBuilding> placedBuildingRegister;
-	vector<unsigned int> registeredUtilities;
-	vector<unsigned int> registeredResidentials;
+	vector<PlacedBuilding*> registeredUtilities;
+	vector<PlacedBuilding*> registeredResidentials;
 
 };
