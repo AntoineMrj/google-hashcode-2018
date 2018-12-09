@@ -34,7 +34,7 @@ void FileLoader::loadProject(string projectFile)
 		//lecture de la première ligne
 		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects;
 		project.setCity(width, height);
-
+		project.setMaxWalkingDistance(maxWalkingDistance);
 		//Lecture des buildings
 		for(int i = 0; i < nbOfBuildingProjects; i++) {
 			openFile >> projectType >> rowNum >> columnNum >> capacity;

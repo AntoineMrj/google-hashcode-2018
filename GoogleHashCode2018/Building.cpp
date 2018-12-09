@@ -42,6 +42,8 @@ unsigned int Building::assignArray(int **array)
 		for(unsigned int j = 0;j++<rowNum;)
 			occupiedCells[i][j]=array[i][j];
 	}
+	shape = this->getShape();
+	this->buildInfluenceArea();
 }
 
 void Building::setCell(unsigned int row, unsigned int column, unsigned int value)
@@ -120,4 +122,22 @@ bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> re
 		}
 	}
 	return false;
+}
+void Building::buildInfluenceArea()
+{
+	for(auto C : shape)
+	{
+		for(auto Influ:Project::globalProject.basic_influenceArea)
+		{
+			Coord temp = {C.row+Influ.row,C.column+Influ.column};
+			if(influenceArea.find(temp)==influenceArea.end())
+			{
+				influenceArea.insert(temp);
+			}
+		}
+	}
+}
+std::set<Coord> Building::getInfluenceArea()
+{
+	return influenceArea;
 }

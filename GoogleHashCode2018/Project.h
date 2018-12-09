@@ -4,6 +4,7 @@
 #include "Utility.h"
 #include "Residential.h"
 #include <vector>
+#include <set>
 
 using namespace std;
 //Il faudrait rendre la classe static pour faire le lien entre les Places
@@ -23,7 +24,10 @@ public:
 	void setCity(unsigned int width,unsigned int height);
 	void addUtility(Building* b);
 	void addResidential(Building *r);
-	//Accesseur des types de batiment
+	void setMaxWalkingDistance(int MaxWD);
+		//Accesseur des types de batiment
 	Residential* getResidential(unsigned int index);
 	Utility* getUtility(unsigned int index);
+	std::set<Coord> basic_influenceArea;
+	int maxWalkingDistance;
 };

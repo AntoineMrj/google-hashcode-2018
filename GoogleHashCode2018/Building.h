@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <set>
+#include "Project.h"
 class Coord;
 
 using namespace std;
@@ -24,11 +26,13 @@ public:
 	vector<Coord> getShape();
 	bool cellInRes(unsigned int row, unsigned int column, vector<Coord> result);
 	virtual void placeInCity(City& C);
+	void buildInfluenceArea();
+	std::set<Coord> getInfluenceArea();
  protected:
 	unsigned int projectNum;
 	unsigned int rowNum;
 	unsigned int columnNum;
 	int** occupiedCells;
 	std::vector<Coord> shape;
-	std::vector<Coord> influenceZone;
+	std::set<Coord> influenceArea;
 };

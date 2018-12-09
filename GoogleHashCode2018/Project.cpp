@@ -30,3 +30,19 @@ void Project::setCity(unsigned int width, unsigned int height)
 {
 	city = City(height,width);
 }
+
+void Project::setMaxWalkingDistance(int MaxWD)
+{
+	int width = 0;
+	for(int row=-MaxWD;row<=MaxWD;row++)
+	{
+		for(int col=-width;col<=width;col++)
+		{
+			if(!(row==col&&row==0))
+			{
+				this->basic_influenceArea.insert({row,col});
+			}
+		}
+	}
+	this->maxWalkingDistance = MaxWD;
+}

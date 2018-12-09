@@ -24,7 +24,28 @@ struct Coord
 		this->row = row;
 		this->column = column;
 	}
-
+	bool operator<(const Coord B)
+	{
+		if(column<B.column)
+		{
+			return true;
+		}
+		else if(column>B.column)
+		{
+			return false;
+		}
+		else
+		{
+			if(row<B.column)
+				return true;
+			else
+				return false;
+		}
+	}
+	bool operator==(const Coord B)
+	{
+		return row==B.row && column==B.column;
+	}
 	int row;
 	int column;
 	Coord coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
