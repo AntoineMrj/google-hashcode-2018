@@ -81,7 +81,7 @@ vector<Coord> Building::getShape()
 	coord.column = coords.column;
 
 	vector<Coord> res; //tableau resultat
-	res.assign(1, coord); // case d�part
+	res.push_back(coord);
 
 	unsigned int z = 0;
 	
@@ -110,7 +110,7 @@ vector<Coord> Building::getShape()
 		}
 
 	} while (coord.row != coords.row && coord.column != coords.column);
-	
+
 	return res;
 }
 
@@ -132,7 +132,17 @@ void Building::buildInfluenceArea()
 			Coord temp = {C.row+Influ.row,C.column+Influ.column};
 			if(influenceArea.find(temp)==influenceArea.end())
 			{
-				influenceArea.insert(temp);
+				if(temp.row >=0 && temp.row<rowNum
+					&& temp.column>=0 && temp.column<columnNum)
+					{
+						if(std::find(shape.begin(),shape.end(),temp)==shape.end()
+							&& occupiedCells[temp.row][temp.column]==0)
+							{
+								influenceArea.insert(temp);
+							}
+					}
+				else
+					influenceArea.insert(temp);
 			}
 		}
 	}
