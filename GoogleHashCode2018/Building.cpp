@@ -44,9 +44,19 @@ unsigned int Building::assignArray(int **array)
 	}
 }
 
-void Building::setCell(unsigned int column, unsigned int row, unsigned int value)
+void Building::setCell(unsigned int row, unsigned int column, unsigned int value)
 {
-	occupiedCells[column][row] = value;
+	occupiedCells[row][column] = value;
+}
+
+void Building::setProjectNum(unsigned int projectNum_)
+{
+	this->projectNum = projectNum_;
+}
+
+int Building::getCell(unsigned int row, unsigned int column)
+{
+	return this->occupiedCells[row][column];
 }
 
 vector<Coord> Building::getShape()
@@ -102,10 +112,10 @@ vector<Coord> Building::getShape()
 	return res;
 }
 
-bool Building::cellInRes(unsigned int r, unsigned int c, vector<Coord> res) 
+bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result) 
 {
-	for (unsigned int i = 0; i < res.size(); i++) {
-		if (res[i].column == c && res[i].row == r) {
+	for (unsigned int i = 0; i < result.size(); i++) {
+		if (result[i].column == column && result[i].row == row) {
 			return true;
 		}
 	}

@@ -19,10 +19,10 @@ struct Coord
 	{
 	}
 
-	Coord(int x,int y)
+	Coord(int row, int column)
 	{
-		this->row = x;
-		this->column = y;
+		this->row = row;
+		this->column = column;
 	}
 
 	int row;
@@ -58,12 +58,12 @@ public:
 	City(unsigned int h,unsigned int w);
 	void operator()(Residential* R);
 	void operator()(Utility* U);
-	bool placeBuilding(Building* building, int col, int row);
+	bool placeBuilding(Building* building, int row, int col);
 	void placeBuildingType(Residential* R);
 	void placeBuildingType(Utility *U);
 
-	void setMapCell(int x, int y, int value);
-	int getMapCell(int x, int y);
+	void setMapCell(int row, int col, int value);
+	int getMapCell(int row, int col);
 private:
 	unsigned int width;
 	unsigned int height;
@@ -72,5 +72,4 @@ private:
 	vector<PlacedBuilding> placedBuildingRegister;
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
-
 };

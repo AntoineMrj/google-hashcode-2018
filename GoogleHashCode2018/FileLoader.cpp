@@ -80,7 +80,7 @@ City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 	Building *building;
 	City city;
 
-	int buildingsToPlace, buildingNum, x, y;
+	int buildingsToPlace, buildingNum, row, col;
 
 	ifstream openFile(solutionFile);
 
@@ -91,11 +91,11 @@ City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 
 		for (int i = 0; i < buildingsToPlace; i++)
 		{
-			openFile >> buildingNum >> x >> y;
+			openFile >> buildingNum >> row >> col;
 
 			building = project.buildings[buildingNum];
 			// SI le building ne peut pas être placé, la solution est invalide
-			if (!city.placeBuilding(building, x, y))
+			if (!city.placeBuilding(building, row, col))
 			{
 				cout << "Solution invalide: au moins 2 bâtiments se chevauchent" << endl;
 				exit(0);
