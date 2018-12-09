@@ -31,8 +31,8 @@ void City::operator()(Utility * U)
 }
 
 /*
-	Place un building sur la carte
-	@return true si placement du building possible, sinon faux
+	Place a building on the map
+	@return true if it's possible, otherwise false
 */
 bool City::placeBuilding(Building* building, int row, int col) {
 	int num = this->placedBuildingRegister.size();
@@ -96,7 +96,7 @@ void City::placeBuildingType(Utility *U)
 }
 
 /*
-	Modifie la valeur de la case de la map passée en paramètre
+	Modify the value of the map's cell in parameter
 */
 void City::setMapCell(int x, int y, int value)
 {
@@ -104,17 +104,17 @@ void City::setMapCell(int x, int y, int value)
 }
 
 /*
-	Retourne la valeur de la case de la map passée en paramètre
+	Return the value of the map's cell in parameter
 */
 int City::getMapCell(int x, int y)
 {
 	return this->map[x][y];
 }
 
-Coord PlacedBuilding::manhattanDistance(const PlacedBuilding & P)
+int PlacedBuilding::manhattanDistance(const PlacedBuilding & placedBuilding)
 {
 	//TODO
-	return Coord();
+	return 0;
 }
 
 Utility * PlacedBuilding::getSourceAsUtility()
@@ -129,8 +129,10 @@ Residential * PlacedBuilding::getSourceAsResidential()
 	return nullptr;
 }
 
-Coord Coord::coordManhattanDistance(const Coord & C)
+/*
+	Return Manhattan distance between 2 Coord objects
+*/
+int Coord::coordManhattanDistance(const Coord & coord)
 {
-	//TODO
-	return Coord();
+	return abs(coord.row - this->row) + abs(coord.column - this->column);
 }
