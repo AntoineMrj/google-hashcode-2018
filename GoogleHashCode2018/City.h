@@ -1,5 +1,7 @@
 #pragma once
+
 #include <vector>
+#include <cmath>
 
 //Pré déclaration des classes pour la double inclusion
 class Project;
@@ -48,7 +50,7 @@ struct Coord
 	}
 	int row;
 	int column;
-	Coord coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
+	int coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
 };
 
 /*
@@ -68,7 +70,7 @@ struct PlacedBuilding
 
 	Building* buildingNum;
 	Coord position;
-	Coord manhattanDistance(const PlacedBuilding& placedBuilding);//Calcul la distance de manhatan
+	int manhattanDistance(const PlacedBuilding& placedBuilding);//Calcul la distance de manhatan
 	Utility* getSourceAsUtility();//Retourne le batiment lié en tant que utility
 	Residential* getSourceAsResidential();//Pareil mais différent
 };
