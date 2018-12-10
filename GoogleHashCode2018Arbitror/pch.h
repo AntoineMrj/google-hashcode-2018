@@ -10,5 +10,9 @@
 #define PCH_H
 
 // TODO: Ajoutez les en-têtes à précompiler ici
+#include "../GoogleHashCode2018/Building.h"
+#include "../GoogleHashCode2018/City.h"
+#include "../GoogleHashCode2018/FileLoader.h"
+#include "../GoogleHashCode2018/Project.h"
 
 #endif //PCH_H
