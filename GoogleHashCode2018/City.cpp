@@ -34,6 +34,11 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 	{
 		for (col_temp = col; col_temp < col_temp + building->getColumnNum() && !stop; col_temp++)
 		{
+			if(row_temp>=height||col_temp>=width)
+			{
+				stop=true;
+				break;
+			}
 			if (building->getCell(row_temp - row, col_temp - col) == 1)
 			{
 				//Cas du chevauchement
