@@ -26,8 +26,6 @@ void FileLoader::loadProject(string projectFile)
 	string currentLine, projectType;
 	vector<int> residential, utilities;
 
-	int** occupiedCells;
-
 	//si le fichier existe
 	if (openFile)
 	{
@@ -40,11 +38,11 @@ void FileLoader::loadProject(string projectFile)
 			openFile >> projectType >> rowNum >> columnNum >> capacity;
 
 			if (projectType == "R"){
-				building = new Residential(i, rowNum, columnNum, capacity);
+				building = new Building(i, rowNum, columnNum, capacity, Residential);
 				project.addResidential(building);
 			}
 			else {
-				building = new Utility(i, rowNum, columnNum, capacity);
+				building = new Building(i, rowNum, columnNum, capacity,Utility);
 				project.addUtility(building);
 			}
 

@@ -1,13 +1,15 @@
 #include "Building.h"
 #include "City.h"
+#include "Project.h"
 
-
-Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_)
+Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,unsigned int ex,Building_type t)
 {
 	this->projectNum = projectNum_;
 	this->rowNum = rowNum_;
 	this->columnNum = columnNum_;
 	this->occupiedCells = new int*[columnNum];
+	this->type = t;
+	this->extra = ex;
 	for(unsigned int i = 0;i++<this->rowNum;)
 		this->occupiedCells[i] = new int[this->columnNum];
 }
@@ -21,6 +23,8 @@ Building::Building(const Building &b)
 	for (unsigned int i = 0; i++ < this->rowNum;)
 		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(b.occupiedCells);
+	type = b.type;
+	extra = b.extra;
 }
 
 Building& Building::operator=(Building const& buildingB)
@@ -32,10 +36,12 @@ Building& Building::operator=(Building const& buildingB)
 	for (unsigned int i = 0; i++ < this->rowNum;)
 		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(buildingB.occupiedCells);
+	type = buildingB.type;
+	extra = buildingB.extra;
 	return *this;
 }
 
-unsigned int Building::assignArray(int **array)
+void Building::assignArray(int **array)
 {
 	for(unsigned int i = 0;i++<columnNum;)
 	{
@@ -84,7 +90,7 @@ vector<Coord> Building::getShape()
 	res.push_back(coord);
 
 	unsigned int z = 0;
-	
+
 	do
 	{
 		if (occupiedCells[coord.row-1][coord.column] == 1 && !cellInRes(coord.row -1, coord.column, res)) {
@@ -117,7 +123,7 @@ vector<Coord> Building::getShape()
 bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result) 
 {
 	for (unsigned int i = 0; i < result.size(); i++) {
-		if (result[i].column == column && result[i].row == row) {
+		if (unsigned(result[i].column) == column && unsigned(result[i].row) == row) {
 			return true;
 		}
 	}
@@ -132,8 +138,8 @@ void Building::buildInfluenceArea()
 			Coord temp = {C.row+Influ.row,C.column+Influ.column};
 			if(influenceArea.find(temp)==influenceArea.end())
 			{
-				if(temp.row >=0 && temp.row<rowNum
-					&& temp.column>=0 && temp.column<columnNum)
+				if(temp.row >=0 && temp.row<int(rowNum)
+					&& temp.column>=0 && temp.column<int(columnNum))
 					{
 						if(std::find(shape.begin(),shape.end(),temp)==shape.end()
 							&& occupiedCells[temp.row][temp.column]==0)
@@ -150,4 +156,9 @@ void Building::buildInfluenceArea()
 std::set<Coord> Building::getInfluenceArea()
 {
 	return influenceArea;
+}
+
+Building_type Building::getType()
+{
+	return type;
 }

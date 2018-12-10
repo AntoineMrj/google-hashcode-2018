@@ -1,8 +1,5 @@
 #pragma once
 #include "City.h"
-#include "Building.h"
-#include "Utility.h"
-#include "Residential.h"
 #include <vector>
 #include <set>
 
@@ -25,9 +22,6 @@ public:
 	void addUtility(Building* b);
 	void addResidential(Building *r);
 	void setMaxWalkingDistance(int MaxWD);
-		//Accesseur des types de batiment
-	Residential* getResidential(unsigned int index);
-	Utility* getUtility(unsigned int index);
 	std::set<Coord> basic_influenceArea;
 	int maxWalkingDistance;
 };

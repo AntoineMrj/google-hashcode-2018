@@ -2,12 +2,8 @@
 
 #include <vector>
 #include <cmath>
-
+#include "Building.h"
 //Pré déclaration des classes pour la double inclusion
-class Project;
-class Building;
-class Residential;
-class Utility;
 
 using namespace std;
 
@@ -21,28 +17,10 @@ struct Coord
 	{
 	}
 
-	Coord(int row, int column)
+	Coord(int row,int column)
 	{
 		this->row = row;
 		this->column = column;
-	}
-	bool operator<(const Coord B)
-	{
-		if(column<B.column)
-		{
-			return true;
-		}
-		else if(column>B.column)
-		{
-			return false;
-		}
-		else
-		{
-			if(row<B.column)
-				return true;
-			else
-				return false;
-		}
 	}
 	bool operator==(const Coord B)
 	{
@@ -52,7 +30,7 @@ struct Coord
 	int column;
 	int coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
 };
-
+bool operator<(const Coord A,const Coord B);
 /*
 	Structure correspondant à un building placé sur la map
 */
@@ -71,19 +49,13 @@ struct PlacedBuilding
 	Building* buildingNum;
 	Coord position;
 	int manhattanDistance(const PlacedBuilding& placedBuilding);//Calcul la distance de manhatan
-	Utility* getSourceAsUtility();//Retourne le batiment lié en tant que utility
-	Residential* getSourceAsResidential();//Pareil mais différent
 };
 
 class City {
 public:
 	City();
 	City(unsigned int h,unsigned int w);
-	void operator()(Residential* R);
-	void operator()(Utility* U);
-	bool placeBuilding(Building* building, int row, int col);
-	void placeBuildingType(Residential* R);
-	void placeBuildingType(Utility *U);
+	bool placeBuilding(Building* building,unsigned int row,unsigned int col);
 
 	void setMapCell(int row, int col, int value);
 	int getMapCell(int row, int col);

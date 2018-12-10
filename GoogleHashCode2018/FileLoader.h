@@ -3,8 +3,6 @@
 #include <string>
 #include "Project.h"
 #include "City.h"
-#include "Residential.h"
-#include "Utility.h"
 #include <vector>
 #include <iostream>
 

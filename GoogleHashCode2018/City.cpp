@@ -9,7 +9,7 @@ City::City(unsigned int w, unsigned int h)
 	this->width = w;
 	this->height = h;
 	map = new int *[w]; // Type de la varibale map à modifier
-	for (int a = 0; a < w; a++) {
+	for (unsigned int a = 0; a < w; a++) {
 	map[a] = new int[h];
 	}
 	for (unsigned int i = 0; i < h; i++) {
@@ -20,24 +20,14 @@ City::City(unsigned int w, unsigned int h)
 	}
 }
 
-void City::operator()(Residential * R)
-{
-	//TODO
-}
-
-void City::operator()(Utility * U)
-{
-	//TODO
-}
-
 /*
 	Place a building on the map
 	@return true if it's possible, otherwise false
 */
-bool City::placeBuilding(Building* building, int row, int col) {
+bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 	int num = this->placedBuildingRegister.size();
-	int row_temp;
-	int col_temp;
+	unsigned int row_temp;
+	unsigned int col_temp;
 	bool stop = false;
 	// On check les cellules que prend le building
 	for (row_temp = row; row < row + building->getRowNum() && !stop; row++)
@@ -64,14 +54,22 @@ bool City::placeBuilding(Building* building, int row, int col) {
 		PlacedBuilding placedBuilding = PlacedBuilding(building);
 		placedBuilding.position = Coord(row, col);
 		placedBuildingRegister.push_back(placedBuilding);
-		building->placeInCity(*this);
+		switch(building->getType())
+		{
+			case Building_type::Residential:
+				registeredResidentials.push_back(&placedBuildingRegister.back());
+				break;
+			case Building_type::Utility :
+				registeredUtilities.push_back(&placedBuildingRegister.back());
+				break;
+		}
 		return true;
 	}
 	else
 	{
 		// Annulation du placement
-		int row_recover = row_temp--;
-		int col_recover = col_temp--;
+		unsigned int row_recover = row_temp--;
+		unsigned int col_recover = col_temp--;
 		for (; row_recover > row; row_recover--)
 		{
 			for (; col_recover > col; col_recover--)
@@ -85,15 +83,6 @@ bool City::placeBuilding(Building* building, int row, int col) {
 	}
 }
 
-void City::placeBuildingType(Residential *R)
-{
-	registeredResidentials.push_back(&placedBuildingRegister.back());
-}
-
-void City::placeBuildingType(Utility *U)
-{
-	registeredUtilities.push_back(&placedBuildingRegister.back());
-}
 
 /*
 	Modify the value of the map's cell in parameter
@@ -117,22 +106,30 @@ int PlacedBuilding::manhattanDistance(const PlacedBuilding & placedBuilding)
 	return 0;
 }
 
-Utility * PlacedBuilding::getSourceAsUtility()
-{
-	//TODO
-	return nullptr;
-}
-
-Residential * PlacedBuilding::getSourceAsResidential()
-{
-	//TODO
-	return nullptr;
-}
 
 /*
 	Return Manhattan distance between 2 Coord objects
 */
 int Coord::coordManhattanDistance(const Coord & coord)
 {
-	return abs(coord.row - this->row) + abs(coord.column - this->column);
+	return abs(int(coord.row) - int(this->row)) + abs(int(coord.column) - int(this->column));
+}
+
+bool operator<(const Coord A, const Coord B)
+{
+	if (A.column < B.column)
+	{
+		return true;
+	}
+	else if (A.column > B.column)
+	{
+		return false;
+	}
+	else
+	{
+		if (A.row < B.column)
+			return true;
+		else
+			return false;
+	}
 }
