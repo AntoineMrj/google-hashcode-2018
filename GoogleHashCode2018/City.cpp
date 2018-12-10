@@ -25,7 +25,7 @@ int PlacedBuilding::use(unsigned int utilityType)
 		accumulatedScore += source->getExtra();
 		return source->getExtra();
 	}
-	return false;
+	return 0;
 }
 
 
