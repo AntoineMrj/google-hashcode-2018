@@ -1,6 +1,35 @@
 #include"City.h"
 #include "Project.h"
 
+
+
+
+PlacedBuilding::PlacedBuilding(Building*buildingNum)
+{
+	this->source = buildingNum;
+	accumulatedScore = 0;
+	if (buildingNum->getType() == Residential)
+	{
+		connectedUtility = new std::map<unsigned int, bool>();
+		for (unsigned int i : Project::globalProject.UtilitiesReferences)
+		{
+			(*connectedUtility)[i] = false;
+		}
+	}
+}
+int PlacedBuilding::use(unsigned int utilityType)
+{
+	if ((*connectedUtility)[utilityType] == false)
+	{
+		(*connectedUtility)[utilityType] = true;
+		accumulatedScore += source->getExtra();
+		return source->getExtra();
+	}
+	return false;
+}
+
+
+
 City::City() {
 }
 
@@ -8,16 +37,17 @@ City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
-	map = new int *[w]; // Type de la varibale map à modifier
-	for (unsigned int a = 0; a < w; a++) {
-	map[a] = new int[h];
+	map = new int *[h]; // Type de la varibale map à modifier
+	for (unsigned int a = 0; a < h; a++) {
+	map[a] = new int[w];
 	}
 	for (unsigned int i = 0; i < h; i++) {
-		for (unsigned int j = 0; j < h; j++)
+		for (unsigned int j = 0; j < w; j++)
 		{
 			map[i][j] = -1;
 		}
 	}
+	score = 0;
 }
 
 /*
@@ -68,6 +98,15 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 				registeredUtilities.push_back(&placedBuildingRegister.back());
 				break;
 		}
+		//Calcul du score généré par le placement
+		for (auto coord : placedBuilding.source->getInfluenceArea())
+		{
+			Coord temp_coord = {coord.row+int(row),coord.column+int(col)};
+			if(temp_coord.row>=0&&temp_coord.row<int(height)&&temp_coord.column>=0&&temp_coord.column<int(width))
+			{
+				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
+			}
+		}
 		return true;
 	}
 	else
@@ -88,7 +127,35 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 	}
 }
 
-
+int City::computeScore(PlacedBuilding &A,PlacedBuilding &B)
+{
+	switch(A.source->getType())
+	{
+		case Utility:
+			switch(B.source->getType())
+			{
+				case Residential:
+					return B.use(A.source->getExtra());
+				break;
+				default:
+					return 0;
+				break;
+			}
+		break;
+		case Residential:
+			switch (B.source->getType())
+			{
+			case Utility:
+				return A.use(B.source->getExtra());
+				break;
+			default:
+				return 0;
+				break;
+			}
+			break;
+	}
+	return 0;
+}
 /*
 	Modify the value of the map's cell in parameter
 */
@@ -111,7 +178,10 @@ int PlacedBuilding::manhattanDistance(const PlacedBuilding & placedBuilding)
 	return 0;
 }
 
-
+int City::getScore()
+{
+	return score;
+}
 /*
 	Return Manhattan distance between 2 Coord objects
 */

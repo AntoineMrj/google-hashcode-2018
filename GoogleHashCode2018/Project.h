@@ -24,4 +24,5 @@ public:
 	void setMaxWalkingDistance(int MaxWD);
 	std::set<Coord> basic_influenceArea;
 	int maxWalkingDistance;
+	std::vector<unsigned int> UtilitiesReferences;
 };

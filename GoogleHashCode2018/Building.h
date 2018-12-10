@@ -23,6 +23,7 @@ public:
 	unsigned int getProjectNum() { return this->projectNum; }
 	unsigned int getRowNum() { return this->rowNum; }
 	unsigned int getColumnNum() { return this->columnNum; }
+	unsigned int getExtra(){return this->extra;}
 	vector<Coord> getShape();
 	std::set<Coord> getInfluenceArea();
 

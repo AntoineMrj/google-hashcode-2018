@@ -18,6 +18,10 @@ void Project::addUtility(Building *u)
 {
 	this->buildings.push_back(u);
 	this->utilities.push_back(buildings.size() - 1);
+	if(std::find(UtilitiesReferences.begin(),UtilitiesReferences.end(),u->getExtra())!=UtilitiesReferences.end())
+	{
+		UtilitiesReferences.push_back(u->getExtra());
+	}
 }
 
 void Project::addResidential(Building *r)
