@@ -5,6 +5,8 @@
 #include <chrono>
 #include <Windows.h>
 #include <utility>
+#include <algorithm>
+#include <fstream>
 
 #define NUMBER_EXEC 3
 
@@ -35,7 +37,6 @@ int main(int argc, char **argv)
 	if (argc == 3)
 	{
 		const char * executableDirectory;
-		const char * outputFile;
 		executableDirectory = argv[1];
 
 		// We check if the second argument is a directory
@@ -45,36 +46,45 @@ int main(int argc, char **argv)
 			cout << "Usage: " << argv[0] << " [executablesDirectory] [outputFile]" << endl;
 			exit(0);
 		}
-
-		outputFile = argv[2];
 		
 		//We iterate through the directory
 		vector<string> executables;
 		executables = IterateOnFileDir(executableDirectory);
 
 		Arbitror arbitror;
-		vector<pair<double, int>> result;
+		vector<pair<int, double>> result;
 
 		for (auto file : executables)
 		{
-			arbitror = Arbitror("projectFile ?????", "solution");
+			arbitror = Arbitror("project1", "solution");
 			double mean = 0;
 			const string command = file + " solution";
 			for (int i = 0; i < NUMBER_EXEC; i++)
 			{
 				mean += computeExecutionTime(command);
 			}
-			result.push_back(make_pair(mean / NUMBER_EXEC, arbitror.getScore()));
+			result.push_back(make_pair(arbitror.getScore(), mean / NUMBER_EXEC));
 		}
 		
-		//TODO: sort results + print it in file
+		//Sorting the vector on the first element of the pair (here the score)
+		sort(result.begin(), result.end());
 
+		// Writing the results in the output file
+		ofstream outputFile;
+		outputFile.open(argv[2]);
+		for (int i = 0; i < result.size(); i++)
+		{
+			outputFile << "Score: " << result[i].first
+				<< "\t execution time: " << result[i].second << endl;
+		}
 	}
 	else
 	{
 		cout << "Usage: " << argv[0] << " [executablesDirectory] [outputFile]" << endl;
 		exit(0);
 	}
+
+	return EXIT_SUCCESS;
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
