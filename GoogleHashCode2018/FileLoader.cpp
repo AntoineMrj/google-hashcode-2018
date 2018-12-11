@@ -57,6 +57,7 @@ void FileLoader::loadProject(string projectFile)
 						building->setCell(j,k, 1);
 				}
 			}
+			project.city->placeBuilding(project.buildings[0],0,0);
 		}
 	}
 	else

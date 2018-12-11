@@ -12,6 +12,8 @@ Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int 
 	this->occupiedCells = new int*[rowNum_];
 	for(unsigned int i = 0;i<this->rowNum;i++)
 		this->occupiedCells[i] = new int[columnNum_];
+	shape = this->getShape();
+	this->buildInfluenceArea();
 }
 
 Building::Building(const Building &b)
