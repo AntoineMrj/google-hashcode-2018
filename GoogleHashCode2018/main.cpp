@@ -4,8 +4,7 @@
 int main(int argc, char* argv[])
 {
 
-	FileLoader f;
-	f.loadProject("GoogleHashCode2018/input/a_example.in");
+	FileLoader::loadProject("GoogleHashCode2018/input/a_example.in");
 
 	return EXIT_SUCCESS;
 }

@@ -10,10 +10,8 @@
 class FileLoader
 {
 public:
-	FileLoader();
-	~FileLoader();
 
-	void loadProject(std::string projectFile);
-	void loadSolution(std::string projectFile, std::string solutionFile);
+	static void loadProject(std::string projectFile);
+	static void loadSolution(std::string projectFile, std::string solutionFile);
 };
 

@@ -2,14 +2,6 @@
 
 using namespace std;
 
-FileLoader::FileLoader()
-{
-}
-
-FileLoader::~FileLoader()
-{
-}
-
 /*
 	Chargement du fichier de projet pour créer le projet, la carte et 
 	tous les buildings disponibles
@@ -72,7 +64,7 @@ void FileLoader::loadProject(string projectFile)
 void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 {
 	Project& project = Project::globalProject;
-	this->loadProject(projectFile);
+	loadProject(projectFile);
 
 	Building *building;
 	City* city=project.city;
