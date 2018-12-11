@@ -151,11 +151,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\GoogleHashCode2018\Arbitror.h" />
+    <ClInclude Include="Arbitror.h" />
+    <ClInclude Include="FileHandling.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\GoogleHashCode2018\Arbitror.cpp" />
+    <ClCompile Include="Arbitror.cpp" />
+    <ClCompile Include="FileHandling.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
