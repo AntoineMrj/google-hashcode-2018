@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <iostream>
 #include <set>
 class Coord;
 
@@ -27,7 +28,7 @@ public:
 	vector<Coord> getShape();
 	std::set<Coord> getInfluenceArea();
 
-	void setCell(unsigned int row, unsigned int column, unsigned int value);
+	void setCell(unsigned int row, unsigned int column, int value);
 	void setProjectNum(unsigned int projectNum_);
 
 	bool cellInRes(unsigned int row, unsigned int column, vector<Coord> result);

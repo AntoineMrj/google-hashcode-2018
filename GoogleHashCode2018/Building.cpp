@@ -7,11 +7,11 @@ Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int 
 	this->projectNum = projectNum_;
 	this->rowNum = rowNum_;
 	this->columnNum = columnNum_;
-	this->occupiedCells = new int*[columnNum];
 	this->type = t;
 	this->extra = ex;
-	for(unsigned int i = 0;i++<this->rowNum;)
-		this->occupiedCells[i] = new int[this->columnNum];
+	this->occupiedCells = new int*[rowNum_];
+	for(unsigned int i = 0;i<this->rowNum;i++)
+		this->occupiedCells[i] = new int[columnNum_];
 }
 
 Building::Building(const Building &b)
@@ -19,8 +19,8 @@ Building::Building(const Building &b)
 	projectNum = b.projectNum;
 	rowNum = b.rowNum;
 	columnNum = b.columnNum;
-	this->occupiedCells = new int *[columnNum];
-	for (unsigned int i = 0; i++ < this->rowNum;)
+	this->occupiedCells = new int *[this->rowNum];
+	for (unsigned int i = 0; i< this->rowNum;i++)
 		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(b.occupiedCells);
 	type = b.type;
@@ -33,7 +33,8 @@ Building& Building::operator=(Building const& buildingB)
 	rowNum = buildingB.rowNum;
 	columnNum = buildingB.columnNum;
 	occupiedCells = buildingB.occupiedCells;
-	for (unsigned int i = 0; i++ < this->rowNum;)
+	this->occupiedCells = new int *[this->rowNum];
+	for (unsigned int i = 0; i< this->rowNum;i++)
 		this->occupiedCells[i] = new int[this->columnNum];
 	assignArray(buildingB.occupiedCells);
 	type = buildingB.type;
@@ -43,18 +44,18 @@ Building& Building::operator=(Building const& buildingB)
 
 void Building::assignArray(int **array)
 {
-	for(unsigned int i = 0;i++<columnNum;)
+	for(unsigned int i = 0;i<rowNum;i++)
 	{
-		for(unsigned int j = 0;j++<rowNum;)
+		for(unsigned int j = 0;j<columnNum;i++)
 			occupiedCells[i][j]=array[i][j];
 	}
 	shape = this->getShape();
 	this->buildInfluenceArea();
 }
 
-void Building::setCell(unsigned int row, unsigned int column, unsigned int value)
+void Building::setCell(unsigned int row, unsigned int column, int value)
 {
-	occupiedCells[row][column] = value;
+	occupiedCells[row][column]=value;
 }
 
 void Building::setProjectNum(unsigned int projectNum_)

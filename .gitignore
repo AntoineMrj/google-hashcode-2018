@@ -5,6 +5,7 @@
 GoogleHashCode2018/bin/*
 GoogleHashCode2018/makefile
 GoogleHashCode2018/.vscode/*
+.vscode/*
 *.suo
 *.user
 *.userosscache

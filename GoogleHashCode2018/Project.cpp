@@ -6,7 +6,7 @@ Project::Project() {
 	this->utilities = vector<int>();
 }
 
-Project::Project(City city_)
+Project::Project(City* city_)
 {
 	this->city = city_;
 	this->buildings = vector<Building*>();
@@ -32,7 +32,7 @@ void Project::addResidential(Building *r)
 
 void Project::setCity(unsigned int width, unsigned int height)
 {
-	city = City(height,width);
+	city = new City(height,width);
 }
 
 void Project::setMaxWalkingDistance(int MaxWD)

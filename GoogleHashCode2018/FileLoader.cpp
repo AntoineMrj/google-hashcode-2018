@@ -47,16 +47,14 @@ void FileLoader::loadProject(string projectFile)
 			}
 
 			//Construction de la liste de cellules occupées
-			int **occupiedCells = new int*[rowNum];
 			for (int j = 0; j < rowNum; j++) {
-				occupiedCells[j] = new int[columnNum];
-				for (int k = 0; k < columnNum; j++)
+				for (int k = 0; k < columnNum; k++)
 				{
 					openFile >> currentChar;
 					if (currentChar == '.')
-						building->setCell(k,j,0);
+						building->setCell(j,k,0);
 					else
-						building->setCell(k, j, 1);
+						building->setCell(j,k, 1);
 				}
 			}
 		}
@@ -70,13 +68,13 @@ void FileLoader::loadProject(string projectFile)
 	Chargement du fichier de solution pour placer les buildings choisis sur la
 	map de la classe city
 */
-City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
+void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 {
 	Project& project = Project::globalProject;
 	this->loadProject(projectFile);
 
 	Building *building;
-	City city;
+	City* city=project.city;
 
 	int buildingsToPlace, buildingNum, row, col;
 
@@ -93,7 +91,7 @@ City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 
 			building = project.buildings[buildingNum];
 			// SI le building ne peut pas être placé, la solution est invalide
-			if (!city.placeBuilding(building, row, col))
+			if (!city->placeBuilding(building, row, col))
 			{
 				cout << "Solution invalide: au moins 2 bâtiments se chevauchent" << endl;
 				exit(0);
@@ -103,5 +101,4 @@ City FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 	else
 		cout << "Le fichier de solution n'existe pas" << endl;
 
-	return city;
 }
