@@ -1,12 +1,9 @@
 #pragma once
 
-#include "pch.h"
-
 class Arbitror
 {
 private:
-	City city;
-	FileLoader* fileLoader;
+	City *city;
 	std::string projectFile;
 	std::string solutionFile;
 	int score;

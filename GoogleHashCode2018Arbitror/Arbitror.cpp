@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Arbitror.h"
 
 using namespace std;
@@ -11,7 +12,6 @@ Arbitror::Arbitror(string projectFile, string solutionFile)
 	this->projectFile = projectFile;
 	this->solutionFile = solutionFile;
 	this->score = 0;
-	this->fileLoader = new FileLoader;
 	this->evaluate();
 }
 
@@ -20,9 +20,14 @@ Arbitror::Arbitror(string projectFile, string solutionFile)
 */
 void Arbitror::evaluate()
 {
-	//TODO
+	FileLoader::loadSolution(this->projectFile, this->solutionFile);
+	this->city = Project::globalProject.city;
+	this->score = city->getScore();
 }
 
+/*
+	Method that returns the score of the solution
+*/
 int Arbitror::getScore()
 {
 	return this->score;

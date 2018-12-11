@@ -51,7 +51,6 @@ std::vector<std::string> IterateOnFileDir(const char *baseDir)
 		std::string file(baseDir);
 		file += fileName;
 		executables.push_back(file);
-
 	}
 	return executables;
 }
