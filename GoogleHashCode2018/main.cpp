@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
 {
 
 	FileLoader f;
-	f.loadProject("input/a_example.in");
+	f.loadProject("GoogleHashCode2018/input/a_example.in");
 
 	return EXIT_SUCCESS;
 }

@@ -60,9 +60,9 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 	unsigned int col_temp;
 	bool stop = false;
 	// On check les cellules que prend le building
-	for (row_temp = row; row < row + building->getRowNum() && !stop; row++)
+	for (row_temp = row; row_temp < row + building->getRowNum() && !stop; row_temp++)
 	{
-		for (col_temp = col; col_temp < col_temp + building->getColumnNum() && !stop; col_temp++)
+		for (col_temp = col; col_temp < col + building->getColumnNum() && !stop; col_temp++)
 		{
 			if(row_temp>=height||col_temp>=width)
 			{
