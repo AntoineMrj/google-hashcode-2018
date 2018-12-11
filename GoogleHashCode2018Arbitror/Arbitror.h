@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include "pch.h"
 
 class Arbitror
@@ -12,11 +11,11 @@ private:
 	std::string solutionFile;
 	int score;
 public:
-
+	Arbitror();
 	Arbitror(std::string projectFile, std::string solutionFile);
 
-	double computeTime();
 	void evaluate();
+	int getScore();
 
 	~Arbitror();
 };

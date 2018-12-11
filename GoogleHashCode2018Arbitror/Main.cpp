@@ -1,43 +1,90 @@
 #include "Arbitror.h"
+#include "FileHandling.h"
 #include <iostream>
 #include <sys/stat.h>
+#include <chrono>
+#include <Windows.h>
+#include <utility>
+#include <algorithm>
+#include <fstream>
+
+#define NUMBER_EXEC 3
 
 using namespace std;
 
+/*
+	Method that calculates the execution time of the solution's computation
+*/
+double computeExecutionTime(const string command)
+{	
+	auto start = chrono::steady_clock::now();
+	// We execute the executable
+	system(command.c_str());
+	auto end = chrono::steady_clock::now();
+
+	// Execution time
+	chrono::duration<double> executionTime = end - start;
+
+	return executionTime.count();
+}
+
+/*
+	Main function
+*/
 int main(int argc, char **argv)
 {
 	// We check the number of arguments
 	if (argc == 3)
 	{
 		const char * executableDirectory;
-		const char * outputFile;
 		executableDirectory = argv[1];
 
-		struct stat buff;
 		// We check if the second argument is a directory
-		if (stat(executableDirectory, &buff) == 0)
+		if (!((GetFileAttributesA(executableDirectory) & FILE_ATTRIBUTE_DIRECTORY) != 0))
 		{
-			if (!(buff.st_mode & S_IFDIR))
-			{
-				cout << "Error: the second argument is not a directory" << endl;
-				cout << "Usage: ./program executablesDirectory outputFile" << endl;
-				exit(0);
-			}
-		}
-		else
-		{
-			cout << "Error while checking if the second argument is a directory" << endl;
+			cout << "Error: the second argument is not a directory" << endl;
+			cout << "Usage: " << argv[0] << " [executablesDirectory] [outputFile]" << endl;
 			exit(0);
 		}
+		
+		//We iterate through the directory
+		vector<string> executables;
+		executables = IterateOnFileDir(executableDirectory);
 
-		outputFile = argv[2];
+		Arbitror arbitror;
+		vector<pair<int, double>> result;
 
+		for (auto file : executables)
+		{
+			arbitror = Arbitror("project1", "solution");
+			double mean = 0;
+			const string command = file + " solution";
+			for (int i = 0; i < NUMBER_EXEC; i++)
+			{
+				mean += computeExecutionTime(command);
+			}
+			result.push_back(make_pair(arbitror.getScore(), mean / NUMBER_EXEC));
+		}
+		
+		//Sorting the vector on the first element of the pair (here the score)
+		sort(result.begin(), result.end());
+
+		// Writing the results in the output file
+		ofstream outputFile;
+		outputFile.open(argv[2]);
+		for (int i = 0; i < result.size(); i++)
+		{
+			outputFile << "Score: " << result[i].first
+				<< "\t execution time: " << result[i].second << endl;
+		}
 	}
 	else
 	{
-		cout << "Usage: ./program executablesDirectory outputFile" << endl;
+		cout << "Usage: " << argv[0] << " [executablesDirectory] [outputFile]" << endl;
 		exit(0);
 	}
+
+	return EXIT_SUCCESS;
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
