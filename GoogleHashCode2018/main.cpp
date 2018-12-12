@@ -3,7 +3,7 @@
 #include <algorithm>
 int main(int argc, char* argv[])
 {
-
+	
 	if(argc<3)
 	{
 		std::cerr << "Erreur : Too fee arguments." << std::endl;
@@ -19,6 +19,9 @@ int main(int argc, char* argv[])
 		std::string projectPath(argv[1]);
 		std::string solutionOuput(argv[2]);
 		FileLoader::loadProject(argv[1]);
+
+		std::ofstream outfile(solutionOuput); //creation du fichier solution
+		outfile.close();
 	}
 
 	return EXIT_SUCCESS;
