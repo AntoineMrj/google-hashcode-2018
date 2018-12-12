@@ -87,11 +87,15 @@ vector<Coord> Building::getShape()
 	bool begin_middle=true;
 
 	bool end=false;
+	std::cout << "BITE" << std::endl;
 
 	for(int i=0;i<rowNum;i++)
 	{
-		if(i==rowNum-1)
+		if(i>=(int(rowNum)-1))
+		{
+			first = false;
 			end=true;
+		}
 		for(int j=0;j<columnNum;j++)
 		{
 			if(first&&occupiedCells[i][j])
@@ -141,12 +145,13 @@ bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> re
 }
 void Building::buildInfluenceArea()
 {
+	Project& p = Project::globalProject;
 	for(auto C : shape)
 	{
-		for(auto Influ:Project::globalProject.basic_influenceArea)
+		for(const Coord& Influ:Project::globalProject.basic_influenceArea)
 		{
 			Coord temp = {C.row+Influ.row,C.column+Influ.column};
-			if(influenceArea.find(temp)==influenceArea.end())
+			if (std::find(influenceArea.begin(), influenceArea.end(), temp) == influenceArea.end())
 			{
 				if(temp.row >=0 && temp.row<int(rowNum)
 					&& temp.column>=0 && temp.column<int(columnNum))
@@ -154,16 +159,18 @@ void Building::buildInfluenceArea()
 						if(std::find(shape.begin(),shape.end(),temp)==shape.end()
 							&& occupiedCells[temp.row][temp.column]==0)
 							{
-								influenceArea.insert(temp);
+								influenceArea.push_back(temp);
 							}
 					}
 				else
-					influenceArea.insert(temp);
+					{
+							influenceArea.push_back(temp);
+					}
 			}
 		}
 	}
 }
-std::set<Coord> Building::getInfluenceArea()
+std::vector<Coord> Building::getInfluenceArea()
 {
 	return influenceArea;
 }

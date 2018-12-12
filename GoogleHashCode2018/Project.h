@@ -22,7 +22,7 @@ public:
 	void addUtility(Building* b);
 	void addResidential(Building *r);
 	void setMaxWalkingDistance(int MaxWD);
-	std::set<Coord> basic_influenceArea;
+	std::vector<Coord> basic_influenceArea;
 	int maxWalkingDistance;
 	std::vector<unsigned int> UtilitiesReferences;
 };

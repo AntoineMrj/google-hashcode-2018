@@ -27,7 +27,7 @@ public:
 	unsigned int getColumnNum() { return this->columnNum; }
 	unsigned int getExtra(){return this->extra;}
 	vector<Coord> getShape();
-	std::set<Coord> getInfluenceArea();
+	std::vector<Coord> getInfluenceArea();
 
 	void setCell(unsigned int row, unsigned int column, int value);
 	void setProjectNum(unsigned int projectNum_);
@@ -42,5 +42,5 @@ public:
 	Building_type type;
 	int** occupiedCells;
 	std::vector<Coord> shape;
-	std::set<Coord> influenceArea;
+	std::vector<Coord> influenceArea;
 };

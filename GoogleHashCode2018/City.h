@@ -24,14 +24,11 @@ struct Coord
 		this->row = row;
 		this->column = column;
 	}
-	bool operator==(const Coord B)
-	{
-		return row==B.row && column==B.column;
-	}
 	int row;
 	int column;
 	int coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
 };
+bool operator==(const Coord& A,const Coord& B);
 bool operator<(const Coord A,const Coord B);
 /*
 	Structure correspondant à un building placé sur la map
@@ -63,6 +60,7 @@ public:
 	int getMapCell(int row, int col);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	int getScore();
+	void PrintMap();
 private:
 	unsigned int width;
 	unsigned int height;

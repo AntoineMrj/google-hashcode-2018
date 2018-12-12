@@ -42,9 +42,9 @@ void Project::setMaxWalkingDistance(int MaxWD)
 	{
 		for(int col=-width;col<=width;col++)
 		{
-			if(!(row==col&&row==0))
+			if(!(row==0&&col==0))
 			{
-				this->basic_influenceArea.insert({row,col});
+				this->basic_influenceArea.push_back({row,col});
 			}
 		}
 		if(row<0)

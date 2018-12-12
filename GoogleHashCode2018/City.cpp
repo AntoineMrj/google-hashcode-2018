@@ -72,7 +72,7 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 			if (building->getCell(row_temp - row, col_temp - col) == 1)
 			{
 				//Cas du chevauchement
-				if(this->getMapCell(row, col) != -1)
+				if (this->getMapCell(row_temp, col_temp) != -1)
 				{
 					stop = true;
 					break;
@@ -99,10 +99,10 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 				break;
 		}
 		//Calcul du score généré par le placement
-		for (auto coord : placedBuilding.source->getInfluenceArea())
+		for (const Coord& coord : placedBuilding.source->getInfluenceArea())
 		{
 			Coord temp_coord = {coord.row+int(row),coord.column+int(col)};
-			if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > 0 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
+			if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > -1 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
 			{
 				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
 			}
@@ -156,6 +156,17 @@ int City::computeScore(PlacedBuilding &A,PlacedBuilding &B)
 	}
 	return 0;
 }
+void City::PrintMap()
+{
+	for(int r = 0;r<height;r++)
+	{
+		for(int c=0;c<width;c++)
+		{
+			std::cout << map[r][c];
+		}
+		std::cout << std::endl;
+	}
+}
 /*
 	Modify the value of the map's cell in parameter
 */
@@ -207,4 +218,8 @@ bool operator<(const Coord A, const Coord B)
 		else
 			return false;
 	}
+}
+bool operator==(const Coord &A, const Coord &B)
+{
+	return A.row == B.row && A.column == B.column;
 }
