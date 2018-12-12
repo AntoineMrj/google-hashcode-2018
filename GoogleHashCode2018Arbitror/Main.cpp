@@ -8,7 +8,10 @@
 #include <algorithm>
 #include <fstream>
 
-#define NUMBER_EXEC 3
+/*
+	Number of execution of each executable
+*/
+#define NUMBER_EXEC 10
 
 using namespace std;
 
@@ -16,6 +19,10 @@ using namespace std;
 	Vector that contains the executables
 */
 vector<string> executables;
+/*
+	Arbitror object
+*/
+Arbitror arbitror;
 
 /*
 	Method that insert the executable files in a vector
@@ -27,9 +34,9 @@ void handleExecutables(string file)
 }
 
 /*
-	Method that calculates the execution time of the solution's computation
+	Method that calculates the execution time and the score of the solution's computation
 */
-double computeExecutionTime(const string command)
+pair<int, double> computeExecutionTime(const string command)
 {	
 	cout << "command: " << command << endl; //debug
 
@@ -41,7 +48,7 @@ double computeExecutionTime(const string command)
 	// Execution time
 	chrono::duration<double> executionTime = end - start;
 
-	return executionTime.count();
+	return make_pair(arbitror.getScore(), executionTime.count());
 }
 
 /*
@@ -66,22 +73,25 @@ int main(int argc, char **argv)
 		//We iterate through the directory
 		IterateOnFileDir(executableDirectory, handleExecutables);
 
-		Arbitror arbitror;
 		vector<pair<int, double>> result;
 
 		for (auto file : executables)
 		{
 			arbitror = Arbitror("input/a_example.in", "solution");
-			double mean = 0;
+			double meanExecTime = 0;
+			int meanScore = 0;
+			pair<int, double> means;
 			const string command = file + " input/a_example.in solution_test";
 
-			cout << command << endl; //debug
-
+			// We compute the execution time of each execution of one executable
+			// to have a mean, same for the score
 			for (int i = 0; i < NUMBER_EXEC; i++)
 			{
-				mean += computeExecutionTime(command);
+				means = computeExecutionTime(command);
+				meanScore += means.first;
+				meanExecTime += means.second;
 			}
-			result.push_back(make_pair(arbitror.getScore(), mean / NUMBER_EXEC));
+			result.push_back(make_pair(meanScore / NUMBER_EXEC, meanExecTime / NUMBER_EXEC));
 		}
 		
 		//Sorting the vector on the first element of the pair (here the score)
