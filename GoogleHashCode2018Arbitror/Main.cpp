@@ -31,6 +31,8 @@ void handleExecutables(string file)
 */
 double computeExecutionTime(const string command)
 {	
+	cout << "command: " << command << endl; //debug
+
 	auto start = chrono::steady_clock::now();
 	// We execute the executable
 	system(command.c_str());
@@ -69,9 +71,9 @@ int main(int argc, char **argv)
 
 		for (auto file : executables)
 		{
-			arbitror = Arbitror("project1", "solution");
+			arbitror = Arbitror("input/a_example.in", "solution");
 			double mean = 0;
-			const string command = file + " solution";
+			const string command = file + " input/a_example.in solution_test";
 
 			cout << command << endl; //debug
 
