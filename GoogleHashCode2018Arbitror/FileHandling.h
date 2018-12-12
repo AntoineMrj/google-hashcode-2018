@@ -48,7 +48,7 @@ void IterateOnFileDir(const char *baseDir, F &func)
 	while (dirList.GetNextFile(fileName))
 	{
 		std::string file(baseDir);
-		file +=  "/" + fileName;
+		file += "\\" + fileName;
 
 		func(file);
 	}

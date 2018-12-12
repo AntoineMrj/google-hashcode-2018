@@ -53,8 +53,7 @@ void FileLoader::loadProject(string projectFile)
 		}
 	}
 	else
-		cout << "Le fichier de projet n'existe pas" << endl;
-
+		cout << "The project file doesn't exist" << endl;
 }
 
 /*
@@ -75,23 +74,28 @@ void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 
 	if (openFile)
 	{
-		// lecture première ligne
-		openFile >> buildingsToPlace;
-
-		for (int i = 0; i < buildingsToPlace; i++)
+		if (!(openFile.peek() == ifstream::traits_type::eof()))
 		{
-			openFile >> buildingNum >> row >> col;
+			// lecture première ligne
+			openFile >> buildingsToPlace;
 
-			building = project.buildings[buildingNum];
-			// SI le building ne peut pas être placé, la solution est invalide
-			if (!city->placeBuilding(building, row, col))
+			for (int i = 0; i < buildingsToPlace; i++)
 			{
-				cout << "Solution invalide: au moins 2 bâtiments se chevauchent" << endl;
-				exit(0);
+				openFile >> buildingNum >> row >> col;
+
+				building = project.buildings[buildingNum];
+				// SI le building ne peut pas être placé, la solution est invalide
+				if (!city->placeBuilding(building, row, col))
+				{
+					cout << "Invalid solution: at least 2 buildings are on top of each other" << endl;
+					city->setScore(0);
+					break;
+				}
 			}
 		}
+		else
+			cout << "The solution file is empty" << endl;
 	}
 	else
-		cout << "Le fichier de solution n'existe pas" << endl;
-
+		cout << "The solution file doesn't exist" << endl;
 }
