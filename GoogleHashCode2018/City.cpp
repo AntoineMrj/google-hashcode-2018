@@ -102,7 +102,7 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 		for (auto coord : placedBuilding.source->getInfluenceArea())
 		{
 			Coord temp_coord = {coord.row+int(row),coord.column+int(col)};
-			if(temp_coord.row>=0&&temp_coord.row<int(height)&&temp_coord.column>=0&&temp_coord.column<int(width))
+			if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > 0 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
 			{
 				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
 			}

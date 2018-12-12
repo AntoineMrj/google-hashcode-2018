@@ -49,8 +49,11 @@ void FileLoader::loadProject(string projectFile)
 						building->setCell(j,k, 1);
 				}
 			}
-			project.city->placeBuilding(project.buildings[0],0,0);
+			building->computeShape();
 		}
+			project.city->placeBuilding(project.buildings[0],0,0);
+			project.city->placeBuilding(project.buildings[1], 3, 0);
+			project.city->getScore();
 	}
 	else
 		cout << "Le fichier de projet n'existe pas" << endl;

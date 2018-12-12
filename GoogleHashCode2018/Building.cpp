@@ -12,8 +12,6 @@ Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int 
 	this->occupiedCells = new int*[rowNum_];
 	for(unsigned int i = 0;i<this->rowNum;i++)
 		this->occupiedCells[i] = new int[columnNum_];
-	shape = this->getShape();
-	this->buildInfluenceArea();
 }
 
 Building::Building(const Building &b)
@@ -69,58 +67,67 @@ int Building::getCell(unsigned int row, unsigned int column)
 {
 	return this->occupiedCells[row][column];
 }
-
+void Building::computeShape()
+{
+	shape = this->getShape();
+	this->buildInfluenceArea();
+}
 vector<Coord> Building::getShape()
 {
 	Coord coord;
-	Coord coords; // coord start
-	coords.row = 0;
-	coords.column = 0;
-
-	if (occupiedCells[0][0] == 0) {
-		for (unsigned int i = 1; i < this->columnNum; i++) {
-			if (occupiedCells[0][i] == 1) {
-				coords.column = i;
-				break;
-			}
-		}
-	}
-
-	coord.row = coords.row;
-	coord.column = coords.column;
+	std::vector<Coord> Top;
+	std::vector<Coord> Bottom;
+	std::vector<Coord> Left;
+	std::vector<Coord> Right;
 
 	vector<Coord> res; //tableau resultat
-	res.push_back(coord);
 
-	unsigned int z = 0;
+	bool first=true;
 
-	do
+	bool begin_middle=true;
+
+	bool end=false;
+
+	for(int i=0;i<rowNum;i++)
 	{
-		if (coord.row-1 >= 0 && occupiedCells[coord.row-1][coord.column] == 1 && !cellInRes(coord.row -1, coord.column, res)) {
-			coord.row -= 1;
+		if(i==rowNum-1)
+			end=true;
+		for(int j=0;j<columnNum;j++)
+		{
+			if(first&&occupiedCells[i][j])
+			{
+				Top.push_back({i,j});
+			}
+			if(!first&&!end)
+			{
+				if (begin_middle && occupiedCells[i][j])
+				{
+					Left.push_back({i,j});
+					begin_middle=false;
+				}
+				else if (occupiedCells[i][j])
+				{
+					coord={i,j};
+				}
+			}
+			if(end&&occupiedCells[i][j])
+			{
+				Bottom.push_back({i,j});
+			}
 		}
-		else if (coord.column+1 <= columnNum && occupiedCells[coord.row][coord.column + 1] == 1 && !cellInRes(coord.row, coord.column+1, res)) {
-			coord.column += 1;
+		if(!first&&!end)
+		{
+			Right.push_back(coord);
+			begin_middle=true;
 		}
-		else if (coord.row+1 <= rowNum && occupiedCells[coord.row + 1][coord.column] == 1 && !cellInRes(coord.row+1, coord.column, res)) {
-			coord.row += 1;
-		}
-		else if (coord.column-1 >= 0 && occupiedCells[coord.row][coord.column - 1] == 1 && !cellInRes(coord.row, coord.column-1, res)) {
-			coord.column -= 1;
-		}
-		else { // no move available then go back
-			z--;
-			coord = res[z];
-		}
-
-		if (!cellInRes(coord.row, coord.column, res)) { // cell not in res then add
-			res.push_back(coord);
-			z = res.size()-1;
-		}
-
-	} while (coord.row != coords.row && coord.column != coords.column);
-
-	return res;
+		first=false;
+	}
+	std::reverse(Left.begin(),Left.end());
+	std::reverse(Bottom.begin(),Bottom.end());
+	Top.insert(Top.end(),Right.begin(),Right.end());
+	Top.insert(Top.end(),Bottom.begin(),Bottom.end());
+	Top.insert(Top.end(),Left.begin(),Left.end() );
+	return Top;
 }
 
 bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result) 

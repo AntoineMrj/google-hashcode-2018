@@ -3,6 +3,7 @@
 #include <functional>
 #include <iostream>
 #include <set>
+#include <algorithm>
 class Coord;
 
 using namespace std;
@@ -30,9 +31,8 @@ public:
 
 	void setCell(unsigned int row, unsigned int column, int value);
 	void setProjectNum(unsigned int projectNum_);
-
 	bool cellInRes(unsigned int row, unsigned int column, vector<Coord> result);
-
+	void computeShape();
 	Building_type getType();
  protected:
 	unsigned int projectNum;
