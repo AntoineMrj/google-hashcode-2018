@@ -22,7 +22,7 @@ void FileLoader::loadProject(string projectFile)
 	if (openFile)
 	{
 		//lecture de la première ligne
-		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects;
+		openFile >> width >> height >> maxWalkingDistance >> nbOfBuildingProjects;
 		project.setCity(width, height);
 		project.setMaxWalkingDistance(maxWalkingDistance);
 		//Lecture des buildings

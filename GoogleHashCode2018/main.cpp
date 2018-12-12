@@ -16,12 +16,10 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		std::string projectPath(argv[1]);
-		std::string solutionOuput(argv[2]);
-		FileLoader::loadProject(argv[1]);
-
-		std::ofstream outfile(solutionOuput); //creation du fichier solution
-		outfile.close();
+		//std::string projectPath(argv[1]);
+		//std::string solutionOuput(argv[2]);
+		//FileLoader::loadProject(argv[1]);
+		FileLoader::loadSolution("GoogleHashCode2018/input/a_example.in", "GoogleHashCode2018/input/a.out");
 	}
 
 	return EXIT_SUCCESS;
