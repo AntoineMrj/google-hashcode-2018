@@ -34,7 +34,12 @@ void Project::setCity(unsigned int width, unsigned int height)
 {
 	city = new City(height,width);
 }
-
+/**
+ * @brief
+ * Set the maximal walking distance of this city.
+ * Define at the same time all coordinates relative to a case that can be accesible.
+ * @param MaxWD 
+ */
 void Project::setMaxWalkingDistance(int MaxWD)
 {
 	int width = 0;

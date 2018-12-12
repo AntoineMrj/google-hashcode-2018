@@ -16,6 +16,9 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
+		/**
+		 *Load the project passed in arguments.
+		 */
 		std::string projectPath(argv[1]);
 		FileLoader::loadProject(argv[1]);
 	}

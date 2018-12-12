@@ -41,7 +41,12 @@ Building& Building::operator=(Building const& buildingB)
 	extra = buildingB.extra;
 	return *this;
 }
-
+/**
+ * @brief
+ * Assign a 2D int array to the oocupied cells of this building.
+ * The size of the array must correspond with the one of the building.
+ * @param array 
+ */
 void Building::assignArray(int **array)
 {
 	for(unsigned int i = 0;i<rowNum;i++)
@@ -52,26 +57,52 @@ void Building::assignArray(int **array)
 	shape = this->getShape();
 	this->buildInfluenceArea();
 }
-
+/**
+ * @brief
+ * Assign a value to a cell of the occupiedCells Array
+ * @param row
+ * @param column 
+ * @param value 
+ */
 void Building::setCell(unsigned int row, unsigned int column, int value)
 {
 	occupiedCells[row][column]=value;
 }
-
+/**
+ * @brief
+ * Set the project num of the building.
+ * @param projectNum_ 
+ */
 void Building::setProjectNum(unsigned int projectNum_)
 {
 	this->projectNum = projectNum_;
 }
-
+/**
+ * @brief
+ * Return the value of a cell of this building.
+ * @param row 
+ * @param column 
+ * @return int 
+ */
 int Building::getCell(unsigned int row, unsigned int column)
 {
 	return this->occupiedCells[row][column];
 }
+/**
+ * @brief
+ * Compute the shape and the influence area of the building
+ * This allow to gain time in cmputation when placing building on a city.
+ */
 void Building::computeShape()
 {
 	shape = this->getShape();
 	this->buildInfluenceArea();
 }
+/**
+ * @brief
+ * Algorithm determining the shape of a building
+ * @return vector<Coord> 
+ */
 vector<Coord> Building::getShape()
 {
 	Coord coord;
@@ -142,6 +173,11 @@ bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> re
 	}
 	return false;
 }
+/**
+ * @brief
+ * Determine all Coordinates relative to the top left corner of the building
+ * that will affect the other building on a city
+ */
 void Building::buildInfluenceArea()
 {
 	Project& p = Project::globalProject;
