@@ -51,10 +51,6 @@ void FileLoader::loadProject(string projectFile)
 			}
 			building->computeShape();
 		}
-		project.city->placeBuilding(project.buildings[0], 0, 0);
-		project.city->placeBuilding(project.buildings[1], 3, 0);
-		project.city->placeBuilding(project.buildings[2], 0, 2);
-		std::cout << project.city->getScore() << std::endl;
 	}
 	else
 		cout << "Le fichier de projet n'existe pas" << endl;

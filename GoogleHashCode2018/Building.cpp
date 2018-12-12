@@ -87,7 +87,6 @@ vector<Coord> Building::getShape()
 	bool begin_middle=true;
 
 	bool end=false;
-	std::cout << "BITE" << std::endl;
 
 	for(int i=0;i<rowNum;i++)
 	{
