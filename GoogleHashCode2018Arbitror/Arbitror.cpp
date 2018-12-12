@@ -20,8 +20,8 @@ Arbitror::Arbitror(string projectFile, string solutionFile)
 void Arbitror::evaluate()
 {
 	FileLoader::loadSolution(this->projectFile, this->solutionFile);
-	this->city = Project::globalProject.city;
-	this->score = city->getScore();
+	//this->city = Project::globalProject.city;
+	this->score = Project::globalProject.city->getScore();
 }
 
 /*
