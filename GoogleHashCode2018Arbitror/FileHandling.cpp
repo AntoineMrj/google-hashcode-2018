@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "FileHandling.h"
 #ifdef _WIN32
 #include <windows.h>

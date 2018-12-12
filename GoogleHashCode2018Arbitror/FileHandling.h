@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <string>
-#include <vector>
 
 class FileHandling
 {
@@ -39,18 +38,18 @@ private:
 	DIRHANDLE hDir;
 };
 
-std::vector<std::string> IterateOnFileDir(const char *baseDir)
+template <class F>
+void IterateOnFileDir(const char *baseDir, F &func)
 {
-	std::vector<std::string> executables;
 	std::string fileName;
 
 	FileHandling dirList(baseDir);
-	int i = 0;
+
 	while (dirList.GetNextFile(fileName))
 	{
 		std::string file(baseDir);
-		file += fileName;
-		executables.push_back(file);
+		file +=  "/" + fileName;
+
+		func(file);
 	}
-	return executables;
 }

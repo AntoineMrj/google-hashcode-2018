@@ -13,6 +13,20 @@
 using namespace std;
 
 /*
+	Vector that contains the executables
+*/
+vector<string> executables;
+
+/*
+	Method that insert the executable files in a vector
+*/
+void handleExecutables(string file)
+{
+	cout << file << endl; //debug
+	executables.push_back(file);
+}
+
+/*
 	Method that calculates the execution time of the solution's computation
 */
 double computeExecutionTime(const string command)
@@ -48,8 +62,7 @@ int main(int argc, char **argv)
 		}
 		
 		//We iterate through the directory
-		vector<string> executables;
-		executables = IterateOnFileDir(executableDirectory);
+		IterateOnFileDir(executableDirectory, handleExecutables);
 
 		Arbitror arbitror;
 		vector<pair<int, double>> result;
@@ -59,6 +72,9 @@ int main(int argc, char **argv)
 			arbitror = Arbitror("project1", "solution");
 			double mean = 0;
 			const string command = file + " solution";
+
+			cout << command << endl; //debug
+
 			for (int i = 0; i < NUMBER_EXEC; i++)
 			{
 				mean += computeExecutionTime(command);
@@ -72,6 +88,7 @@ int main(int argc, char **argv)
 		// Writing the results in the output file
 		ofstream outputFile;
 		outputFile.open(argv[2]);
+		outputFile << "Table of the sorted results" << endl;
 		for (int i = 0; i < result.size(); i++)
 		{
 			outputFile << "Score: " << result[i].first
