@@ -60,6 +60,7 @@ public:
 	int getMapCell(int row, int col);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	int getScore();
+	void setScore(int score);
 	void PrintMap();
 private:
 	unsigned int width;

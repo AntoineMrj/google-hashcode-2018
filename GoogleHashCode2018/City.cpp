@@ -193,6 +193,11 @@ int City::getScore()
 {
 	return score;
 }
+
+void City::setScore(int score)
+{
+	this->score = score;
+}
 /*
 	Return Manhattan distance between 2 Coord objects
 */
