@@ -16,10 +16,8 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		//std::string projectPath(argv[1]);
-		//std::string solutionOuput(argv[2]);
-		//FileLoader::loadProject(argv[1]);
-		FileLoader::loadSolution("GoogleHashCode2018/input/a_example.in", "GoogleHashCode2018/input/a.out");
+		std::string projectPath(argv[1]);
+		FileLoader::loadProject(argv[1]);
 	}
 
 	return EXIT_SUCCESS;
