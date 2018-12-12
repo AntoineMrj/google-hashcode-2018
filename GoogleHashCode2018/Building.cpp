@@ -96,16 +96,16 @@ vector<Coord> Building::getShape()
 
 	do
 	{
-		if (occupiedCells[coord.row-1][coord.column] == 1 && !cellInRes(coord.row -1, coord.column, res)) {
+		if (coord.row-1 >= 0 && occupiedCells[coord.row-1][coord.column] == 1 && !cellInRes(coord.row -1, coord.column, res)) {
 			coord.row -= 1;
 		}
-		else if (occupiedCells[coord.row][coord.column + 1] == 1 && !cellInRes(coord.row, coord.column+1, res)) {
+		else if (coord.column+1 <= columnNum && occupiedCells[coord.row][coord.column + 1] == 1 && !cellInRes(coord.row, coord.column+1, res)) {
 			coord.column += 1;
 		}
-		else if (occupiedCells[coord.row + 1][coord.column] == 1 && !cellInRes(coord.row+1, coord.column, res)) {
+		else if (coord.row+1 <= rowNum && occupiedCells[coord.row + 1][coord.column] == 1 && !cellInRes(coord.row+1, coord.column, res)) {
 			coord.row += 1;
 		}
-		else if (occupiedCells[coord.row][coord.column - 1] == 1 && !cellInRes(coord.row, coord.column-1, res)) {
+		else if (coord.column-1 >= 0 && occupiedCells[coord.row][coord.column - 1] == 1 && !cellInRes(coord.row, coord.column-1, res)) {
 			coord.column -= 1;
 		}
 		else { // no move available then go back
