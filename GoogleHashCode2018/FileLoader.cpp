@@ -2,10 +2,12 @@
 
 using namespace std;
 
-/*
-	Chargement du fichier de projet pour créer le projet, la carte et 
-	tous les buildings disponibles
-*/
+/**
+ * Function that loads the project file to create the project, the map and the buildings
+ *
+ * @param projectFile
+ * @param solutionFile
+ */
 void FileLoader::loadProject(string projectFile)
 {
 	Project& project = Project::globalProject;
@@ -18,14 +20,14 @@ void FileLoader::loadProject(string projectFile)
 	string currentLine, projectType;
 	vector<int> residential, utilities;
 
-	//si le fichier existe
+	// We check if the file exists
 	if (openFile)
 	{
-		//lecture de la première ligne
+		// Reading the first line
 		openFile >> height >> width >> maxWalkingDistance >> nbOfBuildingProjects;
 		project.setCity(height, width);
 		project.setMaxWalkingDistance(maxWalkingDistance);
-		//Lecture des buildings
+		// Reading the buildings
 		for(int i = 0; i < nbOfBuildingProjects; i++) {
 			openFile >> projectType >> rowNum >> columnNum >> capacity;
 
@@ -38,7 +40,7 @@ void FileLoader::loadProject(string projectFile)
 				project.addUtility(building);
 			}
 
-			//Construction de la liste de cellules occupées
+			// Construction of the occupied cells list
 			for (int j = 0; j < rowNum; j++) {
 				for (int k = 0; k < columnNum; k++)
 				{
@@ -56,10 +58,12 @@ void FileLoader::loadProject(string projectFile)
 		cout << "The project file doesn't exist" << endl;
 }
 
-/*
-	Chargement du fichier de solution pour placer les buildings choisis sur la
-	map de la classe city
-*/
+/**
+ * Function that loads the solution file to place the buildings on the map of the city class
+ *
+ * @param projectFile
+ * @param solutionFile
+ */
 void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 {
 	Project& project = Project::globalProject;
@@ -71,20 +75,23 @@ void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 	int buildingsToPlace, buildingNum, row, col;
 
 	ifstream openFile(solutionFile);
+	// We check if the file exists
 
 	if (openFile)
 	{
+		// We check if the file is empty
 		if (!(openFile.peek() == ifstream::traits_type::eof()))
 		{
-			// lecture première ligne
+			// Reading the first line
 			openFile >> buildingsToPlace;
 
+			// Reading all the other lines
 			for (int i = 0; i < buildingsToPlace; i++)
 			{
 				openFile >> buildingNum >> row >> col;
 
 				building = project.buildings[buildingNum];
-				// SI le building ne peut pas être placé, la solution est invalide
+				// If the building can't be placed, the solution is invalid
 				if (!city->placeBuilding(building, row, col))
 				{
 					cout << "Invalid solution: at least 2 buildings are on top of each other" << endl;

@@ -15,27 +15,32 @@
 
 using namespace std;
 
-/*
-	Vector that contains the executables
-*/
+/**
+ * Vector that contains the executables
+ */
 vector<string> executables;
-/*
-	Arbitror object
-*/
+/**
+ * Arbitror object
+ */
 Arbitror arbitror;
 
-/*
-	Method that insert the executable files in a vector
-*/
+/**
+ * Method that insert the executable files in a vector
+ *
+ * @param file
+ */
 void handleExecutables(string file)
 {
 	cout << file << endl; //debug
 	executables.push_back(file);
 }
 
-/*
-	Method that calculates the execution time and the score of the solution's computation
-*/
+/**
+ * Method that calculates the execution time and the score of the solution's computation
+ *
+ * @param command
+ * @return pair<int, double>	the pair containing the socre and execution time of the executable
+ */
 pair<int, double> computeExecutionTime(const string command)
 {	
 	cout << "command: " << command << endl; //debug
@@ -51,9 +56,12 @@ pair<int, double> computeExecutionTime(const string command)
 	return make_pair(arbitror.getScore(), executionTime.count());
 }
 
-/*
-	Main function
-*/
+/**
+ * Main function
+ *
+ * @param argc
+ * @param argv
+ */
 int main(int argc, char **argv)
 {
 	// We check the number of arguments
@@ -65,7 +73,7 @@ int main(int argc, char **argv)
 		// We check if the second argument is a directory
 		if (!((GetFileAttributesA(executableDirectory) & FILE_ATTRIBUTE_DIRECTORY) != 0))
 		{
-			cout << "Error: the second argument is not a directory" << endl;
+			cerr << "Error: the second argument is not a directory" << endl;
 			cout << "Usage: " << argv[0] << " [executablesDirectory] [outputFile]" << endl;
 			exit(0);
 		}
@@ -115,14 +123,3 @@ int main(int argc, char **argv)
 
 	return EXIT_SUCCESS;
 }
-
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
-
-// Conseils pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
