@@ -1,10 +1,17 @@
 #include"City.h"
 #include "Project.h"
 
-
-
-
-PlacedBuilding::PlacedBuilding(Building*buildingNum)
+PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
+{
+	position = P.position;
+	for (auto pair : *(P.connectedUtility))
+	{
+		(*connectedUtility)[pair.first] = (pair.second);
+	}
+	source = P.source;
+	accumulatedScore = P.accumulatedScore;
+}
+	PlacedBuilding::PlacedBuilding(Building *buildingNum)
 {
 	this->source = buildingNum;
 	accumulatedScore = 0;
@@ -16,6 +23,16 @@ PlacedBuilding::PlacedBuilding(Building*buildingNum)
 			(*connectedUtility)[i] = false;
 		}
 	}
+}
+PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
+{
+	position = P.position + C;
+	for (auto pair : *(P.connectedUtility))
+	{
+		(*connectedUtility)[pair.first] = (pair.second);
+	}
+	source = P.source;
+	accumulatedScore = P.accumulatedScore;
 }
 /**
  * @brief
@@ -58,15 +75,128 @@ City::City(unsigned int w, unsigned int h)
 	}
 	score = 0;
 }
-
-/*
+/**
+ * @brief Construct a new City:: City object
+ * Copy constructor
+ * @param c 
+ */
+City::City(City& c)
+{
+	width=c.width;
+	height=c.height;
+	map=new int*[height];
+	for(unsigned int a=0;a<height;a++)
+		map[a]=new int[width];
+	for (unsigned int i = 0; i < height; i++)
+	{
+		for (unsigned int j = 0; j < width; j++)
+		{
+			map[i][j] = c.map[i][j];
+		}
+	}
+	for (PlacedBuilding P : c.placedBuildingRegister)
+	{
+		placedBuildingRegister.push_back(P);
+		switch (P.source->getType())
+		{
+		case Residential:
+			registeredResidentials.push_back(&placedBuildingRegister.back());
+			break;
+		case Utility:
+			registeredUtilities.push_back(&placedBuildingRegister.back());
+			break;
+		}
+	}
+	score = c.score;
+}
+/**
+ * @brief
+ * Assignation operator
+ * @param c 
+ * @return City& 
+ */
+City& City::operator=(City& c)
+{
+	width = c.width;
+	height = c.height;
+	map = new int *[height];
+	for (unsigned int a = 0; a < height; a++)
+		map[a] = new int[width];
+	for (unsigned int i = 0; i < height; i++)
+	{
+		for (unsigned int j = 0; j < width; j++)
+		{
+			map[i][j] = c.map[i][j];
+		}
+	}
+	for(PlacedBuilding P:c.placedBuildingRegister)
+	{
+		placedBuildingRegister.push_back(P);
+		switch(P.source->getType())
+		{
+			case Residential:
+				registeredResidentials.push_back(&placedBuildingRegister.back());
+			break;
+			case Utility:
+				registeredUtilities.push_back(&placedBuildingRegister.back());
+				break;
+		}
+	}
+	score = c.score;
+	return *this;
+}
+/**
+ * @brief Construct a new City object from an other
+ *
+ * @param h
+ * @param w 
+ * @param c 
+ * @param row 
+ * @param col 
+ */
+City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int col)
+{
+	this->width = w;
+	this->height = h;
+	map = new int *[h]; // Type de la varibale map à modifier
+	for (unsigned int a = 0; a < h; a++)
+	{
+		map[a] = new int[w];
+	}
+	placeMap(c,row,col);
+}
+/**
+ * @brief
+ * Insert a city in an other bigger
+ * @param c 
+ * @param row 
+ * @param col
+ * @return true
+ * @return false 
+ */
+bool City::placeMap(City &c, unsigned int row, unsigned int col)
+{
+	for (PlacedBuilding P : c.placedBuildingRegister)
+	{
+		if(!placeBuilding(P.source,row,col))
+			return false;
+	}
+}
+	/*
 	Place a building on the map
-	@return true if it's possible, otherwise false
+	The try argument determine if it's just a test of placement instead of a placing.
+	@return the coverage ration of the building
+	if it's 0, this mean an error occured,
+	else the closest it is from 1, the more the placement is optimized.
 */
-bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
+	double City::placeBuilding(Building *building, unsigned int row, unsigned int col,bool test)
+{
 	int num = this->placedBuildingRegister.size();
 	unsigned int row_temp;
 	unsigned int col_temp;
+	//Unité de mesure du placement
+	double coverage = 0;
+	int maxCoverage = building->getColumnNum()*building->getRowNum();
 	bool stop = false;
 	// On check les cellules que prend le building
 	for (row_temp = row; row_temp < row + building->getRowNum() && !stop; row_temp++)
@@ -87,15 +217,21 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 					break;
 				}
 				// On met le numéro du building sur les cases qu'il prend sur la map
-				this->setMapCell(row_temp, col_temp, num);
+				if(!test)
+					this->setMapCell(row_temp, col_temp, num);
+				coverage++;
+			}
+			else if (this->getMapCell(row_temp, col_temp) != -1)
+			{
+				coverage++;
 			}
 		}
 		if(stop)
 			break;
 	}
-	if(!stop)
+	if(!stop && !test)
 	{
-		PlacedBuilding placedBuilding = PlacedBuilding(building);
+		PlacedBuilding placedBuilding(building);
 		placedBuilding.position = Coord(row, col);
 		placedBuildingRegister.push_back(placedBuilding);
 		switch(building->getType())
@@ -116,9 +252,9 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
 			}
 		}
-		return true;
+		return coverage/maxCoverage;
 	}
-	else
+	else if(!test)
 	{
 		// Annulation du placement
 		unsigned int row_recover = row_temp--;
@@ -132,8 +268,12 @@ bool City::placeBuilding(Building* building,unsigned int row,unsigned int col) {
 			}
 			col_recover = col + building->getColumnNum();
 		}
-		return false;
+		return 0;
 	}
+	else if(test && stop)
+		return 0;
+	else
+		return coverage / maxCoverage;
 }
 /**
  * @brief
@@ -186,6 +326,23 @@ void City::PrintMap()
 		std::cout << std::endl;
 	}
 }
+
+
+/*
+	Save the city into a file
+*/
+ void City::toSolution(string outfileName)
+ {
+	 std::ofstream outfile(outfileName);
+	 outfile << placedBuildingRegister.size() << std::endl;
+	 for (int i = 0; i < placedBuildingRegister.size(); i++)
+	 {
+		 outfile << placedBuildingRegister.at(i).source->getProjectNum() << " " << placedBuildingRegister.at(i).position.row << " " << placedBuildingRegister.at(i).position.column << std::endl;
+	 }
+	 outfile.close();
+ }
+
+
 /*
 	Modify the value of the map's cell in parameter
 */
@@ -231,6 +388,12 @@ void City::setScore(int score)
 int Coord::coordManhattanDistance(const Coord & coord)
 {
 	return abs(int(coord.row) - int(this->row)) + abs(int(coord.column) - int(this->column));
+}
+
+
+Coord operator+(const Coord& A,const Coord& B)
+{
+	return {A.row+B.row,A.column+B.column};
 }
 
 bool operator<(const Coord A, const Coord B)

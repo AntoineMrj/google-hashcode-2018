@@ -21,6 +21,10 @@ int main(int argc, char* argv[])
 		 */
 		std::string projectPath(argv[1]);
 		FileLoader::loadProject(argv[1]);
+
+		Project::globalProject.city->placeBuilding(Project::globalProject.buildings.at(0), 0, 0);
+		std::cout << Project::globalProject.buildings.size() << std::endl;
+		Project::globalProject.city->toSolution("solution.txt");
 	}
 
 	return EXIT_SUCCESS;
