@@ -28,6 +28,7 @@ struct Coord
 	int column;
 	int coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
 };
+Coord operator+(const Coord& A,const Coord& B);
 bool operator==(const Coord& A,const Coord& B);
 bool operator<(const Coord A,const Coord B);
 /*
@@ -41,6 +42,8 @@ struct PlacedBuilding
 	}
 
 	PlacedBuilding(Building* buildingNum);
+	PlacedBuilding(const PlacedBuilding& P);
+	PlacedBuilding(PlacedBuilding& P,Coord C={0,0});
 	//Uniquement utilisable par un residential
 	int use(unsigned int utilityType);
 	std::map<unsigned int,bool>* connectedUtility;
@@ -54,8 +57,11 @@ class City {
 public:
 	City();
 	City(unsigned int h,unsigned int w);
-	bool placeBuilding(Building* building,unsigned int row,unsigned int col);
-
+	City(City& c);
+	virtual City& operator=(City& c);
+	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
+	bool placeMap(City& c,unsigned int row,unsigned int col);
+	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=false);
 	void setMapCell(int row, int col, int value);
 	int getMapCell(int row, int col);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
