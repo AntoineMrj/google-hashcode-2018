@@ -170,8 +170,8 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
  * Insert a city in an other bigger
  * @param c 
  * @param row 
- * @param col 
- * @return true 
+ * @param col
+ * @return true
  * @return false 
  */
 bool City::placeMap(City &c, unsigned int row, unsigned int col)
@@ -184,6 +184,7 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 }
 	/*
 	Place a building on the map
+	The try argument determine if it's just a test of placement instead of a placing.
 	@return the coverage ration of the building
 	if it's 0, this mean an error occured,
 	else the closest it is from 1, the more the placement is optimized.
@@ -269,7 +270,10 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 		}
 		return 0;
 	}
-	return 0;
+	else if(test && stop)
+		return 0;
+	else
+		return coverage / maxCoverage;
 }
 /**
  * @brief
