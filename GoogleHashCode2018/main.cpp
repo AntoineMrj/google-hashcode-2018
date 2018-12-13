@@ -1,30 +1,46 @@
 #include <iostream>
 #include "FileLoader.h"
 #include <algorithm>
+
+using namespace std;
+
+/**
+ * Main function
+ *
+ * @param argc
+ * @param argv
+ */
 int main(int argc, char* argv[])
 {
-	
-	if(argc<3)
+	// We check if the number of arguments is correct
+	if (argc < 3)
 	{
-		std::cerr << "Erreur : Too fee arguments." << std::endl;
-		std::cout << "This program require 2 files path as input, first one for the project path, the second one for the output path." << std::endl;
+		cerr << "Error : Too few arguments." << endl;
+		cout << "Usage: " << argv[0] << " [projectFile] [outputFile]" << endl;
 	}
-	else if(argc>3)
+	else if (argc > 3)
 	{
-		std::cerr << "Erreur : Too much arguments." << std::endl;
-		std::cout << "This program require 2 files path as input, first one for the project path, the second one for the output path." << std::endl;
+		cerr << "Error : Too many arguments." << endl;
+		cout << "Usage: " << argv[0] << " [projectFile] [outputFile]" << endl;
 	}
 	else
 	{
-		/**
-		 *Load the project passed in arguments.
-		 */
-		std::string projectPath(argv[1]);
-		FileLoader::loadProject(argv[1]);
+		string projectPath(argv[1]);
+		string solutionPath(argv[2]);
+		
+		// Loading the project
+		FileLoader::loadProject(projectPath);
 
-		Project::globalProject.city->placeBuilding(Project::globalProject.buildings.at(0), 0, 0);
-		std::cout << Project::globalProject.buildings.size() << std::endl;
-		Project::globalProject.city->toSolution("solution.txt");
+		Project project = Project::globalProject;
+		project.setProjectFile(projectPath);
+		project.setSolutionFile(solutionPath);
+
+		// Placing the buildings
+		project.city->placeBuilding(project.buildings.at(0), 0, 0);
+		std::cout << project.buildings.size() << std::endl;
+
+		// Writing the solution in the solution file
+		project.city->toSolution(solutionPath);
 	}
 
 	return EXIT_SUCCESS;

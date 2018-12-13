@@ -41,6 +41,26 @@ int Arbitror::getScore()
 }
 
 /**
+ * Getter project file
+ *
+ * @return the project file
+ */
+string Arbitror::getProjectFile()
+{
+	return this->projectFile;
+}
+
+/**
+ * Getter solution file
+ *
+ * @return the solution file
+ */
+string Arbitror::getSolutionFile()
+{
+	return this->solutionFile;
+}
+
+/**
  * Destructor of the class
  */
 Arbitror::~Arbitror()
