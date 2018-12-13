@@ -59,3 +59,9 @@ void Project::setMaxWalkingDistance(int MaxWD)
 	}
 	this->maxWalkingDistance = MaxWD;
 }
+
+/*Building Project::getProjectById(unsigned int PId)
+{
+ //TO DO
+	return Building();
+}*/

@@ -326,6 +326,23 @@ void City::PrintMap()
 		std::cout << std::endl;
 	}
 }
+
+
+/*
+	Save the city into a file
+*/
+ void City::toSolution(string outfileName)
+ {
+	 std::ofstream outfile(outfileName);
+	 outfile << placedBuildingRegister.size() << std::endl;
+	 for (int i = 0; i < placedBuildingRegister.size(); i++)
+	 {
+		 outfile << placedBuildingRegister.at(i).source->getProjectNum() << " " << placedBuildingRegister.at(i).position.row << " " << placedBuildingRegister.at(i).position.column << std::endl;
+	 }
+	 outfile.close();
+ }
+
+
 /*
 	Modify the value of the map's cell in parameter
 */

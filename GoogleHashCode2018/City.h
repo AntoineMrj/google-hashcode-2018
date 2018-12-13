@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Building.h"
 #include <map>
+#include <fstream>
 //Pré déclaration des classes pour la double inclusion
 
 using namespace std;
@@ -68,6 +69,7 @@ public:
 	int getScore();
 	void setScore(int score);
 	void PrintMap();
+	void toSolution(string outfileName);
 private:
 	unsigned int width;
 	unsigned int height;
