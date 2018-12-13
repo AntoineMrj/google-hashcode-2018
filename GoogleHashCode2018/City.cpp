@@ -4,9 +4,13 @@
 PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 {
 	position = P.position;
-	for (auto pair : *(P.connectedUtility))
+	if(P.source->getType()==Residential)
 	{
-		(*connectedUtility)[pair.first] = (pair.second);
+		connectedUtility = new std::map<unsigned int, bool>();
+		for (auto pair : *(P.connectedUtility))
+		{
+			(*connectedUtility)[pair.first] = (pair.second);
+		}
 	}
 	source = P.source;
 	accumulatedScore = P.accumulatedScore;
@@ -27,9 +31,13 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
 {
 	position = P.position + C;
-	for (auto pair : *(P.connectedUtility))
+	if (P.source->getType() == Residential)
 	{
-		(*connectedUtility)[pair.first] = (pair.second);
+		connectedUtility = new std::map<unsigned int, bool>();
+		for (auto pair : *(P.connectedUtility))
+		{
+			(*connectedUtility)[pair.first] = (pair.second);
+		}
 	}
 	source = P.source;
 	accumulatedScore = P.accumulatedScore;

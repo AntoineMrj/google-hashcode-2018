@@ -20,9 +20,10 @@ int main(int argc, char* argv[])
 		 *Load the project passed in arguments.
 		 */
 		std::string projectPath(argv[1]);
-		FileLoader::loadProject(argv[1]);
+		FileLoader::loadProject(projectPath);
 
 		Project::globalProject.city->placeBuilding(Project::globalProject.buildings.at(0), 0, 0);
+		Project::globalProject.city->placeBuilding(Project::globalProject.buildings.at(1), 3, 0);
 		std::cout << Project::globalProject.buildings.size() << std::endl;
 		Project::globalProject.city->toSolution("solution.txt");
 	}
