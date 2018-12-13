@@ -25,7 +25,7 @@ vector<string> executables;
 Arbitror arbitror;
 
 /**
- * Method that insert the executable files in a vector
+ * Function that inserts the executable files in a vector
  *
  * @param file
  */
@@ -85,11 +85,13 @@ int main(int argc, char **argv)
 
 		for (auto file : executables)
 		{
-			arbitror = Arbitror("input/a_example.in", "solution");
+			arbitror = Arbitror(Project::globalProject.getProjectFile(), 
+				Project::globalProject.getSolutionFile());
 			double meanExecTime = 0;
 			int meanScore = 0;
 			pair<int, double> means;
-			const string command = file + " input/a_example.in solution_test";
+			const string command = file + " " + arbitror.getProjectFile() 
+				+ " "  + arbitror.getSolutionFile();
 
 			// We compute the execution time of each execution of one executable
 			// to have a mean, same for the score

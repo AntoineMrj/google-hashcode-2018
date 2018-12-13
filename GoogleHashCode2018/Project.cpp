@@ -1,5 +1,7 @@
 #include "Project.h"
+
 Project Project::globalProject;
+
 Project::Project() {
 	this->buildings = vector<Building *>();
 	this->residentials = vector<int>();
@@ -12,6 +14,26 @@ Project::Project(City* city_)
 	this->buildings = vector<Building*>();
 	this->residentials =vector<int>();
 	this->utilities = vector<int>();
+}
+
+void Project::setProjectFile(std::string projectFile)
+{
+	this->projectFile = projectFile;
+}
+
+void Project::setSolutionFile(std::string solutionFile)
+{
+	this->solutionFile = solutionFile;
+}
+
+std::string Project::getProjectFile()
+{
+	return this->projectFile;
+}
+
+std::string Project::getSolutionFile()
+{
+	return this->solutionFile;
 }
 
 void Project::addUtility(Building *u)

@@ -16,6 +16,8 @@ public:
 
 	void evaluate();
 	int getScore();
+	std::string getProjectFile();
+	std::string getSolutionFile();
 
 	~Arbitror();
 };

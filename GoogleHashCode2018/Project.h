@@ -2,6 +2,7 @@
 #include "City.h"
 #include <vector>
 #include <set>
+#include <string>
 
 using namespace std;
 //Il faudrait rendre la classe static pour faire le lien entre les Places
@@ -9,6 +10,9 @@ using namespace std;
 //Sinon il va falloir lier une city à un project
 class Project
 {
+private:
+	std::string projectFile;
+	std::string solutionFile;
 public:
 	static Project globalProject;
 	City* city;
@@ -18,6 +22,10 @@ public:
 	Project();
 	Project(City* city_); // liste des utilities faisant reference a l index dans building
 
+	void setProjectFile(std::string projectFile);
+	void setSolutionFile(std::string solutionFile);
+	std::string getProjectFile();
+	std::string getSolutionFile();
 	void setCity(unsigned int width,unsigned int height);
 	void addUtility(Building* b);
 	void addResidential(Building *r);
