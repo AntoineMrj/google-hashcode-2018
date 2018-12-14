@@ -4,7 +4,6 @@
 
 Solver::Solver(Project project)
 {
-	/*
 	unsigned int x, y;
 	unsigned int x_tmp, y_tmp;
 	PlacedBuilding B_tmp, A;
@@ -24,7 +23,7 @@ Solver::Solver(Project project)
 		}
 		else {
 			B_tmp = B;
-			while (c!=10) // on essaie 10 positions différentes
+			while (c != 10) // on essaie 10 positions différentes
 			{
 				x_tmp = rand() % project.city->getCityHeight();
 				y_tmp = rand() % project.city->getCityWidth();
@@ -46,12 +45,7 @@ Solver::Solver(Project project)
 			c = 0;
 		}
 		A = B;
-	}*/
-	std::cout << project.city->placeBuilding(project.buildings.at(0), 0, 0) << std::endl;
-	std::cout << project.city->placeBuilding(project.buildings.at(0), 0, 2) << std::endl;
-	std::cout << project.city->placeBuilding(project.buildings.at(2), 0, 4) << std::endl;
-	std::cout << project.city->placeBuilding(project.buildings.at(2), 2, 4) << std::endl;
-	std::cout << project.city->placeBuilding(project.buildings.at(1), 3, 0) << std::endl;
+	}
 }
 
 
