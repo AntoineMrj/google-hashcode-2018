@@ -1,6 +1,7 @@
 #include <iostream>
 #include "FileLoader.h"
 #include <algorithm>
+#include "Solver.h"
 
 using namespace std;
 
@@ -35,9 +36,11 @@ int main(int argc, char* argv[])
 		project.setProjectFile(projectPath);
 		project.setSolutionFile(solutionPath);
 
+		/*
 		// Placing the buildings
 		project.city->placeBuilding(project.buildings.at(0), 0, 0);
-		std::cout << project.buildings.size() << std::endl;
+		std::cout << project.buildings.size() << std::endl;*/
+		Solver::Solver(project);
 
 		// Writing the solution in the solution file
 		project.city->toSolution(solutionPath);
