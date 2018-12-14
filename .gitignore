@@ -263,3 +263,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# Other
+solution
+solution.txt
+result
+result.txt
