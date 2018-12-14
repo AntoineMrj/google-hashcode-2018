@@ -1,8 +1,10 @@
 #pragma once
+#include "Project.h"
+
 class Solver
 {
 public:
-	Solver();
+	Solver(Project project);
 	~Solver();
 };
 

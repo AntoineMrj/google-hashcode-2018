@@ -70,6 +70,9 @@ public:
 	void setScore(int score);
 	void PrintMap();
 	void toSolution(string outfileName);
+	unsigned int getCityWidth() { return width; }
+	unsigned int getCityHeight() { return height; }
+
 private:
 	unsigned int width;
 	unsigned int height;
