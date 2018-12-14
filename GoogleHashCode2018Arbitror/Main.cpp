@@ -53,6 +53,8 @@ pair<int, double> computeExecutionTime(const string command)
 	// Execution time
 	chrono::duration<double> executionTime = end - start;
 
+	// We evaluate the solution to return the score
+	arbitror.evaluate();
 	return make_pair(arbitror.getScore(), executionTime.count());
 }
 
@@ -67,6 +69,12 @@ int main(int argc, char **argv)
 	// We check the number of arguments
 	if (argc == 3)
 	{
+		Project project = Project::globalProject;
+		// We set the input file of the project here
+		project.setProjectFile("input/a_example.in");
+		// We set the solution file of the project here
+		project.setSolutionFile("solution.txt");
+
 		const char * executableDirectory;
 		executableDirectory = argv[1];
 
@@ -85,8 +93,7 @@ int main(int argc, char **argv)
 
 		for (auto file : executables)
 		{
-			arbitror = Arbitror(Project::globalProject.getProjectFile(), 
-				Project::globalProject.getSolutionFile());
+			arbitror = Arbitror(project.getProjectFile(), project.getSolutionFile());
 			double meanExecTime = 0;
 			int meanScore = 0;
 			pair<int, double> means;

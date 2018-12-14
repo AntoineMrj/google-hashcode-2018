@@ -10,7 +10,7 @@ Arbitror::Arbitror()
 }
 
 /**
- * Constructor that set the score to 0 and evaluate a solution
+ * Constructor that set the score to 0
  *
  * @param projectFile
  * @param solutionFile
@@ -20,7 +20,6 @@ Arbitror::Arbitror(string projectFile, string solutionFile)
 	this->projectFile = projectFile;
 	this->solutionFile = solutionFile;
 	this->score = 0;
-	this->evaluate();
 }
 
 /**
