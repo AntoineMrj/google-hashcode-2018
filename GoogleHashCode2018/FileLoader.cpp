@@ -75,8 +75,8 @@ void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 	int buildingsToPlace, buildingNum, row, col;
 
 	ifstream openFile(solutionFile);
-	// We check if the file exists
 
+	// We check if the file exists
 	if (openFile)
 	{
 		// We check if the file is empty
