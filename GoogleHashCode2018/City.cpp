@@ -22,9 +22,9 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	if (buildingNum->getType() == Residential)
 	{
 		connectedUtility = new std::map<unsigned int, bool>();
-		for (unsigned int i : Project::globalProject.UtilitiesReferences)
+		for (auto i : Project::globalProject.utilities)
 		{
-			(*connectedUtility)[i] = false;
+			(*connectedUtility)[i.first] = false;
 		}
 	}
 }
@@ -71,6 +71,7 @@ City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
+	remainingCell = width * height;
 	map = new int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++) {
 	map[a] = new int[w];
@@ -79,6 +80,13 @@ City::City(unsigned int w, unsigned int h)
 		for (unsigned int j = 0; j < w; j++)
 		{
 			map[i][j] = -1;
+		}
+	}
+	for (int i = 0; i < getCityHeight(); i++)
+	{
+		for (int j = 0; j < getCityWidth(); j++)
+		{
+			RemainingCellsList.insert({i, j});
 		}
 	}
 	score = 0;
@@ -92,9 +100,11 @@ City::City(City& c)
 {
 	width=c.width;
 	height=c.height;
+	remainingCell = width*height;
 	map=new int*[height];
 	for(unsigned int a=0;a<height;a++)
 		map[a]=new int[width];
+	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
 		for (unsigned int j = 0; j < width; j++)
@@ -127,9 +137,11 @@ City& City::operator=(City& c)
 {
 	width = c.width;
 	height = c.height;
+	remainingCell = width * height;
 	map = new int *[height];
 	for (unsigned int a = 0; a < height; a++)
 		map[a] = new int[width];
+	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
 		for (unsigned int j = 0; j < width; j++)
@@ -166,6 +178,7 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 {
 	this->width = w;
 	this->height = h;
+	remainingCell = width * height;
 	map = new int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++)
 	{
@@ -176,11 +189,11 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 /**
  * @brief
  * Insert a city in an other bigger
- * @param c 
+ * @param c
  * @param row 
  * @param col
  * @return true
- * @return false 
+ * @return false
  */
 bool City::placeMap(City &c, unsigned int row, unsigned int col)
 {
@@ -197,7 +210,66 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 	if it's 0, this mean an error occured,
 	else the closest it is from 1, the more the placement is optimized.
 */
-	double City::placeBuilding(Building *building, unsigned int row, unsigned int col,bool test)
+double City::placeBuilding(Building *building, unsigned int row, unsigned int col, bool test)
+{
+	int num = this->placedBuildingRegister.size();
+	unsigned int row_temp;
+	unsigned int col_temp;
+	//Unité de mesure du placement
+	double coverage = 0;
+	int maxCoverage = building->getColumnNum() * building->getRowNum();
+	bool stop = false;
+	// On check les cellules que prend le building
+	if(building->getColumnNum()+col<=width && building->getRowNum()+row<=height)
+	{
+		for(auto &c : building->getCases())
+		{
+			if (this->getMapCell(c.row+row, c.column+col) != -1)
+			{
+				return 0;
+				//Cas du chevauchement
+			}
+		}
+	}
+	else
+	{
+		return 0;
+	}
+	for (auto &c : building->getCases())
+	{
+			RemainingCellsList.erase({c.row+row,c.column+col});
+			this->setMapCell(c.row+row, c.column+col, num);
+			coverage++; //Cas du chevauchement
+	}
+	PlacedBuilding placedBuilding(building);
+	placedBuilding.position = Coord(row, col);
+	placedBuildingRegister.push_back(placedBuilding);
+	switch (building->getType())
+	{
+	case Building_type::Residential:
+		registeredResidentials.push_back(&placedBuildingRegister.back());
+		break;
+	case Building_type::Utility:
+		registeredUtilities.push_back(&placedBuildingRegister.back());
+		break;
+	}
+	//Calcul du score généré par le placement
+	for (const Coord &coord : placedBuilding.source->getInfluenceArea())
+	{
+		Coord temp_coord = {coord.row + int(row), coord.column + int(col)};
+		if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > -1 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
+		{
+			score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
+		}
+	}
+	remainingCell -= building->getNbCells();
+	return coverage / maxCoverage;
+}
+set<Coord> City::getRemainingCellsList()
+{
+	return RemainingCellsList;
+}
+		/**double City::placeBuilding(Building *building, unsigned int row, unsigned int col, bool test)
 {
 	int num = this->placedBuildingRegister.size();
 	unsigned int row_temp;
@@ -260,21 +332,19 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
 			}
 		}
+		remainingCell -= building->getNbCells();
 		return coverage/maxCoverage;
 	}
 	else if(!test)
 	{
 		// Annulation du placement
-		unsigned int row_recover = row_temp--;
-		unsigned int col_recover = col_temp--;
-		for (; row_recover > row; row_recover--)
+		for ( int row_recover = row_temp; row_recover >= int(row); row_recover--)
 		{
-			for (; col_recover > col; col_recover--)
+			for ( int col_recover = col + building->getColumnNum(); col_recover >= int(col); col_recover--)
 			{
-				if(this->getMapCell(row_recover, col_recover) == num)
+				if (this->getMapCell(row_recover, col_recover) == num)
 					this->setMapCell(row_recover, col_recover, -1);
 			}
-			col_recover = col + building->getColumnNum();
 		}
 		return 0;
 	}
@@ -282,21 +352,25 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 		return 0;
 	else
 		return coverage / maxCoverage;
-}
-/**
+}**/
+		int City::getRemainingCell()
+		{
+			return remainingCell;
+		}
+		/**
  * @brief
  * Compute the score generated by a freshly placed building A with an other buildbing B accesible by A.
  * @param A Freshly placed building
  * @param B Building already on the map
  * @return int Score generated by the interaction between these 2 buildings.
  */
-int City::computeScore(PlacedBuilding &A,PlacedBuilding &B)
-{
-	switch(A.source->getType())
-	{
-		case Utility:
-			switch(B.source->getType())
+		int City::computeScore(PlacedBuilding & A, PlacedBuilding & B)
+		{
+			switch (A.source->getType())
 			{
+			case Utility:
+				switch (B.source->getType())
+				{
 				case Residential:
 					return B.use(A.source->getExtra());
 				break;
@@ -329,7 +403,10 @@ void City::PrintMap()
 	{
 		for(int c=0;c<width;c++)
 		{
-			std::cout << map[r][c];
+			if(map[r][c]>=0)
+				std::cout  << "#";
+			else
+				std::cout << ".";
 		}
 		std::cout << std::endl;
 	}
@@ -416,7 +493,7 @@ bool operator<(const Coord A, const Coord B)
 	}
 	else
 	{
-		if (A.row < B.column)
+		if (A.row < B.row)
 			return true;
 		else
 			return false;

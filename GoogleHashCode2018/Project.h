@@ -3,8 +3,8 @@
 #include <vector>
 #include <set>
 #include <string>
-
-using namespace std;
+#include <map>
+#include <functional>
 //Il faudrait rendre la classe static pour faire le lien entre les Places
 //Il n'y aura que 1 projet par session je pense
 //Sinon il va falloir lier une city à un project
@@ -16,12 +16,14 @@ private:
 public:
 	static Project globalProject;
 	City* city;
-	vector<Building*> buildings; // liste des projects buildings disponibles
-	vector<int> residentials; // liste des residences faisant referance a l index dans building
-	vector<int> utilities;
+	std::vector<Building *> buildings; // liste des projects buildings disponibles
+	std::vector<Building*> residentials; // liste des residences faisant referance a l index dans building
+	std::map<unsigned int, std::vector<Building*> > utilities;
 	Project();
 	Project(City* city_); // liste des utilities faisant reference a l index dans building
 
+
+	void prepare();//Sort all containers.
 	void setProjectFile(std::string projectFile);
 	void setSolutionFile(std::string solutionFile);
 	std::string getProjectFile();
@@ -33,5 +35,8 @@ public:
 	//Building getProjectById(unsigned int PId); //TO DO
 	std::vector<Coord> basic_influenceArea;
 	int maxWalkingDistance;
-	std::vector<unsigned int> UtilitiesReferences;
+	int minWidth;
+	int maxWidth;
+	int minHeight;
+	int maxHeight;
 };

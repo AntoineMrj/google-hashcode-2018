@@ -1,10 +1,10 @@
 #pragma once
-#include "Project.h"
-
+#include "Chooser.h"
+#include "Placer.h"
 class Solver
 {
 public:
-	Solver(Project project);
+	static void Solve(City* city);//Method use to fill a city with building
 	~Solver();
 };
 

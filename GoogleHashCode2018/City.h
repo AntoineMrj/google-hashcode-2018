@@ -6,7 +6,7 @@
 #include <map>
 #include <fstream>
 //Pré déclaration des classes pour la double inclusion
-
+class Placer;
 using namespace std;
 
 /*
@@ -56,6 +56,7 @@ struct PlacedBuilding
 
 class City {
 public:
+	friend class Placer;
 	City();
 	City(unsigned int h,unsigned int w);
 	City(City& c);
@@ -67,19 +68,22 @@ public:
 	int getMapCell(int row, int col);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	int getScore();
+	int getRemainingCell();
 	void setScore(int score);
 	void PrintMap();
 	void toSolution(string outfileName);
 	unsigned int getCityWidth() { return width; }
 	unsigned int getCityHeight() { return height; }
-
+	set<Coord> getRemainingCellsList();
 private:
 	unsigned int width;
 	unsigned int height;
 	int** map;
 	int score;
+	int remainingCell;
 	//Placed building, index sur les bâtiments posés
 	vector<PlacedBuilding> placedBuildingRegister;
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
+	set<Coord> RemainingCellsList;
 };

@@ -53,6 +53,7 @@ void FileLoader::loadProject(string projectFile)
 			}
 			building->computeShape();
 		}
+		Project::globalProject.prepare();
 	}
 	else
 		cout << "The project file doesn't exist" << endl;

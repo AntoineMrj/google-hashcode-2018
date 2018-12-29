@@ -1,50 +1,100 @@
 #include "Solver.h"
-#include <stdlib.h>
-#include <time.h>
 
-Solver::Solver(Project project)
+void Solver::Solve(City* city)
 {
-	unsigned int x, y;
-	unsigned int x_tmp, y_tmp;
-	PlacedBuilding B_tmp, A;
-	int score_max_building = -1;
-	int score_tot = 0;
-	int score = 0;
-	size_t c = 0;
-	bool first = true;
-
-	srand(time(NULL));
-
-	for (Building *B : project.buildings)
+	Chooser c(0.7,0.5,0.5,0.5,&Project::globalProject);
+	Placer p(city);
+	Building* b;
+	//threshold for each placement type
+	//Placement from the top
+	int seuil = (city->getCityHeight() * city->getCityWidth())*0.5;
+	//Random placement
+	int seuilMIN = seuil*0.5;
+	//Placement with last cells
+	int seuilShuffle = seuilMIN*0.8;
+	//Count of placement
+	int actualPlacement=0;
+	//Threslhold for reinitialising the chooser
+	int reinitSeuil = 1;
+	while ((b = c.get()) != nullptr && city->getRemainingCell()>seuilShuffle)
 	{
-		if (first) {
-			project.city->placeBuilding(B, 0, 0, false);
-			first = false;
-		}
-		else {
-			B_tmp = B;
-			while (c != 10) // on essaie 10 positions différentes
+		//Placement from the right bottom
+		if(city->getRemainingCell()>seuil)
+		{
+		if(p.tetrisPlacement(b))
+		{
+			actualPlacement++;
+			if (actualPlacement > reinitSeuil)
 			{
-				x_tmp = rand() % project.city->getCityHeight();
-				y_tmp = rand() % project.city->getCityWidth();
-
-				project.city->placeBuilding(B, x_tmp, y_tmp, true);
-				score = project.city->computeScore(B_tmp, A);
-
-				if (score > score_max_building) {
-					x = x_tmp;
-					y = y_tmp;
-					score_max_building = score;
-				}
-				c++;
+				c.refill();
+				c.initialize();
+				actualPlacement = 0;
 			}
-			project.city->placeBuilding(B, x, y, false);
-			score_tot += score_max_building;
-			project.city->setScore(score_tot);
-			score_max_building = -1;
-			c = 0;
+			else
+			{
+				c.refill();
+			}
 		}
-		A = B;
+		}
+		//Placement from the right top corner
+		else if(city->getRemainingCell()>seuilMIN)
+		{
+
+			if (p.tetrisPlacementTOP(b))
+			{
+				actualPlacement++;
+				if(actualPlacement>reinitSeuil)
+				{
+					c.refill();
+					c.initialize();
+					actualPlacement=0;
+				}
+				else
+				{
+				c.refill();
+				}
+			}
+		}
+		//Random placement
+		else if (city->getRemainingCell() > seuilShuffle)
+		{
+			if (p.tetrisAleat(b))
+			{
+
+				actualPlacement++;
+				if (actualPlacement > reinitSeuil)
+				{
+					c.refill();
+					c.initialize();
+					actualPlacement = 0;
+				}
+				else
+				{
+					c.refill();
+				}
+			}
+		}
+	}
+	c.refill();
+	c.initialize();
+	while ((b = c.getEnd()) != nullptr)
+	{
+			//Placement in function of the last remaining cells.
+			if (p.lastPlacement(b))
+			{
+				actualPlacement++;
+				if (actualPlacement > reinitSeuil)
+				{
+					c.refillEnd();
+					c.initialize();
+					actualPlacement = 0;
+				}
+				else
+				{
+					c.refillEnd();
+				}
+			}
+
 	}
 }
 

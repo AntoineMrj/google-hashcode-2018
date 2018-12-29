@@ -51,7 +51,7 @@ void Building::assignArray(int **array)
 {
 	for(unsigned int i = 0;i<rowNum;i++)
 	{
-		for(unsigned int j = 0;j<columnNum;i++)
+		for(unsigned int j = 0;j<columnNum;j++)
 			occupiedCells[i][j]=array[i][j];
 	}
 	shape = this->getShape();
@@ -66,6 +66,11 @@ void Building::assignArray(int **array)
  */
 void Building::setCell(unsigned int row, unsigned int column, int value)
 {
+	if(value!=0)
+	{
+		cases.push_back({row,column});
+		nbCells++;
+	}
 	occupiedCells[row][column]=value;
 }
 /**
@@ -156,6 +161,7 @@ vector<Coord> Building::getShape()
 		}
 		first=false;
 	}
+	leftBoundaries = Left;
 	std::reverse(Left.begin(),Left.end());
 	std::reverse(Bottom.begin(),Bottom.end());
 	Top.insert(Top.end(),Right.begin(),Right.end());
@@ -163,8 +169,11 @@ vector<Coord> Building::getShape()
 	Top.insert(Top.end(),Left.begin(),Left.end() );
 	return Top;
 }
-
-bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result) 
+std::vector<Coord> Building::getLeftBoundaries() const
+{
+	return leftBoundaries;
+}
+bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result)
 {
 	for (unsigned int i = 0; i < result.size(); i++) {
 		if (unsigned(result[i].column) == column && unsigned(result[i].row) == row) {
@@ -210,7 +219,38 @@ std::vector<Coord> Building::getInfluenceArea()
 	return influenceArea;
 }
 
-Building_type Building::getType()
+Building_type Building::getType() const
 {
 	return type;
+}
+const std::vector<Coord>& Building::getCases() const
+{
+	return cases;
+}
+float Building::getRatio() const
+{
+	return nbCells/(rowNum*columnNum);
+}
+float Building::getDensity() const
+{
+	return nbCells/extra;
+}
+unsigned int Building::getNbCells() const
+{
+	return nbCells;
+}
+
+void Building::print() const
+{
+	for (unsigned int i = 0; i < rowNum; i++)
+	{
+		for (unsigned int j = 0; j < columnNum; j++)
+		{
+			if(occupiedCells[i][j]>0)
+				std::cout << "#";
+			else
+				std::cout <<".";
+		}
+		std::cout << "\n";
+	}
 }

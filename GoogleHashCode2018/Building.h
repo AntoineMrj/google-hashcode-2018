@@ -22,10 +22,10 @@ public:
 
 	int** getOccupiedCell() { return this->occupiedCells; }
 	int getCell(unsigned int row, unsigned int column);
-	unsigned int getProjectNum() { return this->projectNum; }
-	unsigned int getRowNum() { return this->rowNum; }
-	unsigned int getColumnNum() { return this->columnNum; }
-	unsigned int getExtra(){return this->extra;}
+	unsigned int getProjectNum() const{ return this->projectNum; }
+	unsigned int getRowNum() const { return this->rowNum; }
+	unsigned int getColumnNum() const { return this->columnNum; }
+	unsigned int getExtra() const { return this->extra; }
 	vector<Coord> getShape();
 	std::vector<Coord> getInfluenceArea();
 
@@ -33,8 +33,15 @@ public:
 	void setProjectNum(unsigned int projectNum_);
 	bool cellInRes(unsigned int row, unsigned int column, vector<Coord> result);
 	void computeShape();
-	Building_type getType();
- protected:
+	float getRatio() const;
+	float getDensity() const;
+	unsigned int getNbCells() const;
+	Building_type getType() const;
+	std::vector<Coord> getLeftBoundaries() const;
+	void print() const;
+	const std::vector<Coord>& getCases() const;
+
+  protected:
 	unsigned int projectNum;
 	unsigned int rowNum;
 	unsigned int columnNum;
@@ -43,4 +50,9 @@ public:
 	int** occupiedCells;
 	std::vector<Coord> shape;
 	std::vector<Coord> influenceArea;
+	std::vector<Coord> leftBoundaries;
+	std::vector<Coord> cases;
+	float ratio;//area of a building divided by all his cases
+	float density;//Density of a residentail building
+	unsigned int nbCells;
 };
