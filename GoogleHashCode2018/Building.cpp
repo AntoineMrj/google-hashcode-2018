@@ -161,17 +161,12 @@ vector<Coord> Building::getShape()
 		}
 		first=false;
 	}
-	leftBoundaries = Left;
 	std::reverse(Left.begin(),Left.end());
 	std::reverse(Bottom.begin(),Bottom.end());
 	Top.insert(Top.end(),Right.begin(),Right.end());
 	Top.insert(Top.end(),Bottom.begin(),Bottom.end());
 	Top.insert(Top.end(),Left.begin(),Left.end() );
 	return Top;
-}
-std::vector<Coord> Building::getLeftBoundaries() const
-{
-	return leftBoundaries;
 }
 bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> result)
 {

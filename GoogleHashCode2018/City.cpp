@@ -82,9 +82,9 @@ City::City(unsigned int w, unsigned int h)
 			map[i][j] = -1;
 		}
 	}
-	for (int i = 0; i < getCityHeight(); i++)
+	for (unsigned int i = 0; i < getCityHeight(); i++)
 	{
-		for (int j = 0; j < getCityWidth(); j++)
+		for (unsigned int j = 0; j < getCityWidth(); j++)
 		{
 			RemainingCellsList.insert({i, j});
 		}
@@ -171,7 +171,7 @@ City& City::operator=(City& c)
  * @param h
  * @param w 
  * @param c 
- * @param row 
+ * @param row
  * @param col 
  */
 City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int col)
@@ -237,6 +237,10 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 	}
 	for (auto &c : building->getCases())
 	{
+			if(connexInit)
+			{
+				ConnexComposant[connexMap[c.row + row][c.column + col]].erase({c.row + row, c.column + col});
+			}
 			RemainingCellsList.erase({c.row+row,c.column+col});
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
@@ -265,97 +269,95 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 	remainingCell -= building->getNbCells();
 	return coverage / maxCoverage;
 }
+/**
+ * @brief
+ *	return the list of remaining cells as a list of Coord.
+ * @return set<Coord>
+ */
 set<Coord> City::getRemainingCellsList()
 {
 	return RemainingCellsList;
 }
-		/**double City::placeBuilding(Building *building, unsigned int row, unsigned int col, bool test)
+/**
+ * @brief
+ * Get and create if necessary de connex composant liste
+ * Which is all cells that are in an area in which we can place a building
+ * @return std::vector<std::set<Coord>> 
+ */
+std::vector<std::set<Coord>> City::getConnexComposant()
 {
-	int num = this->placedBuildingRegister.size();
-	unsigned int row_temp;
-	unsigned int col_temp;
-	//Unité de mesure du placement
-	double coverage = 0;
-	int maxCoverage = building->getColumnNum()*building->getRowNum();
-	bool stop = false;
-	// On check les cellules que prend le building
-	for (row_temp = row; row_temp < row + building->getRowNum() && !stop; row_temp++)
+	if(!connexInit)
 	{
-		for (col_temp = col; col_temp < col + building->getColumnNum() && !stop; col_temp++)
+	std::map<int, std::set<Coord>> ConnexComposant;
+	int counter = 0;
+	connexMap = new int*[height];
+	for(int i = 0;i<height;i++)
+	{
+		connexMap[i] = new int[width];
+		std::fill(connexMap[i],connexMap[i]+width,-1);
+	}
+	for(auto C : RemainingCellsList)
+	{
+		bool alreadyPlaced = false;
+		int value = -1;
+		for(int row=-1;row<=1;row++)
 		{
-			if(row_temp>=height||col_temp>=width)
+			for(int col=-1;col<=1;col++)
 			{
-				stop=true;
-				break;
-			}
-			if (building->getCell(row_temp - row, col_temp - col) == 1)
-			{
-				//Cas du chevauchement
-				if (this->getMapCell(row_temp, col_temp) != -1)
+				if(row+int(C.row)>=0 && row+int(C.row)<height && col+int(C.column)>=0 && col+int(C.column)<width && col!=row)
 				{
-					stop = true;
-					break;
+
+						int CasesVal = connexMap[row + C.row][col + C.column] ;
+						if (!alreadyPlaced && CasesVal >= 0)
+						{
+							alreadyPlaced = true;
+							value = CasesVal;
+							connexMap[C.row][C.column] = CasesVal;
+							ConnexComposant[value].insert({C.row,C.column});
+						}
+						else if (alreadyPlaced && CasesVal != value &&CasesVal>=0)
+						{
+							for (auto B : ConnexComposant[CasesVal])
+							{
+								connexMap[B.row][B.column] = value;
+								ConnexComposant[value].insert(B);
+								ConnexComposant[CasesVal].erase(B);
+							}
+							ConnexComposant.erase(CasesVal);
+						}
+
 				}
-				// On met le numéro du building sur les cases qu'il prend sur la map
-				if(!test)
-					this->setMapCell(row_temp, col_temp, num);
-				coverage++;
-			}
-			else if (this->getMapCell(row_temp, col_temp) != -1)
-			{
-				coverage++;
 			}
 		}
-		if(stop)
-			break;
+		if(!alreadyPlaced)
+		{
+
+			connexMap[C.row][C.column] = counter;
+			ConnexComposant[counter] = std::set<Coord>();
+			ConnexComposant[counter].insert(C);
+			counter++;
+		}
 	}
-	if(!stop && !test)
+	connexInit = true;
+	}
+	std::vector<std::set<Coord>> outVec;
+	for(auto C:ConnexComposant)
 	{
-		PlacedBuilding placedBuilding(building);
-		placedBuilding.position = Coord(row, col);
-		placedBuildingRegister.push_back(placedBuilding);
-		switch(building->getType())
+		if(C.second.size() >= Project::globalProject.minHeight *Project::globalProject.minWidth)
 		{
-			case Building_type::Residential:
-				registeredResidentials.push_back(&placedBuildingRegister.back());
-				break;
-			case Building_type::Utility :
-				registeredUtilities.push_back(&placedBuildingRegister.back());
-				break;
+			outVec.push_back(C.second);
 		}
-		//Calcul du score généré par le placement
-		for (const Coord& coord : placedBuilding.source->getInfluenceArea())
-		{
-			Coord temp_coord = {coord.row+int(row),coord.column+int(col)};
-			if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > -1 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
-			{
-				score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
-			}
-		}
-		remainingCell -= building->getNbCells();
-		return coverage/maxCoverage;
 	}
-	else if(!test)
-	{
-		// Annulation du placement
-		for ( int row_recover = row_temp; row_recover >= int(row); row_recover--)
-		{
-			for ( int col_recover = col + building->getColumnNum(); col_recover >= int(col); col_recover--)
-			{
-				if (this->getMapCell(row_recover, col_recover) == num)
-					this->setMapCell(row_recover, col_recover, -1);
-			}
-		}
-		return 0;
-	}
-	else if(test && stop)
-		return 0;
-	else
-		return coverage / maxCoverage;
-}**/
-		int City::getRemainingCell()
-		{
-			return remainingCell;
+	return	outVec;
+}
+/**
+ * @brief
+ * Return the number of remaining cells.
+ * @return int 
+ */
+int City::getRemainingCell()
+{
+	return remainingCell;
 		}
 		/**
  * @brief

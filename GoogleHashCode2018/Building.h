@@ -37,7 +37,6 @@ public:
 	float getDensity() const;
 	unsigned int getNbCells() const;
 	Building_type getType() const;
-	std::vector<Coord> getLeftBoundaries() const;
 	void print() const;
 	const std::vector<Coord>& getCases() const;
 
@@ -50,8 +49,7 @@ public:
 	int** occupiedCells;
 	std::vector<Coord> shape;
 	std::vector<Coord> influenceArea;
-	std::vector<Coord> leftBoundaries;
-	std::vector<Coord> cases;
+	std::vector<Coord> cases;//List of all occupied cells of a building
 	float ratio;//area of a building divided by all his cases
 	float density;//Density of a residentail building
 	unsigned int nbCells;

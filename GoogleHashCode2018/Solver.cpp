@@ -2,21 +2,22 @@
 
 void Solver::Solve(City* city)
 {
-	Chooser c(0.7,0.5,0.5,0.5,&Project::globalProject);
+	Chooser c(0.7,0.7,0.2,0.2,&Project::globalProject);
 	Placer p(city);
 	Building* b;
 	//threshold for each placement type
 	//Placement from the top
-	int seuil = (city->getCityHeight() * city->getCityWidth())*0.5;
+	int seuil = (city->getCityHeight() * city->getCityWidth())*0.9;
 	//Random placement
-	int seuilMIN = seuil*0.5;
+	int seuilMIN = seuil*0.8;
 	//Placement with last cells
-	int seuilShuffle = seuilMIN*0.8;
+	int seuilShuffle = seuilMIN*0.1;
+	int seuilEnd = seuilShuffle*0;
 	//Count of placement
 	int actualPlacement=0;
 	//Threslhold for reinitialising the chooser
 	int reinitSeuil = 1;
-	while ((b = c.get()) != nullptr && city->getRemainingCell()>seuilShuffle)
+	while ((b = c.get()) != nullptr && city->getRemainingCell()>seuilEnd)
 	{
 		//Placement from the right bottom
 		if(city->getRemainingCell()>seuil)
@@ -74,13 +75,30 @@ void Solver::Solve(City* city)
 				}
 			}
 		}
+		else
+		{
+			if (p.ConvexPlacement(b))
+			{
+				actualPlacement++;
+				if (actualPlacement > reinitSeuil)
+				{
+					c.refill();
+					c.initialize();
+					actualPlacement = 0;
+				}
+				else
+				{
+					c.refill();
+				}
+			}
+		}
 	}
 	c.refill();
 	c.initialize();
 	while ((b = c.getEnd()) != nullptr)
 	{
 			//Placement in function of the last remaining cells.
-			if (p.lastPlacement(b))
+			if (p.ConvexPlacement(b))
 			{
 				actualPlacement++;
 				if (actualPlacement > reinitSeuil)

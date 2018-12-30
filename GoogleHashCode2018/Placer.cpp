@@ -8,7 +8,6 @@ Placer::Placer(City* source)
 	{
 		ColRegister.push_back(source->getCityWidth());
 	}
-	lastCoord=0;
 	registerFrequency=1000;
 	actualPlacement=0;
 	lastMaxRowPlacement=0;
@@ -19,7 +18,13 @@ Placer::Placer(City* source)
 		shuffleCoordCol.push_back(i);
 		shuffle();
 }
-
+/**
+ * @brief
+ * Placement from the bottom right corner
+ * @param b 
+ * @return true 
+ * @return false 
+ */
 bool Placer::tetrisPlacement(Building *b)
 {
 	for (int row = src->height - b->getRowNum(); row >= 0; row--)
@@ -47,6 +52,10 @@ bool Placer::tetrisPlacement(Building *b)
 	}
 	return false;
 }
+/**
+ * @brief
+ *Construct the lines register
+ */
 void Placer::buildRegister()
 {
 	for (int i = 0; i < src->getCityHeight(); i++)
@@ -87,6 +96,13 @@ void Placer::buildRegister()
 	lastMaxRowPlacement = 0;
 	lastMinRowPlacement = 10001;
 }
+/**
+ * @brief
+ * Placement from the top right corner
+ * @param b 
+ * @return true 
+ * @return false 
+ */
 bool Placer::tetrisPlacementTOP(Building *b)
 {
 	for (int row = 0; row <= src->height - b->getRowNum(); row++)
@@ -111,7 +127,13 @@ bool Placer::tetrisPlacementTOP(Building *b)
 	}
 	return false;
 }
-
+/**
+ * @brief
+ * Place on a random coordinante.
+ * @param b 
+ * @return true 
+ * @return false 
+ */
 bool Placer::tetrisAleat(Building* b)
 {
 	for(int row : shuffleCoord)
@@ -139,36 +161,32 @@ bool Placer::tetrisAleat(Building* b)
 	}
 	return false;
 }
-bool Placer::lastPlacement(Building*b)
+/**
+ * @brief
+ * Placement using only the connex composant.
+ * @param b 
+ * @return true 
+ * @return false 
+ */
+bool Placer::ConvexPlacement(Building *b)
 {
-	if(CoordRegister.size()==0)
-		reload();
-	int end = CoordRegister.size();
-	for(auto C : src->getRemainingCellsList())
+	for (auto CList: src->getConnexComposant())
 	{
-		//Coord C = CoordRegister[i];
-		if (src->placeBuilding(b, C.row, C.column))
+		for(auto C : CList)
 		{
-			actualPlacement++;
-			if (actualPlacement >= registerFrequency)
+			if (src->placeBuilding(b, C.row, C.column))
 			{
-				//			std::cout << "SHUFFLE" << std::endl;
-				actualPlacement = 0;
-				//reload();
+				return true;
 			}
-			return true;
 		}
 	}
+
 	return false;
 }
-void Placer::reload()
-{
-	CoordRegister.clear();
-	lastCoord = 0;
-	for(auto C : src->getRemainingCellsList())
-		CoordRegister.push_back(C);
-	std::random_shuffle(CoordRegister.begin(), CoordRegister.end());
-}
+/**
+ * @brief
+ * Shffule the coordinates array.
+ */
 void Placer::shuffle()
 {
 	std::random_shuffle(shuffleCoord.begin(), shuffleCoord.end());

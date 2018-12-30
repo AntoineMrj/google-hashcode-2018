@@ -74,10 +74,10 @@ int main(int argc, char* argv[])
 			solvingThread.join();
 			printer.join();
 		// Writing the solution in the solution file
-		project.city->PrintMap();
+		//project.city->PrintMap();
 		project.city->toSolution(solutionPath);
-		cout << "SCORE : " << project.city->getScore();
-
+		cout << "\nSCORE : " << project.city->getScore()<<std::endl;
+		cout << "REMAINING CELLS : " << double(project.city->getRemainingCell())/(project.city->getCityHeight()*project.city->getCityWidth())*100<<"%" <<std::endl;
 	}
 
 	return EXIT_SUCCESS;

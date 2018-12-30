@@ -75,13 +75,17 @@ public:
 	unsigned int getCityWidth() { return width; }
 	unsigned int getCityHeight() { return height; }
 	set<Coord> getRemainingCellsList();
+	std::vector<std::set<Coord>> getConnexComposant();
 private:
 	unsigned int width;
 	unsigned int height;
 	int** map;
 	int score;
 	int remainingCell;
+	bool connexInit = false;
 	//Placed building, index sur les bâtiments posés
+	std::map<int, std::set<Coord>> ConnexComposant;
+	int **connexMap;
 	vector<PlacedBuilding> placedBuildingRegister;
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
