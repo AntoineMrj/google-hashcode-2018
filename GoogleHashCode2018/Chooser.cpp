@@ -35,15 +35,21 @@ bool Chooser::dice(double proba)
 	double r = (double(rand() % 100 + 1) / 100);
 	return r < proba;
 }
-
+/**
+ * @brief
+ * Generates the list of the chooser
+ */
 void Chooser::initialize()
 {
 	while(pile.size()>0)
 		pile.pop_back();
+	//Getting building list from project reference
 	residentialList = projectRef->residentials;
 	utilitiesLists = projectRef->utilities;
+	//Sorting lists
 	std::copy(utilitiesLists.begin(),utilitiesLists.end(),
 		std::back_inserter(utilitiesSorted));
+		//Utilities are sorted in function of their frequencies in the city.
 	std::sort(utilitiesSorted.begin(), utilitiesSorted.end(),
 			  [this](const std::pair<unsigned int, std::vector<Building *>> &p1, const std::pair<unsigned int, std::vector<Building *>> &p2) {
 				  return this->utilitiesRegister[p1.first] < this->utilitiesRegister[p2.first];
@@ -73,6 +79,7 @@ void Chooser::initialize()
 
 			std::vector<Building*>* uList;
 			int a = 0;
+			//FINDING THE UTILITIES TYPE
 			std::vector<std::pair<unsigned int, std::vector<Building *> > >::iterator itRef;
 			for (auto uType = utilitiesSorted.begin(); uType != utilitiesSorted.end(); ++uType)
 			{
@@ -84,6 +91,7 @@ void Chooser::initialize()
 				}
 			}
 			a=0;
+			//CHOOSING AN UTILITIES IN THE PREVIOUS LIST
 			for (auto r = uList->begin(); r != uList->end(); ++r)
 			{
 				if (a++==uList->size()-1|| dice(utilities))
@@ -105,14 +113,27 @@ void Chooser::initialize()
 	}
 
 }
+/**
+ * @brief
+ * Fill the list of the chooser with its previous gived building.
+ */
 void Chooser::refill()
 {
+	if(save.front()->getType()==Building_type::Utility)
+	{
+		utilitiesRegister[save.front()->getExtra()]++;
+	}
 	while(save.size()>0)
 	{
 		pile.push_front(save.front());
 		save.pop_front();
 	}
 }
+/**
+ * @brief
+ * Get a building from the top of the stack
+ * @return Building*
+ */
 Building* Chooser::get()
 {
 	if(pile.size()>0)
@@ -124,14 +145,11 @@ Building* Chooser::get()
 	}
 	return nullptr;
 }
-void Chooser::refillEnd()
-{
-	while (save.size() > 0)
-	{
-		pile.push_back(save.front());
-		save.pop_front();
-	}
-}
+/**
+ * @brief
+ * Get a building from the back of the stack
+ * @return Building* 
+ */
 Building *Chooser::getEnd()
 {
 	if (pile.size() > 0)

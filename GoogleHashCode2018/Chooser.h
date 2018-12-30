@@ -15,7 +15,6 @@ class Chooser
 			double utilitiesType_,double residential_,Project* p);
 		void initialize();
 		void refill();
-		void refillEnd();
 		Building* get();
 		Building* getEnd();
 	private:
@@ -32,5 +31,6 @@ class Chooser
 		std::vector<std::pair<unsigned int, std::vector<Building *>> > utilitiesSorted;
 		std::map<unsigned int,unsigned int> utilitiesRegister;
 		std::map<unsigned int,std::vector<Building*>> utilitiesLists;
+
 
 };

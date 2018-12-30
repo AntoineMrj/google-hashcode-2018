@@ -1,6 +1,9 @@
 #pragma once
 #include "Chooser.h"
 #include "Placer.h"
+#include <vector>
+#include <functional>
+#include <tuple>
 class Solver
 {
 public:
