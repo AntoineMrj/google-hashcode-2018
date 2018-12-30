@@ -71,7 +71,6 @@ City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
-	remainingCell = width * height;
 	map = new int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++) {
 	map[a] = new int[w];
@@ -100,7 +99,6 @@ City::City(City& c)
 {
 	width=c.width;
 	height=c.height;
-	remainingCell = width*height;
 	map=new int*[height];
 	for(unsigned int a=0;a<height;a++)
 		map[a]=new int[width];
@@ -131,13 +129,12 @@ City::City(City& c)
  * @brief
  * Assignation operator
  * @param c 
- * @return City& 
+ * @return City&
  */
 City& City::operator=(City& c)
 {
 	width = c.width;
 	height = c.height;
-	remainingCell = width * height;
 	map = new int *[height];
 	for (unsigned int a = 0; a < height; a++)
 		map[a] = new int[width];
@@ -169,7 +166,7 @@ City& City::operator=(City& c)
  * @brief Construct a new City object from an other
  *
  * @param h
- * @param w 
+ * @param w
  * @param c 
  * @param row
  * @param col 
@@ -178,7 +175,6 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 {
 	this->width = w;
 	this->height = h;
-	remainingCell = width * height;
 	map = new int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++)
 	{
@@ -266,7 +262,6 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 			score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);
 		}
 	}
-	remainingCell -= building->getNbCells();
 	return coverage / maxCoverage;
 }
 /**
@@ -357,7 +352,7 @@ std::vector<std::set<Coord>> City::getConnexComposant()
  */
 int City::getRemainingCell()
 {
-	return remainingCell;
+	return RemainingCellsList.size();
 		}
 		/**
  * @brief

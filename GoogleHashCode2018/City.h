@@ -81,7 +81,6 @@ private:
 	unsigned int height;
 	int** map;
 	int score;
-	int remainingCell;
 	bool connexInit = false;
 	//Placed building, index sur les bâtiments posés
 	std::map<int, std::set<Coord>> ConnexComposant;
