@@ -15,6 +15,7 @@ class Building
 {
 public:
 	Building(const Building &b);
+	~Building();
 	Building& operator=(Building const& buildingB);
 	Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,unsigned int extra,Building_type t);
 	void assignArray(int** array);

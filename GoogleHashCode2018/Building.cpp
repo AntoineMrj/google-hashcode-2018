@@ -13,7 +13,12 @@ Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int 
 	for(unsigned int i = 0;i<this->rowNum;i++)
 		this->occupiedCells[i] = new int[columnNum_];
 }
-
+Building::~Building()
+{
+	for(unsigned int i=0;i<this->rowNum;i++)
+		delete [](occupiedCells[i]);
+	delete[]occupiedCells;
+}
 Building::Building(const Building &b)
 {
 	projectNum = b.projectNum;

@@ -47,7 +47,7 @@ struct PlacedBuilding
 	PlacedBuilding(PlacedBuilding& P,Coord C={0,0});
 	//Uniquement utilisable par un residential
 	int use(unsigned int utilityType);
-	std::map<unsigned int,bool>* connectedUtility;
+	std::map<unsigned int,bool> connectedUtility;
 	Building* source;
 	Coord position;
 	int accumulatedScore;
@@ -62,6 +62,7 @@ public:
 	City(City& c);
 	virtual City& operator=(City& c);
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
+	~City();
 	bool placeMap(City& c,unsigned int row,unsigned int col);
 	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=false);
 	void setMapCell(int row, int col, int value);

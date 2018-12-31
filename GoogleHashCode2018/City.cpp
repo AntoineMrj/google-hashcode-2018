@@ -6,10 +6,9 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	position = P.position;
 	if(P.source->getType()==Residential)
 	{
-		connectedUtility = new std::map<unsigned int, bool>();
-		for (auto pair : *(P.connectedUtility))
+		for (auto pair :P.connectedUtility)
 		{
-			(*connectedUtility)[pair.first] = (pair.second);
+			connectedUtility[pair.first] = (pair.second);
 		}
 	}
 	source = P.source;
@@ -21,10 +20,9 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	accumulatedScore = 0;
 	if (buildingNum->getType() == Residential)
 	{
-		connectedUtility = new std::map<unsigned int, bool>();
 		for (auto i : Project::globalProject.utilities)
 		{
-			(*connectedUtility)[i.first] = false;
+			connectedUtility[i.first] = false;
 		}
 	}
 }
@@ -33,10 +31,9 @@ PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
 	position = P.position + C;
 	if (P.source->getType() == Residential)
 	{
-		connectedUtility = new std::map<unsigned int, bool>();
-		for (auto pair : *(P.connectedUtility))
+		for (auto pair : P.connectedUtility)
 		{
-			(*connectedUtility)[pair.first] = (pair.second);
+			connectedUtility[pair.first] = (pair.second);
 		}
 	}
 	source = P.source;
@@ -53,18 +50,18 @@ PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
  */
 int PlacedBuilding::use(unsigned int utilityType)
 {
-	if ((*connectedUtility)[utilityType] == false)
+	if (connectedUtility[utilityType] == false)
 	{
-		(*connectedUtility)[utilityType] = true;
+		connectedUtility[utilityType] = true;
 		accumulatedScore += source->getExtra();
 		return source->getExtra();
 	}
 	return 0;
 }
 
-
-
 City::City() {
+	map = nullptr;
+	connexMap = nullptr;
 }
 
 City::City(unsigned int w, unsigned int h)
@@ -125,6 +122,20 @@ City::City(City& c)
 	}
 	score = c.score;
 }
+City::~City()
+{
+	if(connexMap!=nullptr)
+	{
+		for(unsigned int i = 0;i<height;i++)
+		{
+			delete [](map[i]);
+			delete [](connexMap[i]);
+		}
+		delete []map;
+		delete []connexMap;
+	}
+}
+
 /**
  * @brief
  * Assignation operator
