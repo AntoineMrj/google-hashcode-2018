@@ -51,7 +51,7 @@ Building& Building::operator=(Building const& buildingB)
  * @brief
  * Assign a 2D int array to the oocupied cells of this building.
  * The size of the array must correspond with the one of the building.
- * @param array 
+ * @param array
  */
 void Building::assignArray(short int **array)
 {

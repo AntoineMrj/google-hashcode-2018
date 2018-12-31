@@ -25,6 +25,7 @@ class Chooser
 		double utilities;
 		double utilitiesType;
 		double residential;
+		bool lastGet=false;
 		std::deque<Building*> pile;
 		std::deque<Building*> save;
 		std::vector<Building*> residentialList;

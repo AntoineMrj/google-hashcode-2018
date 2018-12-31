@@ -119,14 +119,29 @@ void Chooser::initialize()
  */
 void Chooser::refill()
 {
-	if(save.front()->getType()==Building_type::Utility)
+	if(!lastGet)
 	{
-		utilitiesRegister[save.front()->getExtra()]++;
+		if(save.front()->getType()==Building_type::Utility)
+		{
+			utilitiesRegister[save.front()->getExtra()]++;
+		}
+		while(save.size()>0)
+		{
+			pile.push_back(save.front());
+			save.pop_front();
+		}
 	}
-	while(save.size()>0)
+	else
 	{
-		pile.push_front(save.front());
-		save.pop_front();
+		if (save.front()->getType() == Building_type::Utility)
+		{
+			utilitiesRegister[save.front()->getExtra()]++;
+		}
+		while (save.size() > 0)
+		{
+			pile.push_front(save.front());
+			save.pop_front();
+		}
 	}
 }
 /**
@@ -138,6 +153,7 @@ Building* Chooser::get()
 {
 	if(pile.size()>0)
 	{
+		lastGet = false;
 		Building* temp = pile.front();
 		pile.pop_front();
 		save.push_front(temp);
@@ -154,6 +170,7 @@ Building *Chooser::getEnd()
 {
 	if (pile.size() > 0)
 	{
+		lastGet = true;
 		Building *temp = pile.back();
 		pile.pop_back();
 		save.push_front(temp);

@@ -3,6 +3,14 @@ using namespace std;
 void Solver::Solve(City* city)
 {
 	/**
+	 * Solver using a combination of a chooser and a placer to optimize placement on city
+	 * Work in a raisonable time for small cities.
+	 *
+	 * The chooser is use to sort and find building using random generated list.
+	 * The placer is use in 5 ways to optimize calculus time.
+	 *
+	 */
+	/**
 	 * Type : probabilty to choose a type
 	 * 		High : more probability to choose a residential
 	 * 		Low : more probabilitu to choose an utility
@@ -17,9 +25,9 @@ void Solver::Solve(City* city)
 	 * 		Low : more probability to choose a big residential
 	 */
 	double Type = 0.3;
-	double U = 0.7;
-	double UT = 0.2;
-	double R = 0.2;
+	double U = 0.8;
+	double UT = 0.95;
+	double R = 0.3;
 	Chooser c(Type,U,UT,R,&Project::globalProject);
 	Placer p(city);
 	Building* b;
@@ -34,7 +42,7 @@ void Solver::Solve(City* city)
 	//Count of placement
 	int actualPlacement=0;
 	//Threslhold for reinitialising the chooser
-	int reinitSeuil = 1;
+	int reinitSeuil = 10;
 	//DEFINING PLACEMENT FUNCTION
 	auto bottomRightPlacement = [](Building* b,Placer* p)->bool{
 		return p->tetrisPlacement(b);
@@ -76,7 +84,7 @@ void Solver::Solve(City* city)
 	placements.push_back({bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET"});
 	placements.push_back({topRightPlacement,baseGet,0.5,"TOP RIGHT, BASEGET"});
 	placements.push_back({aleatPlacement,baseGet,0.7,"RANDOM, BASEGET"});
-	placements.push_back({convexPlacement,baseGet,0.1,"CONVEX, BASEGET"});
+	placements.push_back({convexPlacement,baseGet,0.2,"CONVEX, BASEGET"});
 	placements.push_back({convexPlacement,endGet,0.8,"CONVEX, ENDGET"});
 	auto nextSeuil = [&seuil,&city,&placements, &lastPlacement, &actualP]()
 	-> bool {
@@ -101,7 +109,6 @@ void Solver::Solve(City* city)
 			actualPlacement++;
 			if (actualPlacement > reinitSeuil)
 			{
-				c.refill();
 				c.initialize();
 				actualPlacement = 0;
 			}
