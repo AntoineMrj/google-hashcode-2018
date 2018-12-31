@@ -195,7 +195,7 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 {
 	for (PlacedBuilding P : c.placedBuildingRegister)
 	{
-		if(!placeBuilding(P.source,row,col))
+		if(!placeBuilding(P.source,P.position.row+row,P.position.column+col))
 			return false;
 	}
 }
