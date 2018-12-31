@@ -83,13 +83,13 @@ void Project::setCity(unsigned int width, unsigned int height)
 }
 void Project::prepare()
 {
-	sort(residentials.begin(),residentials.end(),[](const Building* a,const Building* b)->bool
+	sort(residentials.begin(),residentials.end(),[](Building* a,Building* b)->bool
 	{
 		return a->getDensity()<b->getDensity();
 	});
 	for(auto it:utilities)
 	{
-		sort(it.second.begin(), it.second.end(), [](const Building *a,const Building *b) -> bool {
+		sort(it.second.begin(), it.second.end(), [](Building *a,Building *b) -> bool {
 			return a->getRatio() < b->getRatio();
 		});
 	}
@@ -119,9 +119,3 @@ void Project::setMaxWalkingDistance(int MaxWD)
 	}
 	this->maxWalkingDistance = MaxWD;
 }
-
-/*Building Project::getProjectById(unsigned int PId)
-{
- //TO DO
-	return Building();
-}*/

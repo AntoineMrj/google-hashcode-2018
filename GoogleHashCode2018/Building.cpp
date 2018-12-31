@@ -31,7 +31,6 @@ Building::Building(const Building &b)
 	type = b.type;
 	extra = b.extra;
 }
-
 Building& Building::operator=(Building const& buildingB)
 {
 	projectNum = buildingB.projectNum;
@@ -214,7 +213,7 @@ void Building::buildInfluenceArea()
 		}
 	}
 }
-std::vector<Coord> Building::getInfluenceArea()
+const std::vector<Coord>& Building::getInfluenceArea() const
 {
 	return influenceArea;
 }
@@ -227,13 +226,17 @@ const std::vector<Coord>& Building::getCases() const
 {
 	return cases;
 }
-float Building::getRatio() const
+float Building::getRatio()
 {
-	return nbCells/(rowNum*columnNum);
+	if(ratio<0)
+		ratio = nbCells / (rowNum * columnNum);
+	return ratio;
 }
-float Building::getDensity() const
+float Building::getDensity()
 {
-	return nbCells/extra;
+	if(density<0)
+		density = nbCells/extra;
+	return density;
 }
 unsigned int Building::getNbCells() const
 {

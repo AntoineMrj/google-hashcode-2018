@@ -96,7 +96,6 @@ void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
 				if (!city->placeBuilding(building, row, col))
 				{
 					cout << "Invalid solution: at least 2 buildings are on top of each other" << endl;
-					city->setScore(0);
 					break;
 				}
 			}

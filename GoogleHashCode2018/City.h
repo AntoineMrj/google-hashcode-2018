@@ -47,11 +47,11 @@ struct PlacedBuilding
 	PlacedBuilding(PlacedBuilding& P,Coord C={0,0});
 	//Uniquement utilisable par un residential
 	int use(unsigned int utilityType);
+
 	std::map<unsigned int,bool> connectedUtility;
 	Building* source;
 	Coord position;
 	int accumulatedScore;
-	int manhattanDistance(const PlacedBuilding& placedBuilding);//Calcul la distance de manhatan
 };
 
 class City {
@@ -63,31 +63,33 @@ public:
 	virtual City& operator=(City& c);
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
 	~City();
+
 	bool placeMap(City& c,unsigned int row,unsigned int col);
 	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=false);
 	void setMapCell(int row, int col, int value);
-	int getMapCell(int row, int col);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
-	int getScore();
-	int getRemainingCell();
-	void setScore(int score);
-	void PrintMap();
 	void toSolution(string outfileName);
-	unsigned int getCityWidth() { return width; }
-	unsigned int getCityHeight() { return height; }
-	set<Coord> getRemainingCellsList();
-	std::vector<std::set<Coord>> getConnexComposant();
+	void PrintMap();
+
+	int getScore() const;
+	int getRemainingCell() const;
+	int getMapCell(int row, int col) const;
+	const unsigned int& getCityWidth()	const{ return width; }
+	const unsigned int& getCityHeight() const{ return height; }
+	const set<Coord>& getRemainingCellsList()const;
+	std::vector<std::set<Coord>>&& getConnexComposant();
+
 private:
 	unsigned int width;
 	unsigned int height;
 	int** map;
+	int **connexMap;
 	int score;
 	bool connexInit = false;
 	//Placed building, index sur les bâtiments posés
-	std::map<int, std::set<Coord>> ConnexComposant;
-	int **connexMap;
 	vector<PlacedBuilding> placedBuildingRegister;
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
+	std::map<int, std::set<Coord>> ConnexComposant;
 	set<Coord> RemainingCellsList;
 };
