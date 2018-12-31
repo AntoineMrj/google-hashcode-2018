@@ -24,22 +24,22 @@ Project::Project(City* city_)
 	maxHeight = 0;
 }
 
-void Project::setProjectFile(std::string projectFile)
+void Project::setProjectFile(string projectFile)
 {
 	this->projectFile = projectFile;
 }
 
-void Project::setSolutionFile(std::string solutionFile)
+void Project::setSolutionFile(string solutionFile)
 {
 	this->solutionFile = solutionFile;
 }
 
-std::string Project::getProjectFile()
+string Project::getProjectFile()
 {
 	return this->projectFile;
 }
 
-std::string Project::getSolutionFile()
+string Project::getSolutionFile()
 {
 	return this->solutionFile;
 }
@@ -57,7 +57,7 @@ void Project::addUtility(Building *u)
 	this->buildings.push_back(u);
 	if(utilities.find(u->getExtra())==utilities.end())
 	{
-		utilities[u->getExtra()] = std::vector<Building*>();
+		utilities[u->getExtra()] = vector<Building*>();
 
 	}
 		utilities[u->getExtra()].push_back(u);

@@ -17,7 +17,7 @@ using namespace std;
  */
 int main(int argc, char* argv[])
 {
-	std::cout << "BEGIN"<<std::endl;
+	cout << "BEGIN"<<endl;
 	// We check if the number of arguments is correct
 	if (argc < 3)
 	{
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 		/*
 		// Placing the buildings
 		project.city->placeBuilding(project.buildings.at(0), 0, 0);
-		std::cout << project.buildings.size() << std::endl;*/
+		cout << project.buildings.size() << endl;*/
 		bool hasEnded=false;
 		mutex locker;
 		auto start = chrono::steady_clock::now();
@@ -76,8 +76,8 @@ int main(int argc, char* argv[])
 		// Writing the solution in the solution file
 		//project.city->PrintMap();
 		project.city->toSolution(solutionPath);
-		cout << "\nSCORE : " << project.city->getScore()<<std::endl;
-		cout << "REMAINING CELLS : " << double(project.city->getRemainingCell())/(project.city->getCityHeight()*project.city->getCityWidth())*100<<"%" <<std::endl;
+		cout << "\nSCORE : " << project.city->getScore()<<endl;
+		cout << "REMAINING CELLS : " << double(project.city->getRemainingCell())/(project.city->getCityHeight()*project.city->getCityWidth())*100<<"%" <<endl;
 	}
 
 	return EXIT_SUCCESS;

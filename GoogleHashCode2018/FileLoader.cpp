@@ -65,7 +65,7 @@ void FileLoader::loadProject(string projectFile)
  * @param projectFile
  * @param solutionFile
  */
-void FileLoader::loadSolution(std::string projectFile, std::string solutionFile)
+void FileLoader::loadSolution(string projectFile, string solutionFile)
 {
 	Project& project = Project::globalProject;
 	loadProject(projectFile);

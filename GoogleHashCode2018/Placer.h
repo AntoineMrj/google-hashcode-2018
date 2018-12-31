@@ -3,7 +3,6 @@
 #include "Project.h"
 #include <algorithm>
 #include <random>
-#include <unordered_set>
 /**
  * @brief
  * Class used to place building in a tetris way.

@@ -1,6 +1,6 @@
 #include "Placer.h"
 
-
+using namespace std;
 Placer::Placer(City* source)
 {
 	src = source;
@@ -140,15 +140,15 @@ bool Placer::tetrisAleat(Building* b)
 	{
 		for(int col : shuffleCoordCol)
 		{
-		//	std::cout << "\nB";
-		//	std::cout << row << "," << col << std::endl;
+		//	cout << "\nB";
+		//	cout << row << "," << col << endl;
 			if (src->placeBuilding(b, row, col))
 			{
-		//		std::cout << "FOUND" << std::endl;
+		//		cout << "FOUND" << endl;
 				actualPlacement++;
 				if (actualPlacement >= registerFrequency)
 				{
-		//			std::cout << "SHUFFLE" << std::endl;
+		//			cout << "SHUFFLE" << endl;
 					actualPlacement = 0;
 					shuffle();
 				}
@@ -156,7 +156,7 @@ bool Placer::tetrisAleat(Building* b)
 				return true;
 
 			}
-		//	std::cout << "\nA\n";
+		//	cout << "\nA\n";
 		}
 	}
 	return false;
@@ -189,6 +189,6 @@ bool Placer::ConvexPlacement(Building *b)
  */
 void Placer::shuffle()
 {
-	std::random_shuffle(shuffleCoord.begin(), shuffleCoord.end());
-	std::random_shuffle(shuffleCoordCol.begin(), shuffleCoordCol.end());
+	random_shuffle(shuffleCoord.begin(), shuffleCoord.end());
+	random_shuffle(shuffleCoordCol.begin(), shuffleCoordCol.end());
 }

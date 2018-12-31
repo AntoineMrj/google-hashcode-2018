@@ -7,27 +7,25 @@
 #include <fstream>
 //Pré déclaration des classes pour la double inclusion
 class Placer;
-using namespace std;
 
-/*
+	/*
 	Structure correspondant à une coordonée sur la map
 */
-//Forward declaration
-struct Coord
+	//Forward declaration
+	struct Coord
 {
 	//Constructeurs
 	Coord()
 	{
 	}
 
-	Coord(int row,int column)
+	Coord(short int row,short int column)
 	{
 		this->row = row;
 		this->column = column;
 	}
-	int row;
-	int column;
-	int coordManhattanDistance(const Coord& coord);//Calcul la distance de manhattan entre 2 coords
+	short int row;
+	short int column;
 };
 Coord operator+(const Coord& A,const Coord& B);
 bool operator==(const Coord& A,const Coord& B);
@@ -73,7 +71,7 @@ public:
 
 	int getScore() const;
 	int getRemainingCell() const;
-	int getMapCell(int row, int col) const;
+	short int getMapCell(int row, int col) const;
 	const unsigned int& getCityWidth()	const{ return width; }
 	const unsigned int& getCityHeight() const{ return height; }
 	const set<Coord>& getRemainingCellsList()const;
@@ -82,8 +80,8 @@ public:
 private:
 	unsigned int width;
 	unsigned int height;
-	int** map;
-	int **connexMap;
+	short int** map;
+	short int **connexMap;
 	int score;
 	bool connexInit = false;
 	//Placed building, index sur les bâtiments posés

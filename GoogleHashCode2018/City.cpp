@@ -68,9 +68,9 @@ City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
-	map = new int *[h]; // Type de la varibale map à modifier
+	map = new short int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++) {
-	map[a] = new int[w];
+	map[a] = new short int[w];
 	}
 	for (unsigned int i = 0; i < h; i++) {
 		for (unsigned int j = 0; j < w; j++)
@@ -96,9 +96,9 @@ City::City(City& c)
 {
 	width=c.width;
 	height=c.height;
-	map=new int*[height];
+	map=new short int*[height];
 	for(unsigned int a=0;a<height;a++)
-		map[a]=new int[width];
+		map[a]=new short int[width];
 	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
@@ -146,9 +146,9 @@ City& City::operator=(City& c)
 {
 	width = c.width;
 	height = c.height;
-	map = new int *[height];
+	map = new short int *[height];
 	for (unsigned int a = 0; a < height; a++)
-		map[a] = new int[width];
+		map[a] = new short int[width];
 	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
@@ -186,10 +186,10 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 {
 	this->width = w;
 	this->height = h;
-	map = new int *[h]; // Type de la varibale map à modifier
+	map = new short int *[h]; // Type de la varibale map à modifier
 	for (unsigned int a = 0; a < h; a++)
 	{
-		map[a] = new int[w];
+		map[a] = new short int[w];
 	}
 	placeMap(c,row,col);
 }
@@ -296,10 +296,10 @@ std::vector<std::set<Coord>>&& City::getConnexComposant()
 	{
 	std::map<int, std::set<Coord>> ConnexComposant;
 	int counter = 0;
-	connexMap = new int*[height];
+	connexMap = new short int*[height];
 	for(int i = 0;i<height;i++)
 	{
-		connexMap[i] = new int[width];
+		connexMap[i] = new short int[width];
 		std::fill(connexMap[i],connexMap[i]+width,-1);
 	}
 	for(auto C : RemainingCellsList)
@@ -449,7 +449,7 @@ void City::setMapCell(int x, int y, int value)
 /*
 	Return the value of the map's cell in parameter
 */
-int City::getMapCell(int x, int y) const
+short int City::getMapCell(int x, int y) const
 {
 	return this->map[x][y];
 }
@@ -462,14 +462,6 @@ int City::getScore() const
 {
 	return score;
 }
-/*
-	Return Manhattan distance between 2 Coord objects
-*/
-int Coord::coordManhattanDistance(const Coord & coord)
-{
-	return abs(int(coord.row) - int(this->row)) + abs(int(coord.column) - int(this->column));
-}
-
 
 Coord operator+(const Coord& A,const Coord& B)
 {

@@ -17,15 +17,15 @@ public:
 	Building(const Building &b);
 	~Building();
 	Building& operator=(Building const& buildingB);
-	Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,unsigned int extra,Building_type t);
-	void assignArray(int** array);
+	Building(unsigned short int projectNum_, unsigned short int rowNum_, unsigned short int columnNum_,unsigned short int extra,Building_type t);
+	void assignArray(short int** array);
 	void buildInfluenceArea();
 
 	int getCell(unsigned int row, unsigned int column);
-	unsigned int getProjectNum() const{ return this->projectNum; }
-	unsigned int getRowNum() const { return this->rowNum; }
-	unsigned int getColumnNum() const { return this->columnNum; }
-	unsigned int getExtra() const { return this->extra; }
+	unsigned short int getProjectNum() const{ return this->projectNum; }
+	unsigned short int getRowNum() const { return this->rowNum; }
+	unsigned short int getColumnNum() const { return this->columnNum; }
+	unsigned short int getExtra() const { return this->extra; }
 	vector<Coord> getShape();
 	const std::vector<Coord>& getInfluenceArea() const;
 	float getRatio() ;
@@ -41,12 +41,12 @@ public:
 	void print() const;
 
   protected:
-	unsigned int projectNum;
-	unsigned int rowNum;
-	unsigned int columnNum;
-	unsigned int extra;//Capacité pour residence et type pour utility.
+	unsigned short int projectNum;
+	unsigned short int rowNum;
+	unsigned short int columnNum;
+	unsigned short int extra;//Capacité pour residence et type pour utility.
 	Building_type type;
-	int** occupiedCells;
+	short int** occupiedCells;
 	std::vector<Coord> shape;
 	std::vector<Coord> influenceArea;
 	std::vector<Coord> cases;//List of all occupied cells of a building

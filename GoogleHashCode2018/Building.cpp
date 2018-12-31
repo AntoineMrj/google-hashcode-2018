@@ -2,16 +2,18 @@
 #include "City.h"
 #include "Project.h"
 
-Building::Building(unsigned int projectNum_, unsigned int rowNum_, unsigned int columnNum_,unsigned int ex,Building_type t)
+using namespace std;
+
+Building::Building(unsigned short int projectNum_, unsigned short int rowNum_, unsigned short int columnNum_, unsigned short int ex, Building_type t)
 {
 	this->projectNum = projectNum_;
 	this->rowNum = rowNum_;
 	this->columnNum = columnNum_;
 	this->type = t;
 	this->extra = ex;
-	this->occupiedCells = new int*[rowNum_];
+	this->occupiedCells =new short int*[rowNum_];
 	for(unsigned int i = 0;i<this->rowNum;i++)
-		this->occupiedCells[i] = new int[columnNum_];
+		this->occupiedCells[i] =new short int[columnNum_];
 }
 Building::~Building()
 {
@@ -24,9 +26,9 @@ Building::Building(const Building &b)
 	projectNum = b.projectNum;
 	rowNum = b.rowNum;
 	columnNum = b.columnNum;
-	this->occupiedCells = new int *[this->rowNum];
+	this->occupiedCells =new short int *[this->rowNum];
 	for (unsigned int i = 0; i< this->rowNum;i++)
-		this->occupiedCells[i] = new int[this->columnNum];
+		this->occupiedCells[i] =new short int[this->columnNum];
 	assignArray(b.occupiedCells);
 	type = b.type;
 	extra = b.extra;
@@ -37,9 +39,9 @@ Building& Building::operator=(Building const& buildingB)
 	rowNum = buildingB.rowNum;
 	columnNum = buildingB.columnNum;
 	occupiedCells = buildingB.occupiedCells;
-	this->occupiedCells = new int *[this->rowNum];
+	this->occupiedCells =new short int *[this->rowNum];
 	for (unsigned int i = 0; i< this->rowNum;i++)
-		this->occupiedCells[i] = new int[this->columnNum];
+		this->occupiedCells[i] =new short int[this->columnNum];
 	assignArray(buildingB.occupiedCells);
 	type = buildingB.type;
 	extra = buildingB.extra;
@@ -51,7 +53,7 @@ Building& Building::operator=(Building const& buildingB)
  * The size of the array must correspond with the one of the building.
  * @param array 
  */
-void Building::assignArray(int **array)
+void Building::assignArray(short int **array)
 {
 	for(unsigned int i = 0;i<rowNum;i++)
 	{
@@ -115,10 +117,10 @@ void Building::computeShape()
 vector<Coord> Building::getShape()
 {
 	Coord coord;
-	std::vector<Coord> Top;
-	std::vector<Coord> Bottom;
-	std::vector<Coord> Left;
-	std::vector<Coord> Right;
+	vector<Coord> Top;
+	vector<Coord> Bottom;
+	vector<Coord> Left;
+	vector<Coord> Right;
 
 	vector<Coord> res; //tableau resultat
 
@@ -165,8 +167,8 @@ vector<Coord> Building::getShape()
 		}
 		first=false;
 	}
-	std::reverse(Left.begin(),Left.end());
-	std::reverse(Bottom.begin(),Bottom.end());
+	reverse(Left.begin(),Left.end());
+	reverse(Bottom.begin(),Bottom.end());
 	Top.insert(Top.end(),Right.begin(),Right.end());
 	Top.insert(Top.end(),Bottom.begin(),Bottom.end());
 	Top.insert(Top.end(),Left.begin(),Left.end() );
@@ -194,12 +196,12 @@ void Building::buildInfluenceArea()
 		for(const Coord& Influ:Project::globalProject.basic_influenceArea)
 		{
 			Coord temp = {C.row+Influ.row,C.column+Influ.column};
-			if (std::find(influenceArea.begin(), influenceArea.end(), temp) == influenceArea.end())
+			if (find(influenceArea.begin(), influenceArea.end(), temp) == influenceArea.end())
 			{
 				if(temp.row >=0 && temp.row<int(rowNum)
 					&& temp.column>=0 && temp.column<int(columnNum))
 					{
-						if(std::find(shape.begin(),shape.end(),temp)==shape.end()
+						if(find(shape.begin(),shape.end(),temp)==shape.end()
 							&& occupiedCells[temp.row][temp.column]==0)
 							{
 								influenceArea.push_back(temp);
@@ -213,7 +215,7 @@ void Building::buildInfluenceArea()
 		}
 	}
 }
-const std::vector<Coord>& Building::getInfluenceArea() const
+const vector<Coord>& Building::getInfluenceArea() const
 {
 	return influenceArea;
 }
@@ -222,7 +224,7 @@ Building_type Building::getType() const
 {
 	return type;
 }
-const std::vector<Coord>& Building::getCases() const
+const vector<Coord>& Building::getCases() const
 {
 	return cases;
 }
@@ -250,10 +252,10 @@ void Building::print() const
 		for (unsigned int j = 0; j < columnNum; j++)
 		{
 			if(occupiedCells[i][j]>0)
-				std::cout << "#";
+				cout << "#";
 			else
-				std::cout <<".";
+				cout <<".";
 		}
-		std::cout << "\n";
+		cout << "\n";
 	}
 }

@@ -57,10 +57,10 @@ void Solver::Solve(City* city)
 		return c->getEnd();
 	};
 	//DEFINING TYPE OF A COMPUTING STEP
-	using placementGetPair = std::tuple<std::function<bool(Building *, Placer *)>,
-			 std::function<Building *(Chooser*)>,double,string>;
+	using placementGetPair = tuple<function<bool(Building *, Placer *)>,
+			 function<Building *(Chooser*)>,double,string>;
 
-	std::vector<placementGetPair> placements;
+	vector<placementGetPair> placements;
 	unsigned int lastPlacement = 0;
 	double seuil = (city->getCityHeight() * city->getCityWidth());
 	//FILLING PLACEMENTS STEPS
@@ -88,7 +88,7 @@ void Solver::Solve(City* city)
 			}
 			actualP = placements[lastPlacement++];
 			cout<<endl <<city->getRemainingCell()<<" REMAINING CELLS | "
-				<<"PASSING TO : "<< get<3>(actualP)<<std::endl;
+				<<"PASSING TO : "<< get<3>(actualP)<<endl;
 			seuil = get<2>(placements[lastPlacement]) * seuil;
 		}
 		return true;
