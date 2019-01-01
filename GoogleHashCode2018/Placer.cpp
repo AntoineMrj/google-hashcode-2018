@@ -10,7 +10,7 @@ Placer::Placer(City* source)
 		shuffleCoord.push_back(i);
 	for (int i = 0; i < source->getCityWidth(); i++)
 		shuffleCoordCol.push_back(i);
-		shuffle();
+	shuffle();
 }
 /**
  * @brief

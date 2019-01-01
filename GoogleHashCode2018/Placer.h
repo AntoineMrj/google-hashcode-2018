@@ -1,7 +1,5 @@
 #pragma once
-#include "City.h"
 #include "Project.h"
-#include <algorithm>
 #include <random>
 /**
  * @brief

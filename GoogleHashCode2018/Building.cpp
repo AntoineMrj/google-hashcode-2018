@@ -1,5 +1,4 @@
 #include "Building.h"
-#include "City.h"
 #include "Project.h"
 
 using namespace std;
@@ -200,7 +199,6 @@ bool Building::cellInRes(unsigned int row, unsigned int column, vector<Coord> re
  */
 void Building::buildInfluenceArea()
 {
-	Project& p = Project::globalProject;
 	for(auto C : shape)
 	{
 		for(const Coord& Influ:Project::globalProject.basic_influenceArea)

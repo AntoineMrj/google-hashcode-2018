@@ -1,13 +1,6 @@
 #pragma once
 #include "City.h"
-#include <vector>
-#include <set>
-#include <string>
-#include <map>
-#include <functional>
-//Il faudrait rendre la classe static pour faire le lien entre les Places
-//Il n'y aura que 1 projet par session je pense
-//Sinon il va falloir lier une city à un project
+
 class Project
 {
 private:

@@ -1,10 +1,8 @@
 #pragma once
 #include <fstream>
 #include <string>
-#include "Project.h"
-#include "City.h"
-#include <vector>
 #include <iostream>
+#include "Project.h"
 
 
 class FileLoader

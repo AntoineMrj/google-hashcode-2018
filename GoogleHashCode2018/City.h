@@ -1,13 +1,10 @@
 #pragma once
-
 #include <vector>
 #include <cmath>
-#include "Building.h"
 #include <map>
 #include <set>
 #include <fstream>
-//Pré déclaration des classes pour la double inclusion
-class Placer;
+#include "Building.h"
 
 	/*
 	Structure correspondant à une coordonée sur la map
