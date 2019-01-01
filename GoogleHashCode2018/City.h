@@ -52,7 +52,6 @@ struct PlacedBuilding
 	std::map<unsigned int,bool> connectedUtility;
 	Building* source;
 	Coord position;
-	int accumulatedScore;
 };
 
 class City {
@@ -91,7 +90,7 @@ private:
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
 	int connexCount=0;
-	int connexResetFrequency=20;
+	int connexResetFrequency=10;
 	std::map<int, std::set<Coord>> ConnexComposant;
 	set<Coord> RemainingCellsList;
 };

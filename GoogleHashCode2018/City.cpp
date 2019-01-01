@@ -12,12 +12,10 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 		}
 	}
 	source = P.source;
-	accumulatedScore = P.accumulatedScore;
 }
 	PlacedBuilding::PlacedBuilding(Building *buildingNum)
 {
 	this->source = buildingNum;
-	accumulatedScore = 0;
 	if (buildingNum->getType() == Residential)
 	{
 		for (auto i : Project::globalProject.utilities)
@@ -37,7 +35,6 @@ PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
 		}
 	}
 	source = P.source;
-	accumulatedScore = P.accumulatedScore;
 }
 /**
  * @brief
@@ -53,7 +50,6 @@ int PlacedBuilding::use(unsigned int utilityType)
 	if (connectedUtility[utilityType] == false)
 	{
 		connectedUtility[utilityType] = true;
-		accumulatedScore += source->getExtra();
 		return source->getExtra();
 	}
 	return 0;

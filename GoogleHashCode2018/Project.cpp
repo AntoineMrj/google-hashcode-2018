@@ -6,10 +6,6 @@ Project::Project() {
 	this->buildings = vector<Building *>();
 	this->residentials = vector<Building*>();
 	this->utilities = map<unsigned int,vector<Building*> >();
-	minWidth=10000;
-	maxWidth=0;
-	minHeight=100000;
-	maxHeight=0;
 	city = nullptr;
 }
 
@@ -20,10 +16,7 @@ Project::Project(City* city_)
 	this->buildings = vector<Building*>();
 	this->residentials = vector<Building *>();
 	this->utilities = map<unsigned int, vector<Building *>>();
-	minWidth = 10000;
-	maxWidth = 0;
-	minHeight = 100000;
-	maxHeight = 0;
+
 }
 Project::~Project()
 {
@@ -53,14 +46,6 @@ string Project::getSolutionFile()
 
 void Project::addUtility(Building *u)
 {
-	if (u->getColumnNum() > maxWidth)
-		maxWidth = u->getColumnNum();
-	if (u->getColumnNum() < minWidth)
-		minWidth = u->getColumnNum();
-	if (u->getRowNum() > maxHeight)
-		maxHeight = u->getRowNum();
-	if (u->getRowNum() < minHeight)
-		minHeight = u->getRowNum();
 	this->buildings.push_back(u);
 	if(utilities.find(u->getExtra())==utilities.end())
 	{
@@ -72,14 +57,6 @@ void Project::addUtility(Building *u)
 
 void Project::addResidential(Building *r)
 {
-	if(r->getColumnNum()>maxWidth)
-		maxWidth=r->getColumnNum();
-	if (r->getColumnNum() < minWidth)
-		minWidth = r->getColumnNum();
-	if (r->getRowNum() > maxHeight)
-		maxHeight = r->getRowNum();
-	if (r->getRowNum() < minHeight)
-		minHeight = r->getRowNum();
 	this->buildings.push_back(r);
 	this->residentials.push_back(r);
 }

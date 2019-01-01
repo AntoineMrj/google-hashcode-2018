@@ -35,10 +35,6 @@ public:
 	//Building getProjectById(unsigned int PId); //TO DO
 	std::vector<Coord> basic_influenceArea;
 	int maxWalkingDistance;
-	int minWidth;
-	int maxWidth;
-	int minHeight;
-	int maxHeight;
 	int minNbCells;
 
 };
