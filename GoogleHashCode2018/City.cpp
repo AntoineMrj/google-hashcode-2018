@@ -1,6 +1,6 @@
 #include"City.h"
 #include "Project.h"
-
+using namespace std;
 PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 {
 	position = P.position;
@@ -60,7 +60,7 @@ int PlacedBuilding::use(unsigned int utilityType)
 }
 
 City::City() {
-	map = nullptr;
+	buildingMap = nullptr;
 	connexMap = nullptr;
 }
 
@@ -68,14 +68,14 @@ City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
-	map = new short int *[h]; // Type de la varibale map à modifier
+	buildingMap = new short int *[h]; // Type de la varibale buildingMap à modifier
 	for (unsigned int a = 0; a < h; a++) {
-	map[a] = new short int[w];
+	buildingMap[a] = new short int[w];
 	}
 	for (unsigned int i = 0; i < h; i++) {
 		for (unsigned int j = 0; j < w; j++)
 		{
-			map[i][j] = -1;
+			buildingMap[i][j] = -1;
 		}
 	}
 	for (unsigned int i = 0; i < getCityHeight(); i++)
@@ -96,15 +96,15 @@ City::City(City& c)
 {
 	width=c.width;
 	height=c.height;
-	map=new short int*[height];
+	buildingMap=new short int*[height];
 	for(unsigned int a=0;a<height;a++)
-		map[a]=new short int[width];
+		buildingMap[a]=new short int[width];
 	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
 		for (unsigned int j = 0; j < width; j++)
 		{
-			map[i][j] = c.map[i][j];
+			buildingMap[i][j] = c.buildingMap[i][j];
 		}
 	}
 	for (PlacedBuilding P : c.placedBuildingRegister)
@@ -128,10 +128,10 @@ City::~City()
 	{
 		for(unsigned int i = 0;i<height;i++)
 		{
-			delete [](map[i]);
+			delete [](buildingMap[i]);
 			delete [](connexMap[i]);
 		}
-		delete []map;
+		delete []buildingMap;
 		delete []connexMap;
 	}
 }
@@ -146,15 +146,15 @@ City& City::operator=(City& c)
 {
 	width = c.width;
 	height = c.height;
-	map = new short int *[height];
+	buildingMap = new short int *[height];
 	for (unsigned int a = 0; a < height; a++)
-		map[a] = new short int[width];
+		buildingMap[a] = new short int[width];
 	RemainingCellsList = c.RemainingCellsList;
 	for (unsigned int i = 0; i < height; i++)
 	{
 		for (unsigned int j = 0; j < width; j++)
 		{
-			map[i][j] = c.map[i][j];
+			buildingMap[i][j] = c.buildingMap[i][j];
 		}
 	}
 	for(PlacedBuilding P:c.placedBuildingRegister)
@@ -186,10 +186,10 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 {
 	this->width = w;
 	this->height = h;
-	map = new short int *[h]; // Type de la varibale map à modifier
+	buildingMap = new short int *[h]; // Type de la varibale buildingMap à modifier
 	for (unsigned int a = 0; a < h; a++)
 	{
-		map[a] = new short int[w];
+		buildingMap[a] = new short int[w];
 	}
 	placeMap(c,row,col);
 }
@@ -211,7 +211,7 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 	}
 }
 	/*
-	Place a building on the map
+	Place a building on the buildingMap
 	The try argument determine if it's just a test of placement instead of a placing.
 	@return the coverage ration of the building
 	if it's 0, this mean an error occured,
@@ -252,6 +252,7 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
 	}
+
 	PlacedBuilding placedBuilding(building);
 	placedBuilding.position = Coord(row, col);
 	placedBuildingRegister.push_back(placedBuilding);
@@ -288,19 +289,20 @@ const set<Coord>& City::getRemainingCellsList() const
  * @brief
  * Get and create if necessary de connex composant liste
  * Which is all cells that are in an area in which we can place a building
- * @return std::vector<std::set<Coord>> 
+ * @return vector<set<Coord>>
  */
-std::vector<std::set<Coord>>&& City::getConnexComposant()
+vector<set<Coord>>&& City::getConnexComposant()
 {
-	if(!connexInit)
+	if(!connexInit ||connexCount++>=connexResetFrequency)
 	{
-	std::map<int, std::set<Coord>> ConnexComposant;
+	connexCount =0;
+	map<int, set<Coord>> ConnexComposant;
 	int counter = 0;
 	connexMap = new short int*[height];
 	for(int i = 0;i<height;i++)
 	{
 		connexMap[i] = new short int[width];
-		std::fill(connexMap[i],connexMap[i]+width,-1);
+		fill(connexMap[i],connexMap[i]+width,-1);
 	}
 	for(auto C : RemainingCellsList)
 	{
@@ -339,24 +341,28 @@ std::vector<std::set<Coord>>&& City::getConnexComposant()
 		{
 
 			connexMap[C.row][C.column] = counter;
-			ConnexComposant[counter] = std::set<Coord>();
+			ConnexComposant[counter] = set<Coord>();
 			ConnexComposant[counter].insert(C);
 			counter++;
 		}
 	}
 	connexInit = true;
 	}
-	std::vector<std::set<Coord>> outVec;
+	vector<set<Coord>> outVec;
 	for(auto C:ConnexComposant)
 	{
-		if(C.second.size() >= Project::globalProject.minHeight *Project::globalProject.minWidth)
+		if(C.second.size() >= Project::globalProject.minNbCells)
 		{
-			//std::random_shuffle(C.second.begin(),C.second.end());
+			//random_shuffle(C.second.begin(),C.second.end());
 			outVec.push_back(C.second);
 		}
 	}
-	//std::random_shuffle(outVec.begin(),outVec.end());
-	return	std::move(outVec);
+	sort(outVec.begin(), outVec.end(), [](const set<Coord> &a, const set<Coord> &b)
+	{
+		return a.size() < b.size();
+	});
+		//random_shuffle(outVec.begin(),outVec.end());
+		return move(outVec);
 }
 /**
  * @brief
@@ -371,7 +377,7 @@ int City::getRemainingCell() const
  * @brief
  * Compute the score generated by a freshly placed building A with an other buildbing B accesible by A.
  * @param A Freshly placed building
- * @param B Building already on the map
+ * @param B Building already on the buildingMap
  * @return int Score generated by the interaction between these 2 buildings.
  */
 		int City::computeScore(PlacedBuilding & A, PlacedBuilding & B)
@@ -405,7 +411,7 @@ int City::getRemainingCell() const
 }
 /**
  * @brief
- * Print the city map in the console
+ * Print the city buildingMap in the console
  */
 void City::PrintMap()
 {
@@ -413,12 +419,12 @@ void City::PrintMap()
 	{
 		for(int c=0;c<width;c++)
 		{
-			if(map[r][c]>=0)
-				std::cout  << "#";
+			if(buildingMap[r][c]>=0)
+				cout  << "#";
 			else
-				std::cout << ".";
+				cout << ".";
 		}
-		std::cout << std::endl;
+		cout << endl;
 	}
 }
 
@@ -428,30 +434,30 @@ void City::PrintMap()
 */
  void City::toSolution(string outfileName)
  {
-	 std::ofstream outfile(outfileName);
-	 outfile << placedBuildingRegister.size() << std::endl;
+	 ofstream outfile(outfileName);
+	 outfile << placedBuildingRegister.size() << endl;
 	 for (int i = 0; i < placedBuildingRegister.size(); i++)
 	 {
-		 outfile << placedBuildingRegister.at(i).source->getProjectNum() << " " << placedBuildingRegister.at(i).position.row << " " << placedBuildingRegister.at(i).position.column << std::endl;
+		 outfile << placedBuildingRegister.at(i).source->getProjectNum() << " " << placedBuildingRegister.at(i).position.row << " " << placedBuildingRegister.at(i).position.column << endl;
 	 }
 	 outfile.close();
  }
 
 
 /*
-	Modify the value of the map's cell in parameter
+	Modify the value of the buildingMap's cell in parameter
 */
 void City::setMapCell(int x, int y, int value)
 {
-	this->map[x][y] = value;
+	this->buildingMap[x][y] = value;
 }
 
 /*
-	Return the value of the map's cell in parameter
+	Return the value of the buildingMap's cell in parameter
 */
 short int City::getMapCell(int x, int y) const
 {
-	return this->map[x][y];
+	return this->buildingMap[x][y];
 }
 /**
  * @brief

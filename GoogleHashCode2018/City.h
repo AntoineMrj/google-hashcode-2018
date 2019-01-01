@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Building.h"
 #include <map>
+#include <set>
 #include <fstream>
 //Pré déclaration des classes pour la double inclusion
 class Placer;
@@ -80,7 +81,7 @@ public:
 private:
 	unsigned int width;
 	unsigned int height;
-	short int** map;
+	short int** buildingMap;
 	short int **connexMap;
 	int score;
 	bool connexInit = false;
@@ -88,6 +89,8 @@ private:
 	vector<PlacedBuilding> placedBuildingRegister;
 	vector<PlacedBuilding*> registeredUtilities;
 	vector<PlacedBuilding*> registeredResidentials;
+	int connexCount=0;
+	int connexResetFrequency=20;
 	std::map<int, std::set<Coord>> ConnexComposant;
 	set<Coord> RemainingCellsList;
 };

@@ -93,12 +93,15 @@ void Project::prepare()
 			return a->getRatio() < b->getRatio();
 		});
 	}
+	minNbCells =(*min_element(buildings.begin(),buildings.end(),[](const Building* a,const Building* b){
+		return a->getNbCells()<a->getNbCells();
+	}))->getNbCells();
 }
 /**
  * @brief
  * Set the maximal walking distance of this city.
- * Define at the same time all coordinates relative to a case that can be accesible.
- * @param MaxWD 
+ * Define at the same time all coordinates relative to a cell that can be accesible.
+ * @param MaxWD
  */
 void Project::setMaxWalkingDistance(int MaxWD)
 {

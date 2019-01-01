@@ -108,6 +108,7 @@ void Building::computeShape()
 {
 	shape = this->getShape();
 	this->buildInfluenceArea();
+	random_shuffle(cases.begin(),cases.end());
 }
 /**
  * @brief

@@ -39,4 +39,6 @@ public:
 	int maxWidth;
 	int minHeight;
 	int maxHeight;
+	int minNbCells;
+
 };

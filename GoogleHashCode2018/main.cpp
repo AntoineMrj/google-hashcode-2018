@@ -17,7 +17,6 @@ using namespace std;
  */
 int main(int argc, char* argv[])
 {
-	cout << "BEGIN"<<endl;
 	// We check if the number of arguments is correct
 	if (argc < 3)
 	{
@@ -34,6 +33,7 @@ int main(int argc, char* argv[])
 		string projectPath(argv[1]);
 		string solutionPath(argv[2]);
 
+		cout << "PRECALCULATING STUFFS..." << endl;
 		// Loading the project
 		FileLoader::loadProject(projectPath);
 
@@ -74,7 +74,8 @@ int main(int argc, char* argv[])
 			solvingThread.join();
 			printer.join();
 		// Writing the solution in the solution file
-		//project.city->PrintMap();
+		std::cout <<"\n------------------------------------"<<std::endl;
+		project.city->PrintMap();
 		project.city->toSolution(solutionPath);
 		cout << "\nSCORE : " << project.city->getScore()<<endl;
 		cout << "REMAINING CELLS : " << double(project.city->getRemainingCell())/(project.city->getCityHeight()*project.city->getCityWidth())*100<<"%" <<endl;
