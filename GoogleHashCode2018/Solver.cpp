@@ -84,8 +84,8 @@ void Solver::Solve(City* city)
 	placements.push_back({bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET"});
 	placements.push_back({topRightPlacement,baseGet,0.5,"TOP RIGHT, BASEGET"});
 	placements.push_back({aleatPlacement,baseGet,0.7,"RANDOM, BASEGET"});
-	placements.push_back({convexPlacement,baseGet,0.2,"CONVEX, BASEGET"});
-	placements.push_back({convexPlacement,endGet,0.8,"CONVEX, ENDGET"});
+	placements.push_back({convexPlacement,baseGet,0.2,"CONNEX, BASEGET"});
+	placements.push_back({convexPlacement,endGet,0.8,"CONNEX, ENDGET"});
 	auto nextSeuil = [&seuil,&city,&placements, &lastPlacement, &actualP]()
 	-> bool {
 		if (city->getRemainingCell() <= seuil)
