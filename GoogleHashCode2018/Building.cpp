@@ -14,6 +14,9 @@ Building::Building(unsigned short int projectNum_, unsigned short int rowNum_, u
 	this->occupiedCells =new short int*[rowNum_];
 	for(unsigned int i = 0;i<this->rowNum;i++)
 		this->occupiedCells[i] =new short int[columnNum_];
+	ratio = -1;
+	density=-1;
+	nbCells =0;
 }
 Building::~Building()
 {
@@ -32,6 +35,9 @@ Building::Building(const Building &b)
 	assignArray(b.occupiedCells);
 	type = b.type;
 	extra = b.extra;
+	ratio = b.ratio;
+	density = b.density;
+	nbCells = b.nbCells;
 }
 Building& Building::operator=(Building const& buildingB)
 {
@@ -45,6 +51,9 @@ Building& Building::operator=(Building const& buildingB)
 	assignArray(buildingB.occupiedCells);
 	type = buildingB.type;
 	extra = buildingB.extra;
+	ratio = buildingB.ratio;
+	density = buildingB.density;
+	nbCells = buildingB.nbCells;
 	return *this;
 }
 /**

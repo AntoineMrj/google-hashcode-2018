@@ -18,6 +18,8 @@ class Placer;
 	//Constructeurs
 	Coord()
 	{
+		row = 0;
+		column =0;
 	}
 
 	Coord(short int row,short int column)
@@ -61,7 +63,6 @@ public:
 	City(City& c);
 	virtual City& operator=(City& c);
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
-	~City();
 
 	bool placeMap(City& c,unsigned int row,unsigned int col);
 	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=false);
@@ -81,8 +82,8 @@ public:
 private:
 	unsigned int width;
 	unsigned int height;
-	short int** buildingMap;
-	short int **connexMap;
+	std::vector<std::vector<short int>> buildingMap;
+	std::vector<std::vector<short int>> connexMap;
 	int score;
 	bool connexInit = false;
 	//Placed building, index sur les bâtiments posés

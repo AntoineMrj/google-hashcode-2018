@@ -50,8 +50,8 @@ public:
 	std::vector<Coord> shape;
 	std::vector<Coord> influenceArea;
 	std::vector<Coord> cases;//List of all occupied cells of a building
-	float ratio=-1;//area of a building divided by all his cases
-	float density=-1;//Density of a residentail building
+	float ratio;//area of a building divided by all his cases
+	float density;//Density of a residentail building
 	unsigned int nbCells;
 
 };

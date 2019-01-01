@@ -60,24 +60,18 @@ int PlacedBuilding::use(unsigned int utilityType)
 }
 
 City::City() {
-	buildingMap = nullptr;
-	connexMap = nullptr;
 }
 
 City::City(unsigned int w, unsigned int h)
 {
 	this->width = w;
 	this->height = h;
-	buildingMap = new short int *[h]; // Type de la varibale buildingMap à modifier
-	for (unsigned int a = 0; a < h; a++) {
-	buildingMap[a] = new short int[w];
-	}
-	for (unsigned int i = 0; i < h; i++) {
-		for (unsigned int j = 0; j < w; j++)
-		{
-			buildingMap[i][j] = -1;
-		}
-	}
+
+	buildingMap = vector<vector<short int>>(height);
+	fill(buildingMap.begin(),buildingMap.end(),vector<short int>(width));
+	for(auto& v:buildingMap)
+		fill(v.begin(),v.end(),-1);
+
 	for (unsigned int i = 0; i < getCityHeight(); i++)
 	{
 		for (unsigned int j = 0; j < getCityWidth(); j++)
@@ -96,17 +90,8 @@ City::City(City& c)
 {
 	width=c.width;
 	height=c.height;
-	buildingMap=new short int*[height];
-	for(unsigned int a=0;a<height;a++)
-		buildingMap[a]=new short int[width];
+	buildingMap = c.buildingMap;
 	RemainingCellsList = c.RemainingCellsList;
-	for (unsigned int i = 0; i < height; i++)
-	{
-		for (unsigned int j = 0; j < width; j++)
-		{
-			buildingMap[i][j] = c.buildingMap[i][j];
-		}
-	}
 	for (PlacedBuilding P : c.placedBuildingRegister)
 	{
 		placedBuildingRegister.push_back(P);
@@ -122,20 +107,6 @@ City::City(City& c)
 	}
 	score = c.score;
 }
-City::~City()
-{
-	if(connexMap!=nullptr)
-	{
-		for(unsigned int i = 0;i<height;i++)
-		{
-			delete [](buildingMap[i]);
-			delete [](connexMap[i]);
-		}
-		delete []buildingMap;
-		delete []connexMap;
-	}
-}
-
 /**
  * @brief
  * Assignation operator
@@ -146,17 +117,9 @@ City& City::operator=(City& c)
 {
 	width = c.width;
 	height = c.height;
-	buildingMap = new short int *[height];
-	for (unsigned int a = 0; a < height; a++)
-		buildingMap[a] = new short int[width];
+	buildingMap = c.buildingMap;
 	RemainingCellsList = c.RemainingCellsList;
-	for (unsigned int i = 0; i < height; i++)
-	{
-		for (unsigned int j = 0; j < width; j++)
-		{
-			buildingMap[i][j] = c.buildingMap[i][j];
-		}
-	}
+
 	for(PlacedBuilding P:c.placedBuildingRegister)
 	{
 		placedBuildingRegister.push_back(P);
@@ -186,11 +149,10 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
 {
 	this->width = w;
 	this->height = h;
-	buildingMap = new short int *[h]; // Type de la varibale buildingMap à modifier
-	for (unsigned int a = 0; a < h; a++)
-	{
-		buildingMap[a] = new short int[w];
-	}
+	buildingMap = vector<vector<short int>>(height);
+	fill(buildingMap.begin(), buildingMap.end(), vector<short int>(width));
+	for (auto &v : buildingMap)
+		fill(v.begin(), v.end(), -1);
 	placeMap(c,row,col);
 }
 /**
@@ -252,7 +214,6 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
 	}
-
 	PlacedBuilding placedBuilding(building);
 	placedBuilding.position = Coord(row, col);
 	placedBuildingRegister.push_back(placedBuilding);
@@ -298,12 +259,10 @@ vector<set<Coord>>&& City::getConnexComposant()
 	connexCount =0;
 	map<int, set<Coord>> ConnexComposant;
 	int counter = 0;
-	connexMap = new short int*[height];
-	for(int i = 0;i<height;i++)
-	{
-		connexMap[i] = new short int[width];
-		fill(connexMap[i],connexMap[i]+width,-1);
-	}
+	connexMap = vector<vector<short int>>(height);
+	fill(connexMap.begin(), connexMap.end(), vector<short int>(width));
+	for (auto v : connexMap)
+		fill(v.begin(), v.end(), -1);
 	for(auto C : RemainingCellsList)
 	{
 		bool alreadyPlaced = false;

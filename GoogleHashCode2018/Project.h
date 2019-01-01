@@ -21,7 +21,7 @@ public:
 	std::map<unsigned int, std::vector<Building*> > utilities;
 	Project();
 	Project(City* city_); // liste des utilities faisant reference a l index dans building
-
+	~Project();
 
 	void prepare();//Sort all containers.
 	void setProjectFile(std::string projectFile);

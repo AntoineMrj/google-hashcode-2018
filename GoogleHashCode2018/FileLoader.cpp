@@ -11,7 +11,6 @@ using namespace std;
 void FileLoader::loadProject(string projectFile)
 {
 	Project& project = Project::globalProject;
-	City city;
 	Building *building;
 
 	ifstream openFile(projectFile);

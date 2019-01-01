@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 			printer.join();
 		// Writing the solution in the solution file
 		std::cout <<"\n------------------------------------"<<std::endl;
-		project.city->PrintMap();
+		//project.city->PrintMap();
 		project.city->toSolution(solutionPath);
 		cout << "\nSCORE : " << project.city->getScore()<<endl;
 		cout << "REMAINING CELLS : " << double(project.city->getRemainingCell())/(project.city->getCityHeight()*project.city->getCityWidth())*100<<"%" <<endl;

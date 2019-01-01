@@ -10,10 +10,12 @@ Project::Project() {
 	maxWidth=0;
 	minHeight=100000;
 	maxHeight=0;
+	city = nullptr;
 }
 
 Project::Project(City* city_)
 {
+
 	this->city = city_;
 	this->buildings = vector<Building*>();
 	this->residentials = vector<Building *>();
@@ -23,7 +25,12 @@ Project::Project(City* city_)
 	minHeight = 100000;
 	maxHeight = 0;
 }
-
+Project::~Project()
+{
+	delete city;
+	for(auto b:buildings)
+		delete b;
+}
 void Project::setProjectFile(string projectFile)
 {
 	this->projectFile = projectFile;
@@ -79,6 +86,9 @@ void Project::addResidential(Building *r)
 
 void Project::setCity(unsigned int width, unsigned int height)
 {
+
+	if(city!=nullptr)
+		delete city;
 	city = new City(height,width);
 }
 void Project::prepare()
