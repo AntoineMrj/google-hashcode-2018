@@ -90,7 +90,7 @@ void Solver::Solve(City* city)
 	-> bool {
 		if (city->getRemainingCell() <= seuil)
 		{
-			if (lastPlacement + 1 >= placements.size())
+			if (lastPlacement >= placements.size())
 			{
 				return true;
 			}
