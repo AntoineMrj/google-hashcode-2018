@@ -1,5 +1,6 @@
 #include "Solver.h"
 using namespace std;
+
 void Solver::Solve(City* city)
 {
 	/**
@@ -95,8 +96,8 @@ void Solver::Solve(City* city)
 				return true;
 			}
 			actualP = placements[lastPlacement++];
-			cout<<endl <<city->getRemainingCell()<<" REMAINING CELLS | "
-				<<"PASSING TO : "<< get<3>(actualP)<<endl;
+			cout<< endl <<city->getRemainingCell()<<" REMAINING CELLS | "
+			<<"PASSING TO : "<< get<3>(actualP).c_str() << endl;
 			seuil = get<2>(placements[lastPlacement]) * seuil;
 		}
 		return true;

@@ -72,7 +72,7 @@ City::City(unsigned int w, unsigned int h)
 	{
 		for (unsigned int j = 0; j < getCityWidth(); j++)
 		{
-			RemainingCellsList.insert({i, j});
+			RemainingCellsList.insert({short(i), short(j)});
 		}
 	}
 	score = 0;
@@ -204,9 +204,9 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 	{
 			if(connexInit)
 			{
-				ConnexComposant[connexMap[c.row + row][c.column + col]].erase({c.row + row, c.column + col});
+				ConnexComposant[connexMap[c.row + row][c.column + col]].erase({short(c.row + row), short(c.column + col)});
 			}
-			RemainingCellsList.erase({c.row+row,c.column+col});
+			RemainingCellsList.erase({short(c.row+row),short(c.column+col)});
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
 	}
@@ -225,7 +225,7 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 	//Calcul du score généré par le placement
 	for (const Coord &coord : placedBuilding.source->getInfluenceArea())
 	{
-		Coord temp_coord = {coord.row + int(row), coord.column + int(col)};
+		Coord temp_coord = {short(coord.row + int(row)), short(coord.column + int(col))};
 		if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > -1 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
 		{
 			score += computeScore(placedBuildingRegister.back(), placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)]);

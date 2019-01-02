@@ -6,7 +6,6 @@
 #include <mutex>
 #include <chrono>
 #include <iomanip>
-#include <unistd.h>
 using namespace std;
 
 /**
@@ -67,7 +66,7 @@ int main(int argc, char* argv[])
 				cout << "\r"
 					 << "Elapsed Time : " << setw(10) << executionTime.count() << " |"
 					 << "Remaining Cells : " << setw(10)  <<project.city->getRemainingCell();
-				usleep(500);
+				std::this_thread::sleep_for(std::chrono::milliseconds(500));
 			}
 		});
 

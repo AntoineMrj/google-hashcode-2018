@@ -99,7 +99,7 @@ void Project::setMaxWalkingDistance(int MaxWD)
 		{
 			if(!(row==0&&col==0))
 			{
-				this->basic_influenceArea.push_back({row,col});
+				this->basic_influenceArea.push_back({short(row),short(col)});
 			}
 		}
 		if(row<0)

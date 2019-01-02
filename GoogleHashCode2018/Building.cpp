@@ -82,7 +82,7 @@ void Building::setCell(unsigned int row, unsigned int column, int value)
 {
 	if(value!=0)
 	{
-		cases.push_back({row,column});
+		cases.push_back({short(row),short(column)});
 		nbCells++;
 	}
 	occupiedCells[row][column]=value;
@@ -150,23 +150,23 @@ vector<Coord> Building::getShape()
 		{
 			if(first&&occupiedCells[i][j])
 			{
-				Top.push_back({i,j});
+				Top.push_back({short(i),short(j)});
 			}
 			if(!first&&!end)
 			{
 				if (begin_middle && occupiedCells[i][j])
 				{
-					Left.push_back({i,j});
+					Left.push_back({short(i),short(j)});
 					begin_middle=false;
 				}
 				else if (occupiedCells[i][j])
 				{
-					coord={i,j};
+					coord={short(i),short(j)};
 				}
 			}
 			if(end&&occupiedCells[i][j])
 			{
-				Bottom.push_back({i,j});
+				Bottom.push_back({short(i),short(j)});
 			}
 		}
 		if(!first&&!end)
