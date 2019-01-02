@@ -69,6 +69,7 @@ public:
 
 	int getScore() const;
 	int getRemainingCell() const;
+	int getBuildingQuantity() const;
 	short int getMapCell(int row, int col) const;
 	const unsigned int& getCityWidth()	const{ return width; }
 	const unsigned int& getCityHeight() const{ return height; }

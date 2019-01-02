@@ -1,4 +1,5 @@
 #include "Chooser.h"
+
 bool Chooser::isRandInit = false;
 Chooser::Chooser()
 {
@@ -77,7 +78,7 @@ void Chooser::initialize()
 		else//UTILITIES
 		{
 
-			std::vector<Building*>* uList;
+			std::vector<Building*>* uList = nullptr;
 			int a = 0;
 			//FINDING THE UTILITIES TYPE
 			std::vector<std::pair<unsigned int, std::vector<Building *> > >::iterator itRef;
@@ -91,7 +92,7 @@ void Chooser::initialize()
 				}
 			}
 			a=0;
-			//CHOOSING AN UTILITIES IN THE PREVIOUS LIST
+			//CHOOSING AN UTILITY IN THE PREVIOUS LIST
 			for (auto r = uList->begin(); r != uList->end(); ++r)
 			{
 				if (a++==uList->size()-1|| dice(utilities))

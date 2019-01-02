@@ -3,33 +3,68 @@ using namespace std;
 
 void Solver::Solve(City* city)
 {
+	unsigned int subcitySize = 100;
+	vector<City*> subcities;
+	unsigned int subcitiesNumber = (city->getCityHeight() * city->getCityWidth()) / (subcitySize*subcitySize);
+	City *c;
+	
+	//COMPUTE SUBCITIES
+	/*for (size_t k = 0; k < subcitiesNumber; k++)
+	{
+		c = new City(subcitySize, subcitySize);
+		SolveSubcity(c);
+		subcities.push_back(c);
+	}*/
+
+	c = new City(subcitySize, subcitySize);
+	SolveSubcity(c);
+	subcities.push_back(c);
+
+	cout << "SCORE : " << subcities.at(0)->getScore() << " | nb buildings : " << subcities.at(0)->getBuildingQuantity() << endl;
+
+	City test(subcitySize, subcitySize);
+
+	//ASSEMBLE
+	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
+	{
+
+		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
+		{
+			city->placeMap(*subcities.at(0), j, i);
+		}
+	}
+}
+
+
+void Solver::SolveSubcity(City* city)
+{
 	/**
-	 * Solver using a combination of a chooser and a placer to optimize placement on city
+	 * Solver uses a combination of a chooser and a placer to optimize placement on city
 	 * Work in a raisonable time for small cities.
 	 *
-	 * The chooser is use to sort and find building using random generated list.
-	 * The placer is use in 5 ways to optimize calculus time.
+	 * The chooser is used to sort and find building using random generated list.
+	 * The placer is used in 5 ways to optimize calculus time.
 	 *
 	 */
-	/**
-	 * Type : probabilty to choose a type
-	 * 		High : more probability to choose a residential
-	 * 		Low : more probabilitu to choose an utility
-	 * U : probability of choosing an utility
-	 * 		High : more probabilityu to choose a small utility
-	 * 		Low : more probability to choose a big utility
-	 * UT : probability of choosing a type of utility
-	 * 		High : more probability of choosing most represented utility
-	 * 		Low : more probability of choosing a less represented utility
-	 * R : probability of choosing an residential
-	 * 		High : more probabilityu to choose a small residential
-	 * 		Low : more probability to choose a big residential
-	 */
+	 /**
+	  * Type : probabilty to choose a type
+	  * 		High : more probability to choose a residential
+	  * 		Low : more probabilitu to choose an utility
+	  * U : probability of choosing an utility
+	  * 		High : more probability to choose a small utility
+	  * 		Low : more probability to choose a big utility
+	  * UT : probability of choosing a type of utility
+	  * 		High : more probability of choosing most represented utility
+	  * 		Low : more probability of choosing a less represented utility
+	  * R : probability of choosing a residential
+	  * 		High : more probabilityu to choose a small residential
+	  * 		Low : more probability to choose a big residential
+	  */
 	double Type = 0.3;
 	double U = 0.8;
 	double UT = 0.95;
 	double R = 0.3;
-	Chooser c(Type,U,UT,R,&Project::globalProject);
+	Chooser c(Type, U, UT, R, &Project::globalProject);
 	Placer p(city);
 	Building* b;
 	//threshold for each placement type
@@ -41,11 +76,11 @@ void Solver::Solve(City* city)
 	int seuilShuffle = seuilMIN*0.1;
 	int seuilEnd = seuilShuffle*0.8;**/
 	//Count of placement
-	int actualPlacement=0;
+	int actualPlacement = 0;
 	//Threslhold for reinitialising the chooser
 	int reinitSeuil = 10;
 	//DEFINING PLACEMENT FUNCTION
-	auto bottomRightPlacement = [](Building* b,Placer* p)->bool{
+	auto bottomRightPlacement = [](Building* b, Placer* p)->bool {
 		return p->tetrisPlacement(b);
 	};
 	auto topRightPlacement = [](Building *b, Placer *p) -> bool {
@@ -54,7 +89,7 @@ void Solver::Solve(City* city)
 	auto aleatPlacement = [](Building *b, Placer *p) -> bool {
 		return p->tetrisAleat(b);
 	};
-	auto convexPlacement = [](Building* b,Placer* p) -> bool {
+	auto convexPlacement = [](Building* b, Placer* p) -> bool {
 		return p->tetrisPlacementTOP(b);
 	};
 	//DEFINING CHOOSER GET METHOD
@@ -67,7 +102,7 @@ void Solver::Solve(City* city)
 	};
 	//DEFINING TYPE OF A COMPUTING STEP
 	using placementGetPair = tuple<function<bool(Building *, Placer *)>,
-			 function<Building *(Chooser*)>,double,string>;
+		function<Building *(Chooser*)>, double, string>;
 
 	vector<placementGetPair> placements;
 	unsigned int lastPlacement = 0;
@@ -82,13 +117,13 @@ void Solver::Solve(City* city)
 				go to the next step
 	 */
 	placementGetPair actualP;
-	placements.push_back({bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET"});
-	placements.push_back({topRightPlacement,baseGet,0.5,"TOP RIGHT, BASEGET"});
-	placements.push_back({aleatPlacement,baseGet,0.7,"RANDOM, BASEGET"});
-	placements.push_back({convexPlacement,baseGet,0.2,"CONNEX, BASEGET"});
-	placements.push_back({convexPlacement,endGet,0.8,"CONNEX, ENDGET"});
-	auto nextSeuil = [&seuil,&city,&placements, &lastPlacement, &actualP]()
-	-> bool {
+	placements.push_back({ bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET" });
+	placements.push_back({ topRightPlacement,baseGet,0.5,"TOP RIGHT, BASEGET" });
+	placements.push_back({ aleatPlacement,baseGet,0.7,"RANDOM, BASEGET" });
+	placements.push_back({ convexPlacement,baseGet,0.2,"CONNEX, BASEGET" });
+	placements.push_back({ convexPlacement,endGet,0.8,"CONNEX, ENDGET" });
+	auto nextSeuil = [&seuil, &city, &placements, &lastPlacement, &actualP]()
+		-> bool {
 		if (city->getRemainingCell() <= seuil)
 		{
 			if (lastPlacement >= placements.size())
@@ -96,16 +131,16 @@ void Solver::Solve(City* city)
 				return true;
 			}
 			actualP = placements[lastPlacement++];
-			cout<< endl <<city->getRemainingCell()<<" REMAINING CELLS | "
-			<<"PASSING TO : "<< get<3>(actualP).c_str() << endl;
+			cout << endl << city->getRemainingCell() << " REMAINING CELLS | "
+				<< "PASSING TO : " << get<3>(actualP).c_str() << endl;
 			seuil = get<2>(placements[lastPlacement]) * seuil;
 		}
 		return true;
 	};
 	nextSeuil();
-	while( (b=(get<1>(actualP)(&c)))!=nullptr)
+	while ((b = (get<1>(actualP)(&c))) != nullptr)
 	{
-		if(get<0>(actualP)(b,&p))
+		if (get<0>(actualP)(b, &p))
 		{
 			actualPlacement++;
 			if (actualPlacement > reinitSeuil)
@@ -118,7 +153,7 @@ void Solver::Solve(City* city)
 				c.refill();
 			}
 		}
-		if(!nextSeuil())
+		if (!nextSeuil())
 			break;
 	}
 }

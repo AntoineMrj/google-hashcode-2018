@@ -16,7 +16,6 @@ Project::Project(City* city_)
 	this->buildings = vector<Building*>();
 	this->residentials = vector<Building *>();
 	this->utilities = map<unsigned int, vector<Building *>>();
-
 }
 Project::~Project()
 {

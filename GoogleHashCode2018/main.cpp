@@ -6,6 +6,7 @@
 #include <mutex>
 #include <chrono>
 #include <iomanip>
+
 using namespace std;
 
 /**
@@ -44,15 +45,20 @@ int main(int argc, char* argv[])
 		// Placing the buildings
 		project.city->placeBuilding(project.buildings.at(0), 0, 0);
 		cout << project.buildings.size() << endl;*/
-		bool hasEnded=false;
-		mutex locker;
-		auto start = chrono::steady_clock::now();
+		//bool hasEnded=false;
+		//mutex locker;
+		//auto start = chrono::steady_clock::now();
+
+		Solver::Solve(project.city);
+
+		/*
 		thread solvingThread([&project,&locker,&hasEnded](){
 			Solver::Solve(project.city);
 			locker.lock();
 			hasEnded = true;
 			locker.unlock();
 		});
+
 		thread printer([&project, &locker, &hasEnded,&start]()
 		{
 			while(true)
@@ -64,14 +70,17 @@ int main(int argc, char* argv[])
 				auto end = chrono::steady_clock::now();
 				chrono::duration<double> executionTime = end - start;
 				cout << "\r"
-					 << "Elapsed Time : " << setw(10) << executionTime.count() << " |"
+					 << "Elapsed Time : " << setw(10) << executionTime.count() << " | "
 					 << "Remaining Cells : " << setw(10)  <<project.city->getRemainingCell();
 				std::this_thread::sleep_for(std::chrono::milliseconds(500));
 			}
 		});
 
-			solvingThread.join();
-			printer.join();
+		solvingThread.join();
+		printer.join();
+
+		*/
+
 		// Writing the solution in the solution file
 		std::cout <<"\n------------------------------------"<<std::endl;
 		//project.city->PrintMap();

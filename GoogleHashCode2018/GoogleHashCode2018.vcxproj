@@ -144,16 +144,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Building.h" />
+    <ClInclude Include="Chooser.h" />
     <ClInclude Include="City.h" />
     <ClInclude Include="FileLoader.h" />
+    <ClInclude Include="Placer.h" />
     <ClInclude Include="Project.h" />
     <ClInclude Include="Solver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Chooser.cpp" />
     <ClCompile Include="City.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Placer.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="Solver.cpp" />
   </ItemGroup>
