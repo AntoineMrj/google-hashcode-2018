@@ -2,6 +2,8 @@
 #include "Chooser.h"
 #include "Placer.h"
 #include <tuple>
+#include <thread>
+#include <mutex>
 class Solver
 {
 public:

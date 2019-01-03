@@ -1,19 +1,27 @@
 #include "Chooser.h"
 
 bool Chooser::isRandInit = false;
+
+Chooser Chooser::globalChooser;
 Chooser::Chooser()
 {
-	if(!isRandInit)
-	{
-		srand(time(NULL));
-		isRandInit = true;
-	}
 	type =0;
 	utilities = 0;
 	utilitiesType = 0;
 	residential = 0;
 }
-
+Chooser& Chooser::getChooser()
+{
+	if(!isRandInit)
+	 {
+		 double Type = 0.5;
+		 double U = 0.5;
+		 double UT = 0.5;
+		 double R = 0.8;
+		 globalChooser = Chooser(Type, U, UT, R, &Project::globalProject);
+	 }
+	 return globalChooser;
+}
 Chooser::Chooser(double type_, double utilities_,
 				 double utilitiesType_, double residential_, Project *p)
 {

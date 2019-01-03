@@ -12,6 +12,8 @@ class Chooser
 		Chooser();
 		Chooser(double type_,double utilities_,
 			double utilitiesType_,double residential_,Project* p);
+		static Chooser globalChooser;
+		static Chooser& getChooser();
 		void initialize();
 		void refill();
 		Building* get();

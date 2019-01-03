@@ -3,36 +3,78 @@ using namespace std;
 
 void Solver::Solve(City* city)
 {
-	unsigned int subcitySize = 100;
-	vector<City*> subcities;
-	unsigned int subcitiesNumber = (city->getCityHeight() * city->getCityWidth()) / (subcitySize*subcitySize);
-	City *c;
-	
-	//COMPUTE SUBCITIES
-	/*for (size_t k = 0; k < subcitiesNumber; k++)
+	/**
+	 * @brief
+	 * Solving parameter
+	 * Number of cities must be a multiple of the number of thread.
+	 *
+	 */
+	unsigned int nbCities = 100; //Number of sub cities to compute
+	unsigned int subcitySize = 100;//Sub cities size
+	unsigned int nbThread =5;//Number of thread
+
+	auto start = chrono::steady_clock::now();
+	unsigned int nbCityPerThread = nbCities/nbThread;
+	vector<vector<City*>> subProc(nbThread);
+	vector<City*> plane;
+	mutex printMutex;
+	unsigned int remainingCities = nbCities;
+	for(auto& p:subProc)
 	{
-		c = new City(subcitySize, subcitySize);
-		SolveSubcity(c);
-		subcities.push_back(c);
-	}*/
-
-	c = new City(subcitySize, subcitySize);
-	SolveSubcity(c);
-	subcities.push_back(c);
-
-	cout << "SCORE : " << subcities.at(0)->getScore() << " | nb buildings : " << subcities.at(0)->getBuildingQuantity() << endl;
-
-	City test(subcitySize, subcitySize);
-
+		p = vector<City*>(nbCityPerThread);
+		for (auto &pt : p)
+			pt = new City(subcitySize, subcitySize);
+	}
+	unsigned int subcitiesNumber = (city->getCityHeight() * city->getCityWidth()) / (subcitySize*subcitySize);
+	//COMPUTE SUBCITIES
+	cout << "COMPUTING SUB CITIES" << endl;
+	vector<thread*> subSolver(nbThread);
+	for(int i =0;i<subSolver.size();i++)
+	{
+		vector<City*>& v = subProc[i];
+		subSolver[i] = new thread([&v,&i,&printMutex,&remainingCities]()
+		{
+			for(auto& c:v)
+			{
+				SolveSubcity(c);
+				printMutex.lock();
+				remainingCities--;
+				cout << "REMAINING CITIES : " << remainingCities << endl;
+				printMutex.unlock();
+			}
+		});
+	}
+	for(auto& t:subSolver)
+		t->join();
+	for(auto& v:subProc)
+	{
+		for(auto& c:v)
+		{
+			plane.push_back(c);
+		}
+	}
+	random_shuffle(plane.begin(),plane.end());
 	//ASSEMBLE
+	cout << endl << "ASSEMBLING SUB CITIES" << endl;
+	int counter = 0;
 	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
 	{
 
 		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
 		{
-			city->placeMap(*subcities.at(0), j, i);
+			city->placeMap(*plane.at(counter), j, i);
+			counter++;
+			if(counter>=plane.size())
+				counter = 0;
 		}
 	}
+	cout << "CLEANING MEMORY" << endl;
+	for(auto&p:plane)
+		delete p;
+	auto end = chrono::steady_clock::now();
+	chrono::duration<double> execTime = end - start;
+	cout << "END OF SOLVING ALGORITHM" << endl;
+	cout << "ELAPSED TIME : " << execTime.count() << endl;
 }
 
 
@@ -60,10 +102,10 @@ void Solver::SolveSubcity(City* city)
 	  * 		High : more probabilityu to choose a small residential
 	  * 		Low : more probability to choose a big residential
 	  */
-	double Type = 0.3;
-	double U = 0.8;
-	double UT = 0.95;
-	double R = 0.3;
+	double Type = 0.5;
+	double U = 0.2;
+	double UT = 0.8;
+	double R = 0.8;
 	Chooser c(Type, U, UT, R, &Project::globalProject);
 	Placer p(city);
 	Building* b;
@@ -131,8 +173,8 @@ void Solver::SolveSubcity(City* city)
 				return true;
 			}
 			actualP = placements[lastPlacement++];
-			cout << endl << city->getRemainingCell() << " REMAINING CELLS | "
-				<< "PASSING TO : " << get<3>(actualP).c_str() << endl;
+			//cout << endl << city->getRemainingCell() << " REMAINING CELLS | "
+			//	<< "PASSING TO : " << get<3>(actualP).c_str() << endl;
 			seuil = get<2>(placements[lastPlacement]) * seuil;
 		}
 		return true;
