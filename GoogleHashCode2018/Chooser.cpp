@@ -1,8 +1,8 @@
 #include "Chooser.h"
 
 bool Chooser::isRandInit = false;
-
-Chooser Chooser::globalChooser;
+std::map<unsigned int, unsigned int> Chooser::utilitiesRegister;
+mutex Chooser::registerMutex;
 Chooser::Chooser()
 {
 	type =0;
@@ -10,17 +10,25 @@ Chooser::Chooser()
 	utilitiesType = 0;
 	residential = 0;
 }
-Chooser& Chooser::getChooser()
+void Chooser::initChooser()
 {
-	if(!isRandInit)
-	 {
-		 double Type = 0.5;
-		 double U = 0.5;
-		 double UT = 0.5;
-		 double R = 0.8;
-		 globalChooser = Chooser(Type, U, UT, R, &Project::globalProject);
-	 }
-	 return globalChooser;
+	for (auto it : Project::globalProject.utilities)
+		utilitiesRegister[it.first] = 0;
+	if (!isRandInit)
+	{
+		srand(time(NULL));
+		isRandInit = true;
+	}
+}
+Chooser::Chooser(Project*p)
+{
+
+	projectRef = p;
+	type = randNumber();
+	utilities = randNumber();
+	utilitiesType = randNumber();
+	residential = randNumber();
+	initialize();
 }
 Chooser::Chooser(double type_, double utilities_,
 				 double utilitiesType_, double residential_, Project *p)
@@ -31,18 +39,19 @@ Chooser::Chooser(double type_, double utilities_,
 		srand(time(NULL));
 		isRandInit = true;
 	}
-	for(auto it:projectRef->utilities)
-		utilitiesRegister[it.first] = 0;
 	type = type_;
 	utilities = utilities_;
 	utilitiesType = utilitiesType_;
 	residential = residential_;
 	initialize();
 }
+double Chooser::randNumber()
+{
+	return double((rand()%100+1)/100);
+}
 bool Chooser::dice(double proba)
 {
-	double r = (double(rand() % 100 + 1) / 100);
-	return r < proba;
+	return randNumber() < proba;
 }
 /**
  * @brief
@@ -50,14 +59,24 @@ bool Chooser::dice(double proba)
  */
 void Chooser::initialize()
 {
+	if(save.size()>0){
+		if(save.front()->getType() == Building_type::Utility)
+		{
+			registerMutex.lock();
+			utilitiesRegister[save.front()->getExtra()]++;
+			registerMutex.unlock();
+		}
+		save.clear();
+	}
 	while(pile.size()>0)
 		pile.pop_back();
 	//Getting building list from project reference
 	residentialList = projectRef->residentials;
 	utilitiesLists = projectRef->utilities;
 	//Sorting lists
-	std::copy(utilitiesLists.begin(),utilitiesLists.end(),
-		std::back_inserter(utilitiesSorted));
+	if(utilitiesSorted.size()==0)
+		std::copy(utilitiesLists.begin(),utilitiesLists.end(),
+			std::back_inserter(utilitiesSorted));
 		//Utilities are sorted in function of their frequencies in the city.
 	std::sort(utilitiesSorted.begin(), utilitiesSorted.end(),
 			  [this](const std::pair<unsigned int, std::vector<Building *>> &p1, const std::pair<unsigned int, std::vector<Building *>> &p2) {
@@ -128,12 +147,14 @@ void Chooser::initialize()
  */
 void Chooser::refill()
 {
+	if (save.front()->getType() == Building_type::Utility)
+	{
+		registerMutex.lock();
+		utilitiesRegister[save.front()->getExtra()]++;
+		registerMutex.unlock();
+	}
 	if(!lastGet)
 	{
-		if(save.front()->getType()==Building_type::Utility)
-		{
-			utilitiesRegister[save.front()->getExtra()]++;
-		}
 		while(save.size()>0)
 		{
 			pile.push_back(save.front());
@@ -142,10 +163,6 @@ void Chooser::refill()
 	}
 	else
 	{
-		if (save.front()->getType() == Building_type::Utility)
-		{
-			utilitiesRegister[save.front()->getExtra()]++;
-		}
 		while (save.size() > 0)
 		{
 			pile.push_front(save.front());

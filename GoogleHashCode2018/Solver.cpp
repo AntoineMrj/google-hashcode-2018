@@ -29,6 +29,7 @@ void Solver::Solve(City* city)
 	//COMPUTE SUBCITIES
 	cout << "COMPUTING SUB CITIES" << endl;
 	vector<thread*> subSolver(nbThread);
+	Chooser::initChooser();
 	for(int i =0;i<subSolver.size();i++)
 	{
 		vector<City*>& v = subProc[i];
@@ -53,7 +54,24 @@ void Solver::Solve(City* city)
 			plane.push_back(c);
 		}
 	}
-	random_shuffle(plane.begin(),plane.end());
+	cout << "MAX SCORE FOR A SUB CITY : "<<
+	(*max_element(plane.begin(),plane.end(),[](const City* a,const City* b)
+	{
+		return a->getScore() < b->getScore();
+	}))->getScore()
+	<< endl;
+	cout << "MIN SCORE FOR A SUB CITY : " << (*min_element(plane.begin(), plane.end(), [](const City *a, const City *b) {
+												 return a->getScore() < b->getScore();
+											 }))
+												 ->getScore()
+		 << endl;
+	sort(plane.begin(),plane.end(), [](const City *a, const City *b) {
+		return a->getScore() > b->getScore();
+											 });
+	std::vector<City*> best;
+	for(int i =0;i<15;i++)
+		best.push_back(plane[i]);
+	random_shuffle(best.begin(),best.end());
 	//ASSEMBLE
 	cout << endl << "ASSEMBLING SUB CITIES" << endl;
 	int counter = 0;
@@ -62,10 +80,13 @@ void Solver::Solve(City* city)
 
 		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
 		{
-			city->placeMap(*plane.at(counter), j, i);
+			city->placeMap(*best.at(counter), i, j);
 			counter++;
-			if(counter>=plane.size())
+			if(counter>=best.size())
+			{
+				random_shuffle(best.begin(), best.end());
 				counter = 0;
+			}
 		}
 	}
 	cout << "CLEANING MEMORY" << endl;
@@ -104,9 +125,9 @@ void Solver::SolveSubcity(City* city)
 	  */
 	double Type = 0.5;
 	double U = 0.2;
-	double UT = 0.8;
+	double UT = 0.9;
 	double R = 0.8;
-	Chooser c(Type, U, UT, R, &Project::globalProject);
+	Chooser c(Type,U,UT,R,&Project::globalProject);
 	Placer p(city);
 	Building* b;
 	//threshold for each placement type
@@ -160,9 +181,9 @@ void Solver::SolveSubcity(City* city)
 	 */
 	placementGetPair actualP;
 	placements.push_back({ bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET" });
-	placements.push_back({ topRightPlacement,baseGet,0.5,"TOP RIGHT, BASEGET" });
+	placements.push_back({ topRightPlacement,baseGet,0.8,"TOP RIGHT, BASEGET" });
 	placements.push_back({ aleatPlacement,baseGet,0.7,"RANDOM, BASEGET" });
-	placements.push_back({ convexPlacement,baseGet,0.2,"CONNEX, BASEGET" });
+	placements.push_back({ convexPlacement,baseGet,0.7,"CONNEX, BASEGET" });
 	placements.push_back({ convexPlacement,endGet,0.8,"CONNEX, ENDGET" });
 	auto nextSeuil = [&seuil, &city, &placements, &lastPlacement, &actualP]()
 		-> bool {
@@ -198,6 +219,7 @@ void Solver::SolveSubcity(City* city)
 		if (!nextSeuil())
 			break;
 	}
+	cout << "SUB MAP SCORE : " << city->getScore() << endl;
 }
 
 
