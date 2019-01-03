@@ -41,17 +41,12 @@ int main(int argc, char* argv[])
 		project.setProjectFile(projectPath);
 		project.setSolutionFile(solutionPath);
 
-		/*
+		
 		// Placing the buildings
-		project.city->placeBuilding(project.buildings.at(0), 0, 0);
-		cout << project.buildings.size() << endl;*/
-		//bool hasEnded=false;
-		//mutex locker;
-		//auto start = chrono::steady_clock::now();
-
-		Solver::Solve(project.city);
-
-		/*
+		bool hasEnded=false;
+		mutex locker;
+		auto start = chrono::steady_clock::now();
+		
 		thread solvingThread([&project,&locker,&hasEnded](){
 			Solver::Solve(project.city);
 			locker.lock();
@@ -78,8 +73,6 @@ int main(int argc, char* argv[])
 
 		solvingThread.join();
 		printer.join();
-
-		*/
 
 		// Writing the solution in the solution file
 		std::cout <<"\n------------------------------------"<<std::endl;

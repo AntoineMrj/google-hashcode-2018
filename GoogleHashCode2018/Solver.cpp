@@ -74,21 +74,31 @@ void Solver::Solve(City* city)
 	random_shuffle(best.begin(),best.end());
 	//ASSEMBLE
 	cout << endl << "ASSEMBLING SUB CITIES" << endl;
-	int counter = 0;
+	map<int, int> scoreMap;
+
 	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
 	{
 
 		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
 		{
-			city->placeMap(*best.at(counter), i, j);
-			counter++;
-			if(counter>=best.size())
+			for (size_t k = 0; k < plane.size(); k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
 			{
-				random_shuffle(best.begin(), best.end());
-				counter = 0;
+				City copy(*plane.at(k)); //on copie la city actuelle
+				copy.placeMap(*plane.at(k), i, j); //on place une sous-map
+				scoreMap.insert(pair<int, int>(k, copy.getScore()));
 			}
+
+			auto max = std::max_element(scoreMap.begin(), scoreMap.end(), //cacul du meilleur score pour recuperer sa position
+				[](const pair<int, int>& s1, const pair<int, int>& s2) {
+				return s1.second < s2.second; });
+
+			city->placeMap(*plane.at(max->first), i, j);//on place la meilleure subcity dans la city finale
+
+			scoreMap.clear(); //reset de la score map
 		}
 	}
+
+	//=================================================\\
 	cout << "CLEANING MEMORY" << endl;
 	for(auto&p:plane)
 		delete p;
