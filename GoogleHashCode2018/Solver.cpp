@@ -72,7 +72,7 @@ void Solver::Solve(City* city)
 	cout << endl << "ASSEMBLING SUB CITIES" << endl;
 	map<int, int> scoreMap;
 	std::vector<City*> best; //prend les 20 meilleurs subcities
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 20; i++)
 		best.push_back(plane[i]);
 	random_shuffle(best.begin(), best.end());
 
@@ -83,7 +83,7 @@ void Solver::Solve(City* city)
 		{
 			for (size_t k = 0; k < best.size(); k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
 			{
-				City copy(*best.at(k)); //on copie la city actuelle
+				City copy(*city); //on copie la city actuelle
 				copy.placeMap(*best.at(k), i, j); //on place une sous-map
 				scoreMap.insert(pair<int, int>(k, copy.getScore()));
 			}
