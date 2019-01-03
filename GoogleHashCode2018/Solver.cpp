@@ -68,23 +68,23 @@ void Solver::Solve(City* city)
 	sort(plane.begin(),plane.end(), [](const City *a, const City *b) {
 		return a->getScore() > b->getScore();
 											 });
-	std::vector<City*> best;
-	for(int i =0;i<15;i++)
-		best.push_back(plane[i]);
-	random_shuffle(best.begin(),best.end());
 	//ASSEMBLE
 	cout << endl << "ASSEMBLING SUB CITIES" << endl;
 	map<int, int> scoreMap;
+	std::vector<City*> best; //prend les 20 meilleurs subcities
+	for (int i = 0; i < 50; i++)
+		best.push_back(plane[i]);
+	random_shuffle(best.begin(), best.end());
 
 	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
 	{
 
 		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
 		{
-			for (size_t k = 0; k < plane.size(); k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+			for (size_t k = 0; k < best.size(); k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
 			{
-				City copy(*plane.at(k)); //on copie la city actuelle
-				copy.placeMap(*plane.at(k), i, j); //on place une sous-map
+				City copy(*best.at(k)); //on copie la city actuelle
+				copy.placeMap(*best.at(k), i, j); //on place une sous-map
 				scoreMap.insert(pair<int, int>(k, copy.getScore()));
 			}
 
@@ -92,7 +92,7 @@ void Solver::Solve(City* city)
 				[](const pair<int, int>& s1, const pair<int, int>& s2) {
 				return s1.second < s2.second; });
 
-			city->placeMap(*plane.at(max->first), i, j);//on place la meilleure subcity dans la city finale
+			city->placeMap(*best.at(max->first), i, j);//on place la meilleure subcity dans la city finale
 
 			scoreMap.clear(); //reset de la score map
 		}
