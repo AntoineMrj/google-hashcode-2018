@@ -9,7 +9,7 @@ void Solver::Solve(City* city)
 	 * Number of cities must be a multiple of the number of thread.
 	 *
 	 */
-	unsigned int nbCities = 100; //Number of sub cities to compute
+	unsigned int nbCities = 20; //Number of sub cities to compute
 	unsigned int subcitySize = 100;//Sub cities size
 	unsigned int nbThread =5;//Number of thread
 
@@ -49,52 +49,76 @@ void Solver::Solve(City* city)
 		t->join();
 	for(auto& v:subProc)
 	{
-		for(auto& c:v)
-		{
-			plane.push_back(c);
-		}
+		plane.insert(plane.begin(),
+			make_move_iterator(v.begin()),
+			make_move_iterator(v.end()));
 	}
-	cout << "MAX SCORE FOR A SUB CITY : "<<
-	(*max_element(plane.begin(),plane.end(),[](const City* a,const City* b)
-	{
-		return a->getScore() < b->getScore();
-	}))->getScore()
-	<< endl;
-	cout << "MIN SCORE FOR A SUB CITY : " << (*min_element(plane.begin(), plane.end(), [](const City *a, const City *b) {
-												 return a->getScore() < b->getScore();
-											 }))
-												 ->getScore()
-		 << endl;
 	sort(plane.begin(),plane.end(), [](const City *a, const City *b) {
 		return a->getScore() > b->getScore();
 											 });
 	//ASSEMBLE
 	cout << endl << "ASSEMBLING SUB CITIES" << endl;
-	map<int, int> scoreMap;
 	std::vector<City*> best; //prend les 20 meilleurs subcities
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < nbCities; i++)
 		best.push_back(plane[i]);
 	random_shuffle(best.begin(), best.end());
-
+	cout << "MAX SCORE FOR A SUB CITY : "<<
+	(*max_element(best.begin(),best.end(),[](const City* a,const City* b)
+	{
+		return a->getScore() < b->getScore();
+	}))->getScore()
+	<< endl;
+	cout << "MIN SCORE FOR A SUB CITY : " << (*min_element(best.begin(), best.end(), [](const City *a, const City *b) {
+												 return a->getScore() < b->getScore();
+											 }))
+												 ->getScore()
+		 << endl;
+	mutex copyTex;
+	vector<std::vector<City*>> bestSplit;
+	for(int i =0;i<nbThread;i++)
+	{
+		bestSplit.push_back(vector<City*>());
+		int begin = (int(best.size()) / nbThread) * i;
+		int end = (int(best.size()) / int(nbThread)) * (i + 1);
+		for (int k = begin; k < end; k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+ 		{
+			bestSplit.back().push_back(best[k]);
+		}
+	}
 	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
 	{
 
 		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
 		{
-			for (size_t k = 0; k < best.size(); k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+			vector<thread *> subTest;
+			vector<pair<City*,int>> scores(nbThread);
+			fill(scores.begin(),scores.end(),pair<City*,int>(nullptr,0));
+			City c(*city);
+			for(int e = 0;e<nbThread;e++)
 			{
-				City copy(*city); //on copie la city actuelle
-				copy.placeMap(*best.at(k), i, j); //on place une sous-map
-				scoreMap.insert(pair<int, int>(k, copy.getScore()));
+				auto& scoresPair = scores[e];
+				auto& subBest = bestSplit[e];
+				subTest.push_back(new thread([&scoresPair, c,&subBest,e,i,j,nbThread,&copyTex]() mutable{
+					for (auto& sBest:subBest) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+					{
+						c.placeMap(*sBest, i, j); //on place une sous-map
+						if(scoresPair.second<c.getScore())
+							{
+								scoresPair.first = sBest;
+								scoresPair.second = c.getScore();
+							}
+						c.undo(sBest->getBuildingQuantity());
+					}
+				}));
 			}
+			for(const auto& t:subTest)
+			{
+				t->join();
+			}
+			auto max = std::max_element(scores.begin(), scores.end(), //cacul du meilleur score pour recuperer sa position
+										[](const pair<City *, int> &s1, const pair<City *, int> &s2) { return s1.second < s2.second; });
 
-			auto max = std::max_element(scoreMap.begin(), scoreMap.end(), //cacul du meilleur score pour recuperer sa position
-				[](const pair<int, int>& s1, const pair<int, int>& s2) {
-				return s1.second < s2.second; });
-
-			city->placeMap(*best.at(max->first), i, j);//on place la meilleure subcity dans la city finale
-
-			scoreMap.clear(); //reset de la score map
+			city->placeMap(*(*max).first, i, j);//on place la meilleure subcity dans la city finale
 		}
 	}
 

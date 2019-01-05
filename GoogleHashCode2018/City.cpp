@@ -6,9 +6,9 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	position = P.position;
 	if(P.source->getType()==Residential)
 	{
-		for (auto pair :P.connectedUtility)
+		for (auto pair : Project::globalProject.utilities)
 		{
-			connectedUtility[pair.first] = (pair.second);
+			connectedUtility[pair.first] = 0;
 		}
 	}
 	source = P.source;
@@ -20,7 +20,7 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	{
 		for (auto i : Project::globalProject.utilities)
 		{
-			connectedUtility[i.first] = false;
+			connectedUtility[i.first] = 0;
 		}
 	}
 }
@@ -47,12 +47,28 @@ PlacedBuilding::PlacedBuilding(PlacedBuilding &P, Coord C)
  */
 int PlacedBuilding::use(unsigned int utilityType)
 {
-	if (connectedUtility[utilityType] == false)
+	if (connectedUtility[utilityType] == 0)
 	{
-		connectedUtility[utilityType] = true;
+		connectedUtility[utilityType] += 1;
 		return source->getExtra();
 	}
 	return 0;
+}
+int PlacedBuilding::undo()
+{
+	int out = 0;
+	switch(source->getType())
+	{
+		case Residential:
+			for(auto it:connectedUtility)
+			{
+				if(it.second>0)
+				{
+					out+= source->getExtra();
+				}
+			}
+			break;
+	}
 }
 
 City::City() {
@@ -82,7 +98,7 @@ City::City(unsigned int w, unsigned int h)
  * Copy constructor
  * @param c 
  */
-City::City(City& c)
+City::City(const City& c)
 {
 	width=c.width;
 	height=c.height;
@@ -160,13 +176,16 @@ City::City(unsigned int h, unsigned w, City& c, unsigned int row, unsigned int c
  * @return true
  * @return false
  */
-bool City::placeMap(City &c, unsigned int row, unsigned int col)
+bool City::placeMap( City &c, unsigned int row, unsigned int col)
 {
-	for (PlacedBuilding P : c.placedBuildingRegister)
+
+	int i =0;
+	for (PlacedBuilding& P : c.placedBuildingRegister)
 	{
 		if(!placeBuilding(P.source,P.position.row+row,P.position.column+col,false))
 			return false;
 	}
+	return true;
 }
 	/*
 	Place a building on the buildingMap
@@ -208,7 +227,7 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 			{
 				ConnexComposant[connexMap[c.row + row][c.column + col]].erase({short(c.row + row), short(c.column + col)});
 			}
-			RemainingCellsList.erase({short(c.row+row),short(c.column+col)});
+			RemainingCellsList.erase({(c.row+row),(c.column+col)});
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
 	}
@@ -388,7 +407,72 @@ void City::PrintMap()
 		cout << endl;
 	}
 }
-
+/**
+ * @brief
+ *	Remove the last nbBuilding placed on the city.
+ * @param nbBUilding
+ *
+ */
+void City::undo(int nbBUilding)
+{
+	while(nbBUilding-->0)
+	{
+		undo();
+	}
+}
+/**
+ * @brief
+ * Remove the last placed building.
+ */
+void City::undo()
+{
+	auto& lastB = placedBuildingRegister.back();
+	int out = 0;
+	switch (lastB.source->getType())
+	{
+		case Residential:
+		for (auto it : lastB.connectedUtility)
+		{
+			if (it.second > 0)
+			{
+				out += lastB.source->getExtra();
+			}
+		}
+		registeredResidentials.pop_back();
+		break;
+		case Utility:
+			//Calcul du score généré par le placement
+			map<int,bool> alreadyDone;
+			for (const Coord &coord : lastB.source->getInfluenceArea())
+			{
+				Coord temp_coord = coord + lastB.position;
+				if (temp_coord.row >= 0 && temp_coord.row < int(height) && temp_coord.column >= 0 && temp_coord.column < int(width) && getMapCell(temp_coord.row, temp_coord.column) > -1 && &placedBuildingRegister[getMapCell(temp_coord.row, temp_coord.column)] != &placedBuildingRegister.back())
+				{
+					short int buildingNumber = getMapCell(temp_coord.row, temp_coord.column);
+					if (alreadyDone.find(buildingNumber) == alreadyDone.end())
+					{
+						alreadyDone[buildingNumber] = true;
+						auto &build = placedBuildingRegister[buildingNumber];
+						build.connectedUtility[lastB.source->getExtra()]--;
+						if(build.connectedUtility[lastB.source->getExtra()]<=0)
+						{
+							out += build.source->getExtra();
+						}
+					}
+				}
+			}
+			registeredUtilities.pop_back();
+			break;
+	}
+	for(const auto& C:lastB.source->getCases())
+	{
+		Coord temp = C + lastB.position;
+		setMapCell(temp.row,temp.column,-1);
+		RemainingCellsList.insert(C + lastB.position);
+	}
+	score-= out;
+	placedBuildingRegister.pop_back();
+}
 
 /*
 	Save the city into a file

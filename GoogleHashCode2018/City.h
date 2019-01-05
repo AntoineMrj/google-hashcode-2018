@@ -45,8 +45,8 @@ struct PlacedBuilding
 	PlacedBuilding(PlacedBuilding& P,Coord C={0,0});
 	//Uniquement utilisable par un residential
 	int use(unsigned int utilityType);
-
-	std::map<unsigned int,bool> connectedUtility;
+	int undo();
+	std::map<unsigned int, short int> connectedUtility;
 	Building* source;
 	Coord position;
 };
@@ -56,7 +56,7 @@ public:
 	friend class Placer;
 	City();
 	City(unsigned int h,unsigned int w);
-	City(City& c);
+	City(const City& c);
 	virtual City& operator=(City& c);
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
 
@@ -66,7 +66,8 @@ public:
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	void toSolution(string outfileName);
 	void PrintMap();
-
+	void undo(int nbBUilding);
+	void undo();
 	int getScore() const;
 	int getRemainingCell() const;
 	int getBuildingQuantity() const;

@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 				cout << "\r"
 					 << "Elapsed Time : " << setw(10) << executionTime.count() << " | "
 					 << "Remaining Cells : " << setw(10)  <<project.city->getRemainingCell();
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
 			}
 		});
 
