@@ -61,7 +61,7 @@ public:
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
 
 	bool placeMap(City& c,unsigned int row,unsigned int col);
-	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=false);
+	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=true);
 	void setMapCell(int row, int col, int value);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	void toSolution(string outfileName);

@@ -74,7 +74,6 @@ void Chooser::initialize()
 	residentialList = projectRef->residentials;
 	utilitiesLists = projectRef->utilities;
 	//Sorting lists
-	if(utilitiesSorted.size()==0)
 		std::copy(utilitiesLists.begin(),utilitiesLists.end(),
 			std::back_inserter(utilitiesSorted));
 		//Utilities are sorted in function of their frequencies in the city.

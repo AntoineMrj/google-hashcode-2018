@@ -164,14 +164,13 @@ bool City::placeMap(City &c, unsigned int row, unsigned int col)
 {
 	for (PlacedBuilding P : c.placedBuildingRegister)
 	{
-		if(!placeBuilding(P.source,P.position.row+row,P.position.column+col))
+		if(!placeBuilding(P.source,P.position.row+row,P.position.column+col,false))
 			return false;
 	}
 }
 	/*
 	Place a building on the buildingMap
-	The try argument determine if it's just a test of placement instead of a placing.
-	@return the coverage ration of the building
+	The try argument determine if it has to test the placement before placing the building.
 	if it's 0, this mean an error occured,
 	else the closest it is from 1, the more the placement is optimized.
 */
@@ -185,20 +184,23 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 	int maxCoverage = building->getColumnNum() * building->getRowNum();
 	bool stop = false;
 	// On check les cellules que prend le building
-	if(building->getColumnNum()+col<=width && building->getRowNum()+row<=height)
+	if(test)
 	{
-		for(auto &c : building->getCases())
+		if(building->getColumnNum()+col<=width && building->getRowNum()+row<=height)
 		{
-			if (this->getMapCell(c.row+row, c.column+col) != -1)
+			for(auto &c : building->getCases())
 			{
-				return 0;
-				//Cas du chevauchement
+				if (this->getMapCell(c.row+row, c.column+col) != -1)
+				{
+					return 0;
+					//Cas du chevauchement
+				}
 			}
 		}
-	}
-	else
-	{
-		return 0;
+		else
+		{
+			return 0;
+		}
 	}
 	for (auto &c : building->getCases())
 	{
