@@ -227,7 +227,7 @@ double City::placeBuilding(Building *building, unsigned int row, unsigned int co
 			{
 				ConnexComposant[connexMap[c.row + row][c.column + col]].erase({short(c.row + row), short(c.column + col)});
 			}
-			RemainingCellsList.erase({(c.row+row),(c.column+col)});
+			RemainingCellsList.erase({ short(c.row+row),short(c.column+col)});
 			this->setMapCell(c.row+row, c.column+col, num);
 			coverage++; //Cas du chevauchement
 	}
