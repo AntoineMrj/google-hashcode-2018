@@ -9,9 +9,9 @@ void Solver::Solve(City* city)
 	 * Number of cities must be a multiple of the number of thread.
 	 *
 	 */
-	unsigned int nbCities = 20; //Number of sub cities to compute
-	unsigned int subcitySize = 100;//Sub cities size
-	unsigned int nbThread =5;//Number of thread
+	unsigned int nbCities = 1; //Number of sub cities to compute
+	unsigned int subcitySize = 10;//Sub cities size
+	unsigned int nbThread =1;//Number of thread
 
 	auto start = chrono::steady_clock::now();
 	unsigned int nbCityPerThread = nbCities/nbThread;
@@ -45,8 +45,10 @@ void Solver::Solve(City* city)
 			}
 		});
 	}
-	for(auto& t:subSolver)
+	for(auto& t:subSolver){
 		t->join();
+		delete t;
+	}
 	for(auto& v:subProc)
 	{
 		plane.insert(plane.begin(),
@@ -114,6 +116,7 @@ void Solver::Solve(City* city)
 			for(const auto& t:subTest)
 			{
 				t->join();
+				delete t;
 			}
 			auto max = std::max_element(scores.begin(), scores.end(), //cacul du meilleur score pour recuperer sa position
 										[](const pair<City *, int> &s1, const pair<City *, int> &s2) { return s1.second < s2.second; });
@@ -202,7 +205,6 @@ void Solver::SolveSubcity(City* city)
 		function<Building *(Chooser*)>, double, string>;
 
 	vector<placementGetPair> placements;
-	unsigned int lastPlacement = 0;
 	double seuil = (city->getCityHeight() * city->getCityWidth());
 	//FILLING PLACEMENTS STEPS
 	/**
@@ -213,28 +215,26 @@ void Solver::SolveSubcity(City* city)
 	 *		 	if inferior to the Threshold defined by the next step
 				go to the next step
 	 */
-	placementGetPair actualP;
 	placements.push_back({ bottomRightPlacement,baseGet,1,"BOTTOM RIGHT,BASEGET" });
 	placements.push_back({ topRightPlacement,baseGet,0.8,"TOP RIGHT, BASEGET" });
 	placements.push_back({ aleatPlacement,baseGet,0.7,"RANDOM, BASEGET" });
 	placements.push_back({ convexPlacement,baseGet,0.7,"CONNEX, BASEGET" });
 	placements.push_back({ convexPlacement,endGet,0.8,"CONNEX, ENDGET" });
-	auto nextSeuil = [&seuil, &city, &placements, &lastPlacement, &actualP]()
+	unsigned int lastPlacement = 1;
+	unsigned int nbPlacement = placements.size();
+	placementGetPair actualP=placements[0];
+	auto nextSeuil = [&seuil, city, placements, &lastPlacement, &actualP]()
 		-> bool {
 		if (city->getRemainingCell() <= seuil)
 		{
 			if (lastPlacement >= placements.size())
-			{
 				return true;
-			}
 			actualP = placements[lastPlacement++];
-			//cout << endl << city->getRemainingCell() << " REMAINING CELLS | "
-			//	<< "PASSING TO : " << get<3>(actualP).c_str() << endl;
-			seuil = get<2>(placements[lastPlacement]) * seuil;
+			if(lastPlacement<placements.size())
+				seuil = get<2>(placements[lastPlacement])* seuil;
 		}
 		return true;
 	};
-	nextSeuil();
 	while ((b = (get<1>(actualP)(&c))) != nullptr)
 	{
 		if (get<0>(actualP)(b, &p))
@@ -250,8 +250,7 @@ void Solver::SolveSubcity(City* city)
 				c.refill();
 			}
 		}
-		if (!nextSeuil())
-			break;
+		nextSeuil();
 	}
 	cout << "SUB MAP SCORE : " << city->getScore() << endl;
 }

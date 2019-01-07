@@ -72,10 +72,12 @@ int PlacedBuilding::undo()
 }
 
 City::City() {
+	RemainingCellsList = set<Coord>();
 }
 
 City::City(unsigned int w, unsigned int h)
 {
+	RemainingCellsList = set<Coord>();
 	this->width = w;
 	this->height = h;
 
