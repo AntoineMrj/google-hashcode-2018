@@ -6,15 +6,20 @@ class Project
 private:
 	std::string projectFile;
 	std::string solutionFile;
+	std::vector<Coord> basic_influenceArea;
+	int maxWalkingDistance;
+	int minNbCells;
 public:
+	friend class Building;
+	friend class City;
 	static Project globalProject;
+	Project();
+	Project(City* city_); // liste des utilities faisant reference a l index dans building
+	~Project();
 	City* city;
 	std::vector<Building *> buildings; // liste des projects buildings disponibles
 	std::vector<Building*> residentials; // liste des residences faisant referance a l index dans building
 	std::map<unsigned int, std::vector<Building*> > utilities;
-	Project();
-	Project(City* city_); // liste des utilities faisant reference a l index dans building
-	~Project();
 
 	void prepare();//Sort all containers.
 	void setProjectFile(std::string projectFile);
@@ -25,9 +30,5 @@ public:
 	void addUtility(Building* b);
 	void addResidential(Building *r);
 	void setMaxWalkingDistance(int MaxWD);
-	//Building getProjectById(unsigned int PId); //TO DO
-	std::vector<Coord> basic_influenceArea;
-	int maxWalkingDistance;
-	int minNbCells;
 
 };

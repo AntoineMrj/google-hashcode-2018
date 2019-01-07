@@ -13,7 +13,7 @@ PlacedBuilding::PlacedBuilding(const PlacedBuilding &P)
 	}
 	source = P.source;
 }
-	PlacedBuilding::PlacedBuilding(Building *buildingNum)
+	PlacedBuilding::PlacedBuilding(const Building *buildingNum)
 {
 	this->source = buildingNum;
 	if (buildingNum->getType() == Residential)
@@ -195,7 +195,7 @@ bool City::placeMap( City &c, unsigned int row, unsigned int col)
 	if it's 0, this mean an error occured,
 	else the closest it is from 1, the more the placement is optimized.
 */
-double City::placeBuilding(Building *building, unsigned int row, unsigned int col, bool test)
+double City::placeBuilding(const Building *building, unsigned int row, unsigned int col, bool test)
 {
 	int num = this->placedBuildingRegister.size();
 	unsigned int row_temp;

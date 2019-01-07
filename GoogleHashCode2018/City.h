@@ -36,18 +36,14 @@ bool operator<(const Coord A,const Coord B);
 struct PlacedBuilding
 {
 	//Constructeurs
-	PlacedBuilding()
-	{
-	}
-
-	PlacedBuilding(Building* buildingNum);
+	PlacedBuilding(const Building* buildingNum);
 	PlacedBuilding(const PlacedBuilding& P);
 	PlacedBuilding(PlacedBuilding& P,Coord C={0,0});
 	//Uniquement utilisable par un residential
 	int use(unsigned int utilityType);
 	int undo();
 	std::map<unsigned int, short int> connectedUtility;
-	Building* source;
+	const Building* source;
 	Coord position;
 };
 
@@ -61,7 +57,7 @@ public:
 	City(unsigned int h,unsigned w,City& c,unsigned int row,unsigned int col);
 
 	bool placeMap(City& c,unsigned int row,unsigned int col);
-	double placeBuilding(Building* building,unsigned int row,unsigned int col,bool test=true);
+	double placeBuilding(const Building* building,unsigned int row,unsigned int col,bool test=true);
 	void setMapCell(int row, int col, int value);
 	int computeScore(PlacedBuilding& A,PlacedBuilding& B);
 	void toSolution(string outfileName);
