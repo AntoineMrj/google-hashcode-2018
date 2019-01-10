@@ -9,126 +9,133 @@ void Solver::Solve(City* city)
 	 * Number of cities must be a multiple of the number of thread.
 	 *
 	 */
-	unsigned int nbCities = 1; //Number of sub cities to compute
-	unsigned int subcitySize = 10;//Sub cities size
-	unsigned int nbThread =1;//Number of thread
-
+	unsigned int nbCities = 20; //Number of sub cities to compute
+	unsigned int subcitySize = 100;//Sub cities size
+	unsigned int nbThread = 5;//Number of thread
+	
 	auto start = chrono::steady_clock::now();
-	unsigned int nbCityPerThread = nbCities/nbThread;
-	vector<vector<City*>> subProc(nbThread);
-	vector<City*> plane;
-	mutex printMutex;
-	unsigned int remainingCities = nbCities;
-	for(auto& p:subProc)
+	if (city->getCityHeight() < 100 && city->getCityWidth() < 100) //cas de example_a avec un map plus petite que 100x100
 	{
-		p = vector<City*>(nbCityPerThread);
-		for (auto &pt : p)
-			pt = new City(subcitySize, subcitySize);
+		SolveSubcity(city);
 	}
-	unsigned int subcitiesNumber = (city->getCityHeight() * city->getCityWidth()) / (subcitySize*subcitySize);
-	//COMPUTE SUBCITIES
-	cout << "COMPUTING SUB CITIES" << endl;
-	vector<thread*> subSolver(nbThread);
-	Chooser::initChooser();
-	for(int i =0;i<subSolver.size();i++)
+	else
 	{
-		vector<City*>& v = subProc[i];
-		subSolver[i] = new thread([&v,&i,&printMutex,&remainingCities]()
+		unsigned int nbCityPerThread = nbCities / nbThread;
+		vector<vector<City*>> subProc(nbThread);
+		vector<City*> plane;
+		mutex printMutex;
+		unsigned int remainingCities = nbCities;
+		for (auto& p : subProc)
 		{
-			for(auto& c:v)
-			{
-				SolveSubcity(c);
-				printMutex.lock();
-				remainingCities--;
-				cout << "REMAINING CITIES : " << remainingCities << endl;
-				printMutex.unlock();
-			}
-		});
-	}
-	for(auto& t:subSolver){
-		t->join();
-		delete t;
-	}
-	for(auto& v:subProc)
-	{
-		plane.insert(plane.begin(),
-			make_move_iterator(v.begin()),
-			make_move_iterator(v.end()));
-	}
-	sort(plane.begin(),plane.end(), [](const City *a, const City *b) {
-		return a->getScore() > b->getScore();
-											 });
-	//ASSEMBLE
-	cout << endl << "ASSEMBLING SUB CITIES" << endl;
-	std::vector<City*> best; //prend les 20 meilleurs subcities
-	for (int i = 0; i < nbCities; i++)
-		best.push_back(plane[i]);
-	random_shuffle(best.begin(), best.end());
-	cout << "MAX SCORE FOR A SUB CITY : "<<
-	(*max_element(best.begin(),best.end(),[](const City* a,const City* b)
-	{
-		return a->getScore() < b->getScore();
-	}))->getScore()
-	<< endl;
-	cout << "MIN SCORE FOR A SUB CITY : " << (*min_element(best.begin(), best.end(), [](const City *a, const City *b) {
-												 return a->getScore() < b->getScore();
-											 }))
-												 ->getScore()
-		 << endl;
-	mutex copyTex;
-	vector<std::vector<City*>> bestSplit;
-	for(int i =0;i<nbThread;i++)
-	{
-		bestSplit.push_back(vector<City*>());
-		int begin = (int(best.size()) / nbThread) * i;
-		int end = (int(best.size()) / int(nbThread)) * (i + 1);
-		for (int k = begin; k < end; k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
- 		{
-			bestSplit.back().push_back(best[k]);
+			p = vector<City*>(nbCityPerThread);
+			for (auto &pt : p)
+				pt = new City(subcitySize, subcitySize);
 		}
-	}
-	for(size_t i = 0; i < city->getCityWidth()-subcitySize+1; i += subcitySize)
-	{
-
-		for (size_t j = 0; j < city->getCityHeight()-subcitySize+1; j += subcitySize)
+		unsigned int subcitiesNumber = (city->getCityHeight() * city->getCityWidth()) / (subcitySize*subcitySize);
+		//COMPUTE SUBCITIES
+		cout << "COMPUTING SUB CITIES" << endl;
+		vector<thread*> subSolver(nbThread);
+		Chooser::initChooser();
+		for (int i = 0; i < subSolver.size(); i++)
 		{
-			vector<thread *> subTest;
-			vector<pair<City*,int>> scores(nbThread);
-			fill(scores.begin(),scores.end(),pair<City*,int>(nullptr,0));
-			City c(*city);
-			for(int e = 0;e<nbThread;e++)
+			vector<City*>& v = subProc[i];
+			subSolver[i] = new thread([&v, &i, &printMutex, &remainingCities]()
 			{
-				auto& scoresPair = scores[e];
-				auto& subBest = bestSplit[e];
-				subTest.push_back(new thread([&scoresPair, c,&subBest,e,i,j,nbThread,&copyTex]() mutable{
-					for (auto& sBest:subBest) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
-					{
-						c.placeMap(*sBest, i, j); //on place une sous-map
-						if(scoresPair.second<c.getScore())
+				for (auto& c : v)
+				{
+					SolveSubcity(c);
+					printMutex.lock();
+					remainingCities--;
+					cout << "REMAINING CITIES : " << remainingCities << endl;
+					printMutex.unlock();
+				}
+			});
+		}
+		for (auto& t : subSolver) {
+			t->join();
+			delete t;
+		}
+		for (auto& v : subProc)
+		{
+			plane.insert(plane.begin(),
+				make_move_iterator(v.begin()),
+				make_move_iterator(v.end()));
+		}
+		sort(plane.begin(), plane.end(), [](const City *a, const City *b) {
+			return a->getScore() > b->getScore();
+		});
+		//ASSEMBLE
+		cout << endl << "ASSEMBLING SUB CITIES" << endl;
+		std::vector<City*> best; //prend les 20 meilleurs subcities
+		for (int i = 0; i < nbCities; i++)
+			best.push_back(plane[i]);
+		random_shuffle(best.begin(), best.end());
+		cout << "MAX SCORE FOR A SUB CITY : " <<
+			(*max_element(best.begin(), best.end(), [](const City* a, const City* b)
+		{
+			return a->getScore() < b->getScore();
+		}))->getScore()
+			<< endl;
+		cout << "MIN SCORE FOR A SUB CITY : " << (*min_element(best.begin(), best.end(), [](const City *a, const City *b) {
+			return a->getScore() < b->getScore();
+		}))
+			->getScore()
+			<< endl;
+		mutex copyTex;
+		vector<std::vector<City*>> bestSplit;
+		for (int i = 0; i < nbThread; i++)
+		{
+			bestSplit.push_back(vector<City*>());
+			int begin = (int(best.size()) / nbThread) * i;
+			int end = (int(best.size()) / int(nbThread)) * (i + 1);
+			for (int k = begin; k < end; k++) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+			{
+				bestSplit.back().push_back(best[k]);
+			}
+		}
+		for (size_t i = 0; i < city->getCityWidth() - subcitySize + 1; i += subcitySize)
+		{
+
+			for (size_t j = 0; j < city->getCityHeight() - subcitySize + 1; j += subcitySize)
+			{
+				vector<thread *> subTest;
+				vector<pair<City*, int>> scores(nbThread);
+				fill(scores.begin(), scores.end(), pair<City*, int>(nullptr, 0));
+				City c(*city);
+				for (int e = 0; e < nbThread; e++)
+				{
+					auto& scoresPair = scores[e];
+					auto& subBest = bestSplit[e];
+					subTest.push_back(new thread([&scoresPair, c, &subBest, e, i, j, nbThread, &copyTex]() mutable {
+						for (auto& sBest : subBest) //pour chaque emplacement de la map finale on test chaque subcity pour voir quelle est la plus adaptee
+						{
+							c.placeMap(*sBest, i, j); //on place une sous-map
+							if (scoresPair.second < c.getScore())
 							{
 								scoresPair.first = sBest;
 								scoresPair.second = c.getScore();
 							}
-						c.undo(sBest->getBuildingQuantity());
-					}
-				}));
-			}
-			for(const auto& t:subTest)
-			{
-				t->join();
-				delete t;
-			}
-			auto max = std::max_element(scores.begin(), scores.end(), //cacul du meilleur score pour recuperer sa position
-										[](const pair<City *, int> &s1, const pair<City *, int> &s2) { return s1.second < s2.second; });
+							c.undo(sBest->getBuildingQuantity());
+						}
+					}));
+				}
+				for (const auto& t : subTest)
+				{
+					t->join();
+					delete t;
+				}
+				auto max = std::max_element(scores.begin(), scores.end(), //cacul du meilleur score pour recuperer sa position
+					[](const pair<City *, int> &s1, const pair<City *, int> &s2) { return s1.second < s2.second; });
 
-			city->placeMap(*(*max).first, i, j);//on place la meilleure subcity dans la city finale
+				city->placeMap(*(*max).first, i, j);//on place la meilleure subcity dans la city finale
+			}
 		}
+			//=================================================
+			cout << "CLEANING MEMORY" << endl;
+			for(auto&p:plane)
+				delete p;
 	}
-
-	//=================================================\\
-	cout << "CLEANING MEMORY" << endl;
-	for(auto&p:plane)
-		delete p;
+	
 	auto end = chrono::steady_clock::now();
 	chrono::duration<double> execTime = end - start;
 	cout << "END OF SOLVING ALGORITHM" << endl;
