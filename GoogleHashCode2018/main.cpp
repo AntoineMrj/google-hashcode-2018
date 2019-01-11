@@ -19,9 +19,8 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	// We check if the number of arguments is correct
-	if(argc == 4 && strcmp(argv[4],"-t"))
+	if(argc == 4)
 	{
-		cout << "AD" << endl;
 		FileLoader::loadSolution(argv[1],argv[2]);
 		Project &project = Project::globalProject;
 		cout << "\nSCORE : " << project.city->getScore() << endl;
