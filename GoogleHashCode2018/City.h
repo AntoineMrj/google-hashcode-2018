@@ -6,11 +6,11 @@
 #include <fstream>
 #include "Building.h"
 
-	/*
+/*
 	Structure correspondant à une coordonée sur la map
 */
-	//Forward declaration
-	struct Coord
+//Forward declaration
+struct Coord
 {
 	//Constructeurs
 	Coord()
