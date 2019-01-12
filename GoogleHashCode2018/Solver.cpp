@@ -11,7 +11,7 @@ void Solver::Solve(City* city)
 	 */
 	unsigned int nbCities = 20; //Number of sub cities to compute
 	unsigned int subcitySize = 100;//Sub cities size
-	unsigned int nbThread = 5;//Number of thread
+	unsigned int nbThread = 1;//Number of thread
 	
 	auto start = chrono::steady_clock::now();
 	if (city->getCityHeight() < 100 && city->getCityWidth() < 100) //cas de example_a avec un map plus petite que 100x100

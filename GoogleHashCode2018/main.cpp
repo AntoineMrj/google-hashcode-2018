@@ -92,5 +92,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	cin.get();
+
 	return EXIT_SUCCESS;
 }
