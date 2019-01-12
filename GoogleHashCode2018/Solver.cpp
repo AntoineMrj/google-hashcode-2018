@@ -67,7 +67,7 @@ void Solver::Solve(City* city)
 		//ASSEMBLE
 		cout << endl << "ASSEMBLING SUB CITIES" << endl;
 		std::vector<City*> best; //prend les 20 meilleurs subcities
-		for (unsigned int i = 0; i < nbCities; i++)
+		for (int i = 0; i < nbCities; i++)
 			best.push_back(plane[i]);
 		random_shuffle(best.begin(), best.end());
 		cout << "MAX SCORE FOR A SUB CITY : " <<
@@ -83,7 +83,7 @@ void Solver::Solve(City* city)
 			<< endl;
 		mutex copyTex;
 		vector<std::vector<City*>> bestSplit;
-		for (unsigned int i = 0; i < nbThread; i++)
+		for (int i = 0; i < nbThread; i++)
 		{
 			bestSplit.push_back(vector<City*>());
 			int begin = (int(best.size()) / nbThread) * i;
@@ -93,16 +93,16 @@ void Solver::Solve(City* city)
 				bestSplit.back().push_back(best[k]);
 			}
 		}
-		for (unsigned int i = 0; i < city->getCityWidth() - subcitySize + 1; i += subcitySize)
+		for (size_t i = 0; i < city->getCityWidth() - subcitySize + 1; i += subcitySize)
 		{
 
-			for (unsigned int j = 0; j < city->getCityHeight() - subcitySize + 1; j += subcitySize)
+			for (size_t j = 0; j < city->getCityHeight() - subcitySize + 1; j += subcitySize)
 			{
 				vector<thread *> subTest;
 				vector<pair<City*, int>> scores(nbThread);
 				fill(scores.begin(), scores.end(), pair<City*, int>(nullptr, 0));
 				City c(*city);
-				for (unsigned int e = 0; e < nbThread; e++)
+				for (int e = 0; e < nbThread; e++)
 				{
 					auto& scoresPair = scores[e];
 					auto& subBest = bestSplit[e];
@@ -228,7 +228,7 @@ void Solver::SolveSubcity(City* city)
 	placements.push_back({ convexPlacement,baseGet,0.7,"CONNEX, BASEGET" });
 	placements.push_back({ convexPlacement,endGet,0.8,"CONNEX, ENDGET" });
 	unsigned int lastPlacement = 1;
-	unsigned int nbPlacement = (unsigned int) placements.size();
+	unsigned int nbPlacement = placements.size();
 	placementGetPair actualP=placements[0];
 	auto nextSeuil = [&seuil, city, placements, &lastPlacement, &actualP]()
 		-> bool {

@@ -239,13 +239,13 @@ const vector<Coord>& Building::getCases() const
 float Building::getRatio()
 {
 	if(ratio<0)
-		ratio = (float) (nbCells / (rowNum * columnNum));
+		ratio = nbCells / (rowNum * columnNum);
 	return ratio;
 }
 float Building::getDensity()
 {
 	if(density<0)
-		density = (float) (nbCells / extra);
+		density = nbCells/extra;
 	return density;
 }
 unsigned int Building::getNbCells() const
