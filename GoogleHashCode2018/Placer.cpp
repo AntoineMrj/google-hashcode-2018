@@ -6,9 +6,9 @@ Placer::Placer(City* source)
 	src = source;
 	registerFrequency=50;
 	actualPlacement=0;
-	for(int i = 0;i<source->getCityHeight();i++)
+	for (unsigned int i = 0; i < source->getCityHeight(); i++)
 		shuffleCoord.push_back(i);
-	for (int i = 0; i < source->getCityWidth(); i++)
+	for (unsigned int i = 0; i < source->getCityWidth(); i++)
 		shuffleCoordCol.push_back(i);
 	shuffle();
 }
@@ -44,7 +44,7 @@ bool Placer::tetrisPlacement(Building *b)
  */
 bool Placer::tetrisPlacementTOP(Building *b)
 {
-	for (int row = 0; row <= src->height - b->getRowNum(); row++)
+	for (unsigned int row = 0; row <= src->height - b->getRowNum(); row++)
 	{
 		for (int col = src->width - b->getColumnNum(); col >= 0; col--)
 		{
